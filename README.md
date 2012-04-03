@@ -92,9 +92,9 @@ What if we want the url prefix to be the container name? we can do that by setti
 Here is an example that shows you how to add children to a menu, and how to set some additional attributes on the ***li*** tags.
 
 	Menu::container(array('storeowner', 'reseller'), 'backend')
-		->add('accounts', 'Accounts', array('class' => 'has_subs'), MenuItems::factory()->add('accounts/add', 'Add Account'));
+		->add('accounts', 'Accounts', array('class' => 'has_subs'), Menu::items()->add('accounts/add', 'Add Account'));
 	
-	$pages_subs = MenuItems::factory()->add('pages/add', 'Add Page');
+	$pages_subs = Menu::items()->add('pages/add', 'Add Page');
 	Menu::container('storeowner')
 		->add('pages', 'Pages', array(), $pages_subs);
 
