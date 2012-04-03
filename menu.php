@@ -62,6 +62,10 @@ class Menu {
 		return $html;
 	}
 
+	public function items()
+	{
+		return new MenuItems();
+	}
 
 	/**
 	 * Get the evaluated string content for the menu containers this menu acts upon.
