@@ -248,7 +248,7 @@ class MenuItems {
 				$attributes = array_merge_recursive($attributes, array('class' => 'active_subs'));
 			}
 
-			$menu_item = HTML::link($url, $item['title'], $attributes);
+			$menu_item = MenuHTML::link($url, $item['title'], $attributes);
 			if( ! is_null($item['children']))
 			{
 				$menu_item .= $this->render($list_attributes, $link_attributes, $item['children']->items);
@@ -257,7 +257,7 @@ class MenuItems {
 			$menu_items[] = $menu_item;
 		}
 		
-		return HTML::ul($menu_items, $list_attributes);
+		return MenuHTML::ul($menu_items, $list_attributes);
 	}
 
 }
