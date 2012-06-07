@@ -85,4 +85,17 @@ class MenuHTML extends HTML {
 
 		return (count($html) > 0) ? ' '.implode(' ', $html) : '';
 	}
+
+	/**
+	 * Create a LI item
+	 *
+	 * @param  string   $value
+	 * @param  array   	$attributes
+	 * @return string
+	 */
+	public static function li($value, $attributes)
+	{
+		return '<li'.static::attributes($attributes).'>'.$value.'</li>';
+	}
+
 }

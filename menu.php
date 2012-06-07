@@ -193,7 +193,7 @@ class MenuItems {
 	 */
 	public function add($url, $title, $children = null, $link_attributes = array(), $list_attributes = array(), $list_element = 'li')
 	{
-		$this->items[] = compact($url, $title, $children, $link_attributes, $list_attributes, $list_element);
+		$this->items[] = compact('url', 'title', 'children', 'link_attributes', 'list_attributes', 'list_element');
 
 		return $this;
 	}
@@ -214,7 +214,7 @@ class MenuItems {
 	 */
 	public function raw($html, $children = null, $list_attributes = array(), $list_element = 'li')
 	{
-		$this->items[] = compact($html, $children, $list_attributes, $list_element);
+		$this->items[] = compact('html', 'children', 'list_attributes', 'list_element');
 		
 		return $this;
 	}
@@ -246,7 +246,7 @@ class MenuItems {
 	public function render($attributes = array(), $element = 'ul', $items = null)
 	{
 		if(is_null($items)) $items = $this->items;
-		
+
 		if(is_null($items)) return '';
 
 		$menu_items = array();
