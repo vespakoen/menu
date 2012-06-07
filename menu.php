@@ -51,18 +51,18 @@ class Menu {
 	 *
 	 * @return string
 	 */
-	public function render($list_attributes = array(), $link_attributes = array())
+	public function render($attributes = array(), $element = 'ul')
 	{
 		$html = '';
 		foreach($this->handles as $container)
 		{
-			$html .= static::$containers[$container]->render($list_attributes, $link_attributes);
+			$html .= static::$containers[$container]->render($attributes, $element);
 		}
 
 		return $html;
 	}
 
-	public function items()
+	public static function items()
 	{
 		return new MenuItems();
 	}
@@ -252,21 +252,24 @@ class MenuItems {
 		$menu_items = array();
 		foreach($items as $item)
 		{
-			$url = ($this->prefix_links ? (gettype($this->prefix_links) == 'string' ? $this->prefix_links : $this->container) . '/' : '') . $item['url'];
-
-			if(URI::is($url))
+			if( ! array_key_exists('html', $item))
 			{
-				$item['attributes'] = merge_attributes($item['attributes'], array('class' => 'active'));
+				$url = ($this->prefix_links ? (gettype($this->prefix_links) == 'string' ? $this->prefix_links : $this->container) . '/' : '') . $item['url'];
+
+				if(URI::is($url))
+				{
+					$item['attributes'] = merge_attributes($item['attributes'], array('class' => 'active'));
+				}
+
+				if(URI::is($url . '/*'))
+				{
+					$item['attributes'] = merge_attributes($item['attributes'], array('class' => 'active_subs'));
+				}
 			}
+			
+			$item['children'] = isset($item['children']->items) ? $this->render($attributes, $element, $item['children']->items) : '';
 
-			if(URI::is($url . '/*'))
-			{
-				$item['attributes'] = merge_attributes($item['attributes'], array('class' => 'active_subs'));
-			}
-
-			$children = array_key_exists('children', $item) && ! is_null($item['children']) && isset($item['children']->items) ? $this->render($attributes, $element, $item['children']->items) : '';
-
-			$menu_items[] = $this->render_item($item, $children);
+			$menu_items[] = $this->render_item($item);
 		}
 		
 		return MenuHTML::$element($menu_items, $attributes);
@@ -276,23 +279,20 @@ class MenuItems {
 	 * Turn item data into HTML
 	 * 
 	 * @param 	array 	$item 		The menu item
-	 * @param 	string 	$children 	The children HTML
 	 * @return 	string 	The HTML
 	 */
-	protected function render_item($item, $children = '')
+	protected function render_item($item)
 	{
 		extract($item);
 
 		if(array_key_exists('html', $item))
 		{
-			$html = HTML::$list_element($html.PHP_EOL.$children, $list_attributes);
+			return MenuHTML::$list_element($html.PHP_EOL.$children, $list_attributes);
 		}
 		else
 		{
-			$html = HTML::$list_element(MenuHTML::link($url, $title, $link_attributes).PHP_EOL.$children, $list_attributes);
+			return MenuHTML::$list_element(MenuHTML::link($url, $title, $link_attributes).PHP_EOL.$children, $list_attributes);
 		}
-
-		return $html;
 	}
 
 }
