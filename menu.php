@@ -204,6 +204,29 @@ class MenuItems {
 	}
 
 	/**
+	 * Add a raw html item to the MenuItems instance.
+	 *
+	 * <code>
+	 *		// Add a raw item to the default main menu
+	 *		Menu::container()->raw('<img src="img/seperator.gif">');
+	 * </code>
+	 *
+	 * @param  string  $url
+	 * @param  string  $title
+	 * @param  array   $attributes
+	 * @param  array   $children
+	 * @return MenuItems
+	 */
+	public function raw($html)
+	{
+		$this->items[] = array(
+			'html' => $html
+		);
+		
+		return $this;
+	}
+
+	/**
 	 * Add menu items to another MenuItems instance.
 	 *
 	 * <code>
@@ -248,7 +271,14 @@ class MenuItems {
 				$attributes = array_merge_recursive($attributes, array('class' => 'active_subs'));
 			}
 
-			$menu_item = MenuHTML::link($url, $item['title'], $attributes);
+			if(array_key_exists('html', $item))
+			{
+				$menu_item = $item['html'];
+			}
+			else
+			{
+				$menu_item = MenuHTML::link($url, $item['title'], $attributes);
+			}
 			if( ! is_null($item['children']))
 			{
 				$menu_item .= $this->render($list_attributes, $link_attributes, $item['children']->items);
