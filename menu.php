@@ -264,7 +264,7 @@ class MenuItems {
 				$item['attributes'] = merge_attributes($item['attributes'], array('class' => 'active_subs'));
 			}
 
-			$children = array_key_exists('children', $item) && ! is_null($item['children']) ? $this->render($attributes, $element, $item['children']->items) : '';
+			$children = array_key_exists('children', $item) && ! is_null($item['children']) && isset($item['children']->items) ? $this->render($attributes, $element, $item['children']->items) : '';
 
 			$menu_items[] = $this->render_item($item, $children);
 		}
