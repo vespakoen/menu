@@ -191,15 +191,10 @@ class MenuItems {
 	 * @param  array   $children
 	 * @return MenuItems
 	 */
-	public function add($url, $title, $attributes = array(), $children = null)
+	public function add($url, $title, $children = null, $link_attributes = array(), $list_attributes = array(), $list_element = 'li')
 	{
-		$this->items[] = array(
-			'url' => $url,
-			'title' => $title,
-			'attributes' => $attributes,
-			'children' => $children
-		);
-		
+		$this->items[] = compact($url, $title, $children, $link_attributes, $list_attributes, $list_element);
+
 		return $this;
 	}
 
@@ -217,11 +212,9 @@ class MenuItems {
 	 * @param  array   $children
 	 * @return MenuItems
 	 */
-	public function raw($html)
+	public function raw($html, $children = null, $list_attributes = array(), $list_element = 'li')
 	{
-		$this->items[] = array(
-			'html' => $html
-		);
+		$this->items[] = compact($html, $children, $list_attributes, $list_element);
 		
 		return $this;
 	}
@@ -245,14 +238,15 @@ class MenuItems {
 	/**
 	 * Get the evaluated string content of the view.
 	 * 
-	 * @param  array  		$list_attributes 	Extra attributes for the list
-	 * @param  array  		$link_attributes 	Extra attributes for the link
+	 * @param  array  		$attributes 		Attributes for the ul element
+	 * @param  string  		$element 			The type of the element (ul or ol)
 	 * @param  MenuItems 	$items          	Reusing the method for child menu items
 	 * @return string
 	 */
-	public function render($list_attributes = array(), $link_attributes = array(), $items = null)
+	public function render($attributes = array(), $element = 'ul', $items = null)
 	{
 		if(is_null($items)) $items = $this->items;
+		
 		if(is_null($items)) return '';
 
 		$menu_items = array();
@@ -260,34 +254,45 @@ class MenuItems {
 		{
 			$url = ($this->prefix_links ? (gettype($this->prefix_links) == 'string' ? $this->prefix_links : $this->container) . '/' : '') . $item['url'];
 
-			$attributes = $link_attributes;
 			if(URI::is($url))
 			{
-				$attributes = array_merge_recursive($attributes, array('class' => 'active'));
+				$item['attributes'] = merge_attributes($item['attributes'], array('class' => 'active'));
 			}
 
 			if(URI::is($url . '/*'))
 			{
-				$attributes = array_merge_recursive($attributes, array('class' => 'active_subs'));
+				$item['attributes'] = merge_attributes($item['attributes'], array('class' => 'active_subs'));
 			}
 
-			if(array_key_exists('html', $item))
-			{
-				$menu_item = $item['html'];
-			}
-			else
-			{
-				$menu_item = MenuHTML::link($url, $item['title'], $attributes);
-			}
-			if( ! is_null($item['children']))
-			{
-				$menu_item .= $this->render($list_attributes, $link_attributes, $item['children']->items);
-			}
+			$children = is_null($item['children']) ? '' : $this->render($attributes, $element, $item['children']->items);
 
-			$menu_items[] = $menu_item;
+			$menu_items[] = $this->render_item($item, $children);
 		}
 		
-		return MenuHTML::ul($menu_items, $list_attributes);
+		return MenuHTML::$element($menu_items, $attributes);
+	}
+
+	/**
+	 * Turn item data into HTML
+	 * 
+	 * @param 	array 	$item 		The menu item
+	 * @param 	string 	$children 	The children HTML
+	 * @return 	string 	The HTML
+	 */
+	protected function render_item($item, $children = '')
+	{
+		extract($item);
+
+		if(array_key_exists('html', $item))
+		{
+			$html = HTML::$list_element($html.PHP_EOL.$children, $list_attributes);
+		}
+		else
+		{
+			$html = HTML::$list_element(MenuHTML::link($url, $title, $link_attributes).PHP_EOL.$children, $list_attributes);
+		}
+
+		return $html;
 	}
 
 }

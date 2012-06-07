@@ -29,18 +29,6 @@ class MenuHTML extends HTML {
 	}
 
 	/**
-	 * Generate an un-ordered list of items.
-	 *
-	 * @param  array   $list
-	 * @param  array   $attributes
-	 * @return string
-	 */
-	public static function ul($list, $attributes = array())
-	{
-		return static::listing('ul', $list, $attributes);
-	}
-
-	/**
 	 * Generate an ordered or un-ordered list.
 	 *
 	 * @param  string  $type
@@ -48,7 +36,7 @@ class MenuHTML extends HTML {
 	 * @param  array   $attributes
 	 * @return string
 	 */
-	private static function listing($type, $list, $attributes = array())
+	public static function listing($type, $list, $attributes = array())
 	{
 		$html = '';
 
@@ -65,7 +53,7 @@ class MenuHTML extends HTML {
 			}
 			else
 			{
-				$html .= '<li>'.$value.'</li>';
+				$html .= $value;
 			}
 		}
 
