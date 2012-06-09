@@ -30,6 +30,7 @@ In the backend (***domain.com/backend/...***) of our application we have some co
 Now we want to build a menu for our backend, but since every role gets different pages, we are going to use a menu container for every role.
 
 ```php
+	<?php
 	Menu::handler(array('storeowner', 'reseller'))
 		->add('backend/accounts', 'Accounts');
 	
@@ -62,6 +63,7 @@ That was simple, but we don't have to specify "backend/" for every single url, w
 By doing this, every link (including subs) will be prefixed with the given string, and a "/" will automatically be added to the end.
 
 ```php
+	<?php
 	Menu::handler(array('storeowner', 'reseller'))
 		->add('accounts', 'Accounts');
 	
@@ -90,6 +92,7 @@ By doing this, every link (including subs) will be prefixed with the given strin
 What if we want the url prefix to be the container name? we can do that by adding `->prefix_container()` at the end
 
 ```php
+	<?php
 	Menu::handler('storeowner')
 		->add('accounts', 'Accounts');
 	
@@ -118,6 +121,7 @@ What if we want the url prefix to be the container name? we can do that by addin
 Here is an example that shows you how to add children to a menu, how to set some additional attributes for the link and list item and how to specify a custom listitem element type. Wow that was a lot! Just take a close look at the example ;)
 
 ```php
+	<?php
 	Menu::handler(array('storeowner', 'reseller'))
 		->add('accounts', 'Accounts', Menu::items()
 			->add('accounts/add', 'Add Account', null, array('class' => 'link'), array('class' => 'listitem'), 'dt')
@@ -164,6 +168,7 @@ Instead of using "echo Menu::handler('reseller');" you can also use the render m
 In this example, we use an "ol" (ordered list) element in stead of the default "ul" element and add the class "nav" to it
 
 ```php
+	<?php
 	Menu::handler('reseller')->add('accounts', 'Accounts');
 
 	echo Menu::handler('reseller')->prefix('backend')->render(array('class' => 'nav'), 'ol');
