@@ -5,274 +5,222 @@ use Laravel\HTML;
 class Menu {
 
 	/**
-	 * All the created menu containers.
+	 * All the menu containers
 	 *
 	 * @var array
 	 */
 	public static $containers = array();
 
 	/**
-	 * The containers that are being handled for this instance
-	 *
-	 * @var array
-	 */
-	public $handles = array();
-
-	/**
-	 * Set the containers where to act on
+	 * Create a new MenuItems array
 	 * 
-	 * @param array $handles The containers
+	 * @return MenuItems
 	 */
-	public function __construct($handles)
-	{
-		$this->handles = $handles;
-	}
-
-	/**
-	 * Magic method for calling methods on the containers
-	 * 
-	 * @param  string $method
-	 * @param  array $parameters
-	 * @return Menu
-	 */
-	public function __call($method, $parameters)
-	{
-		foreach ($this->handles as $container)
-		{
-			static::$containers[$container] = call_user_func_array(array(static::$containers[$container], $method), $parameters);
-		}
-
-		return $this;
-	}
-
-
-	/**
-	 * Get the evaluated string content for the menu containers this menu acts upon.
-	 *
-	 * @return string
-	 */
-	public function render($attributes = array(), $element = 'ul')
-	{
-		$html = '';
-		foreach($this->handles as $container)
-		{
-			$html .= static::$containers[$container]->render($attributes, $element);
-		}
-
-		return $html;
-	}
-
 	public static function items()
 	{
 		return new MenuItems();
 	}
 
 	/**
-	 * Get the evaluated string content for the menu containers this menu acts upon.
-	 *
-	 * @return string
-	 */
-	public function __toString()
-	{
-		return $this->render();
-	}
-
-	/**
-	 * Get a menu instance.
+	 * Get a MenuHandler.
 	 *
 	 * <code>
-	 *		// Get the default menu container
-	 *		$container = Menu::container();
+	 *		// Get the menu handler that handles the default container
+	 *		$handler = Menu::handler();
 	 *
-	 *		// Get a named menu container
-	 *		$container = Menu::container('backend');
+	 *		// Get a named menu handler for a single container
+	 *		$handler = Menu::handler('backend');
 	 * 
-	 *		// Get a menu that acts on multiple containers
-	 *		$container = Menu::container(array('admin', 'sales'));
+	 *		// Get a menu handler that handles multiple containers
+	 *		$handler = Menu::handler(array('admin', 'sales'));
 	 * </code>
 	 *
 	 * @param  string            $container
 	 * @return Menu
 	 */
-	public static function container($containers = '', $prefix_links = false)
+	public static function handler($containers = '')
 	{
-		if( ! is_array($containers)) $containers = array($containers);
+		$containers = (array) $containers;
 
+		// Create a new MenuItems instance for the containers that don't exist yet
 		foreach ($containers as $container)
 		{
 			if( ! array_key_exists($container, static::$containers))
 			{
-				static::$containers[$container] = new MenuItems($container, $prefix_links);
+				static::$containers[$container] = new MenuItems;
 			}
 		}
 
-		return new Menu($containers);
+		// Return a Handler for the given containers
+		return new MenuHandler($containers);
 	}
 
 	/**
-	 * Magic Method for calling methods on the default container.
+	 * Magic Method for calling methods on the default handler.
 	 *
 	 * <code>
-	 *		// Call the "render" method on the default container
+	 *		// Call the "render" method on the default handler
 	 *		echo Menu::render();
 	 *
-	 *		// Call the "add" method on the default container
+	 *		// Call the "add" method on the default handler
 	 *		Menu::add('home', 'Home');
 	 * </code>
 	 */
 	public static function __callStatic($method, $parameters)
 	{
-		return call_user_func_array(array(static::container(), $method), $parameters);
+		return call_user_func_array(array(static::handler(), $method), $parameters);
 	}
 
 }
 
-class MenuItems {
+class MenuHandler {
+
+	public $handles = array();
 
 	/**
-	 * The menu items
-	 * @var array
-	 */
-	public $items = array();
-	
-	/**
-	 * The container name
-	 * @var string
-	 */
-	public $container;
-	
-	/**
-	 * Prefix the links with the container name of a custom string
+	 * Prefix the links with the container name or a custom string
 	 * 
 	 * @var mixed
 	 */
-	public $prefix_links;
-	
+	public $prefix = '';
+
 	/**
-	 * Creating a new MenuItems instance
+	 * Set the container(s) where this handler should act upon
 	 * 
-	 * @param string  $container
-	 * @param mixed $prefix_links
+	 * @param array $containers The containers to forward calls to
 	 */
-	public function __construct($container = '', $prefix_links = false)
+	public function __construct($containers)
 	{
-		$this->container = $container;
-		$this->prefix_links = $prefix_links;
+		$this->handles = $containers;
 	}
-	
+
 	/**
-	 * Creating a new MenuItems instance
+	 * Magic method that will pass the incoming calls to all of the containers this handler handles
 	 * 
-	 * @param string  $container
-	 * @param mixed $prefix_links
+	 * @param  string $method
+	 * @param  array $parameters
+	 * @return MenuHandler
 	 */
-	public static function factory()
+	public function __call($method, $parameters)
 	{
-		return new MenuItems;
-	}
-	
-	/**
-	 * Add a menu item to the MenuItems instance.
-	 *
-	 * <code>
-	 *		// Add a item to the default main menu
-	 *		Menu::container()->add('home', 'Homepage');
-	 *
-	 *		// Add a subitem to the homepage
-	 *		Menu::container()->add('home', 'Homepage', array(), MenuItems::factory()->add('home/sub', 'Subitem'));
-	 *
-	 *		// Add a item that has attributes applied to its tag
-	 *		Menu::add('home', 'Homepage', array('class' => 'fancy'));
-	 * </code>
-	 *
-	 * @param  string  $url
-	 * @param  string  $title
-	 * @param  array   $attributes
-	 * @param  array   $children
-	 * @return MenuItems
-	 */
-	public function add($url, $title, $children = null, $link_attributes = array(), $list_attributes = array(), $list_element = 'li')
-	{
-		$this->items[] = compact('url', 'title', 'children', 'link_attributes', 'list_attributes', 'list_element');
+		// Loop through the containers this handler handles
+		foreach($this->handles as $handle)
+		{
+			// Pass the call to the container
+			$menuitems = Menu::$containers[$handle];
+			Menu::$containers[$handle] = call_user_func_array(array($menuitems, $method), $parameters);
+		}
 
 		return $this;
 	}
 
 	/**
-	 * Add a raw html item to the MenuItems instance.
-	 *
-	 * <code>
-	 *		// Add a raw item to the default main menu
-	 *		Menu::container()->raw('<img src="img/seperator.gif">');
-	 * </code>
-	 *
-	 * @param  string  $url
-	 * @param  string  $title
-	 * @param  array   $attributes
-	 * @param  array   $children
-	 * @return MenuItems
+	 * Prefix links with a custom string
+	 * 
+ 	 * @return MenuHandler
 	 */
-	public function raw($html, $children = null, $list_attributes = array(), $list_element = 'li')
+	public function prefix($prefix = '')
 	{
-		$this->items[] = compact('html', 'children', 'list_attributes', 'list_element');
-		
+		$this->prefix = $prefix.'/';
+
 		return $this;
 	}
 
 	/**
-	 * Add menu items to another MenuItems instance.
-	 *
-	 * <code>
-	 * 		// Attach menu items to the default menu container
-	 *		Menu::attach(MenuItems::factory()->add('home', 'Homepage'));
-	 * </code>
-	 *
-	 * @param  MenuItems  $menuitems
-	 * @return Void
-	 */	
-	public function attach($menuitems)
+	 * Prefix links with the name of the container
+	 * 
+	 * @return MenuHandler
+	 */
+	public function prefix_container()
 	{
-		$this->items = array_merge($this->items, $menuitems->items);
+		$this->prefix = true;
+
+		return $this;
 	}
-	
+
+	/**
+	 * Get the evaluated string content for the menu containers this menuhandler acts upon.
+	 *
+	 * @return string
+	 */
+	public function render($attributes = array(), $element = 'ul')
+	{
+		$html = '';
+		foreach($this->handles as $handle)
+		{
+			$html .= $this->render_items(Menu::$containers[$handle]->items, $attributes, $element);
+		}
+
+		return $html;
+	}
+
 	/**
 	 * Get the evaluated string content of the view.
 	 * 
-	 * @param  array  		$attributes 		Attributes for the ul element
+	 * @param  MenuItems 	$menuitems         	The menu items to render
+	 * @param  array  		$attributes 		Attributes for the element
 	 * @param  string  		$element 			The type of the element (ul or ol)
-	 * @param  MenuItems 	$items          	Reusing the method for child menu items
 	 * @return string
 	 */
-	public function render($attributes = array(), $element = 'ul', $items = null)
+	public function render_items($menuitems, $attributes = array(), $element = 'ul')
 	{
-		if(is_null($items)) $items = $this->items;
+		if(is_null($menuitems)) return '';
 
-		if(is_null($items)) return '';
-
-		$menu_items = array();
-		foreach($items as $item)
+		$items = array();
+		foreach($menuitems as $menuitem)
 		{
-			if( ! array_key_exists('html', $item))
+			if( ! array_key_exists('html', $menuitem))
 			{
-				$url = ($this->prefix_links ? (gettype($this->prefix_links) == 'string' ? $this->prefix_links : $this->container) . '/' : '') . $item['url'];
+				$menuitem['url'] = (gettype($this->prefix) == 'string' ? $this->prefix : $this->container) . $menuitem['url'];
 
-				if(URI::is($url))
+				if($this->is_active($menuitem))
 				{
-					$item['attributes'] = merge_attributes($item['attributes'], array('class' => 'active'));
+					$menuitem['list_attributes'] = merge_attributes($menuitem['list_attributes'], array('class' => 'active'));
 				}
 
-				if(URI::is($url . '/*'))
+				if($this->has_active_children($menuitem))
 				{
-					$item['attributes'] = merge_attributes($item['attributes'], array('class' => 'active_subs'));
+					$menuitem['list_attributes'] = merge_attributes($menuitem['list_attributes'], array('class' => 'active-children'));
 				}
 			}
 			
-			$item['children'] = isset($item['children']->items) ? $this->render($attributes, $element, $item['children']->items) : '';
+			$menuitem['children'] = isset($menuitem['children']->items) ? $this->render_items($menuitem['children']->items, $attributes, $element) : '';
 
-			$menu_items[] = $this->render_item($item);
+			$items[] = $this->render_item($menuitem);
 		}
 		
-		return MenuHTML::$element($menu_items, $attributes);
+		return MenuHTML::$element($items, $attributes);
+	}
+
+	public function is_active($menuitem)
+	{
+		if($menuitem['url'] == URI::current())
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	public function has_active_children($menuitem)
+	{
+		if( ! isset($menuitem['children']->items))
+		{
+			return false;
+		}
+
+		foreach ($menuitem['children']->items as $child)
+		{
+			if($this->is_active($child))
+			{
+				return true;
+			}
+
+			if(isset($child['children']->items))
+			{
+				return $this->has_active_children($child);
+			}
+		}
 	}
 
 	/**
@@ -293,6 +241,99 @@ class MenuItems {
 		{
 			return MenuHTML::$list_element(MenuHTML::link($url, $title, $link_attributes).PHP_EOL.$children, $list_attributes);
 		}
+	}
+
+	/**
+	 * Get the evaluated string content for the menu containers this menuhandler acts upon.
+	 *
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->render();
+	}
+
+}
+
+class MenuItems {
+
+	/**
+	 * The menu items
+	 * 
+	 * @var array
+	 */
+	public $items = array();
+	
+	/**
+	 * Create a new MenuItems instance
+	 */
+	public static function factory()
+	{
+		return new static;
+	}
+	
+	/**
+	 * Add a menu item to the MenuItems instance.
+	 *
+	 * <code>
+	 *		// Add a item to the default main menu
+	 *		Menu::add('home', 'Homepage');
+	 *
+	 *		// Add a subitem to the homepage
+	 *		Menu::add('home', 'Homepage', Menu::items()->add('home/sub', 'Subitem'));
+	 *
+	 *		// Add a item that has attributes applied to its tag
+	 *		Menu::add('home', 'Homepage', null, array('class' => 'fancy'));
+	 * </code>
+	 *
+	 * @param  string  $url
+	 * @param  string  $title
+	 * @param  array   $attributes
+	 * @param  array   $children
+	 * @return MenuItems
+	 */
+	public function add($url, $title, $children = null, $link_attributes = array(), $list_attributes = array(), $list_element = 'li')
+	{
+		$this->items[] = compact('url', 'title', 'children', 'link_attributes', 'list_attributes', 'list_element');
+
+		return $this;
+	}
+
+	/**
+	 * Add a raw html item to the MenuItems instance.
+	 *
+	 * <code>
+	 *		// Add a raw item to the default main menu
+	 *		Menu::raw('<img src="img/seperator.gif">');
+	 * </code>
+	 *
+	 * @param  string  $url
+	 * @param  string  $title
+	 * @param  array   $attributes
+	 * @param  array   $children
+	 * @return MenuItems
+	 */
+	public function raw($html, $list_attributes = array(), $list_element = 'li')
+	{
+		$this->items[] = compact('html', 'list_attributes', 'list_element');
+		
+		return $this;
+	}
+
+	/**
+	 * Add menu items to another MenuItems instance.
+	 *
+	 * <code>
+	 * 		// Attach menu items to the default menu handler
+	 *		Menu::attach(Menu::items()->add('home', 'Homepage'));
+	 * </code>
+	 *
+	 * @param  MenuItems  $menuitems
+	 * @return Void
+	 */	
+	public function attach($menuitems)
+	{
+		$this->items = array_merge($this->items, $menuitems->items);
 	}
 
 }

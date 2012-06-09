@@ -98,4 +98,28 @@ class MenuHTML extends HTML {
 		return '<li'.static::attributes($attributes).'>'.$value.'</li>';
 	}
 
+	/**
+	 * Create a DT item
+	 *
+	 * @param  string   $value
+	 * @param  array   	$attributes
+	 * @return string
+	 */
+	public static function dt($value, $attributes)
+	{
+		return '<dt'.static::attributes($attributes).'>'.$value.'</dt>';
+	}
+
+	/**
+	 * Create a set of DD breasts
+	 *
+	 * @param  string   $value
+	 * @param  array   	$attributes
+	 * @return string
+	 */
+	public static function dd($value, $attributes)
+	{
+		return '<dd'.static::attributes($attributes).'>'.$value.'</dd>';
+	}
+
 }
