@@ -313,9 +313,9 @@ class MenuItems {
 	 * @param  array   $children
 	 * @return MenuItems
 	 */
-	public function raw($html, $list_attributes = array(), $list_element = 'li')
+	public function raw($html, $children = null, $list_attributes = array(), $list_element = 'li')
 	{
-		$this->items[] = compact('html', 'list_attributes', 'list_element');
+		$this->items[] = compact('html', 'children', 'list_attributes', 'list_element');
 		
 		return $this;
 	}
