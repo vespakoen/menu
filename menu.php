@@ -148,7 +148,7 @@ class MenuHandler {
 		$html = '';
 		foreach($this->handles as $handle)
 		{
-			$html .= $this->render_items(Menu::$containers[$handle]->items, $attributes, $element);
+			$html .= $this->render_items(Menu::$containers[$handle]->items, $attributes, $element, $handle);
 		}
 
 		return $html;
@@ -162,7 +162,7 @@ class MenuHandler {
 	 * @param  string  		$element 			The type of the element (ul or ol)
 	 * @return string
 	 */
-	public function render_items($menuitems, $attributes = array(), $element = 'ul')
+	public function render_items($menuitems, $attributes = array(), $element = 'ul', $handle = null)
 	{
 		if(is_null($menuitems)) return '';
 
@@ -171,7 +171,7 @@ class MenuHandler {
 		{
 			if( ! array_key_exists('html', $menuitem))
 			{
-				$menuitem['url'] = (gettype($this->prefix) == 'string' ? $this->prefix : $this->container) . $menuitem['url'];
+				$menuitem['url'] = (gettype($this->prefix) == 'string' ? $this->prefix : $handle) . $menuitem['url'];
 
 				if($this->is_active($menuitem))
 				{
