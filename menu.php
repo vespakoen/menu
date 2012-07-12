@@ -16,9 +16,9 @@ class Menu {
 	 * 
 	 * @return MenuItems
 	 */
-	public static function items()
+	public static function items($attributes = array(), $element = 'ul')
 	{
-		return new MenuItems();
+		return new MenuItems($attributes, $element);
 	}
 
 	/**
@@ -38,7 +38,7 @@ class Menu {
 	 * @param  string            $container
 	 * @return Menu
 	 */
-	public static function handler($containers = '')
+	public static function handler($containers = '', $attributes = array(), $element = 'ul')
 	{
 		$containers = (array) $containers;
 
@@ -47,7 +47,7 @@ class Menu {
 		{
 			if( ! array_key_exists($container, static::$containers))
 			{
-				static::$containers[$container] = new MenuItems;
+				static::$containers[$container] = new MenuItems($attributes, $element);
 			}
 		}
 
@@ -143,12 +143,22 @@ class MenuHandler {
 	 *
 	 * @return string
 	 */
-	public function render($attributes = array(), $element = 'ul')
+	public function render($attributes = array(), $element = null)
 	{
 		$html = '';
 		foreach($this->handles as $handle)
 		{
-			$html .= $this->render_items(Menu::$containers[$handle]->items, $attributes, $element, $handle);
+			if(empty($attributes))
+			{
+				$attributes = Menu::$containers[$handle]->attributes;
+			}
+
+			if(is_null($element))
+			{
+				$element = Menu::$containers[$handle]->element;
+			}
+
+			$html .= $this->render_items(Menu::$containers[$handle], $attributes, $element, $handle);
 		}
 
 		return $html;
@@ -162,31 +172,48 @@ class MenuHandler {
 	 * @param  string  		$element 			The type of the element (ul or ol)
 	 * @return string
 	 */
-	public function render_items($menuitems, $attributes = array(), $element = 'ul', $handle = null)
+	public function render_items($menuitems, $attributes = array(), $element = null, $handle = null)
 	{
-		if(is_null($menuitems)) return '';
+		if( ! isset($menuitems->items) || is_null($menuitems->items)) return '';
 
 		$items = array();
-		foreach($menuitems as $menuitem)
+		foreach($menuitems->items as $item)
 		{
-			if( ! array_key_exists('html', $menuitem))
+			if( ! array_key_exists('html', $item))
 			{
-				$menuitem['url'] = (gettype($this->prefix) == 'string' ? $this->prefix : $handle) . $menuitem['url'];
+				$item['url'] = (gettype($this->prefix) == 'string' ? $this->prefix : $handle) . $item['url'];
 
-				if($this->is_active($menuitem))
+				if($this->is_active($item))
 				{
-					$menuitem['list_attributes'] = merge_attributes($menuitem['list_attributes'], array('class' => 'active'));
+					$item['list_attributes'] = merge_attributes($item['list_attributes'], array('class' => 'active'));
 				}
 
-				if($this->has_active_children($menuitem))
+				if($this->has_active_children($item))
 				{
-					$menuitem['list_attributes'] = merge_attributes($menuitem['list_attributes'], array('class' => 'active-children'));
+					$item['list_attributes'] = merge_attributes($item['list_attributes'], array('class' => 'active-children'));
 				}
 			}
 			
-			$menuitem['children'] = isset($menuitem['children']->items) ? $this->render_items($menuitem['children']->items, $attributes, $element) : '';
+			if(isset($item['children']->items))
+			{
+				$item['children'] = $this->render_items($item['children'], array(), null, $handle);
+			}
+			else
+			{
+				$item['children'] = '';
+			}
 
-			$items[] = $this->render_item($menuitem);
+			$items[] = $this->render_item($item);
+		}
+
+		if(empty($attributes))
+		{
+			$attributes = $menuitems->attributes;
+		}
+
+		if(is_null($element))
+		{
+			$element = $menuitems->element;
 		}
 		
 		return MenuHTML::$element($items, $attributes);
@@ -263,13 +290,32 @@ class MenuItems {
 	 * @var array
 	 */
 	public $items = array();
+
+	/**
+	 * The menu's attributes
+	 */
+	public $attributes = array();
 	
+	/**
+	 * The menu's element
+	 */
+	public $element;
+
 	/**
 	 * Create a new MenuItems instance
 	 */
-	public static function factory()
+	public function __construct($attributes = array(), $element = 'ul')
 	{
-		return new static;
+		$this->attributes = $attributes;
+		$this->element = $element;
+	}
+
+	/**
+	 * Create a new MenuItems instance
+	 */
+	public static function factory($attributes = array(), $element = 'ul')
+	{
+		return new static($attributes, $element);
 	}
 	
 	/**
@@ -333,7 +379,12 @@ class MenuItems {
 	 */	
 	public function attach($menuitems)
 	{
-		$this->items = array_merge($this->items, $menuitems->items);
+		foreach ($menuitems->items as $item)
+		{
+			$this->items[] = $item;
+		}
+
+		return $this;
 	}
 
 }
