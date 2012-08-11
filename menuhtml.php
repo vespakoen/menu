@@ -21,11 +21,13 @@ class MenuHTML extends HTML {
 	 * @param  bool    $https
 	 * @return string
 	 */
-	public static function link($url, $title, $attributes = array(), $https = false)
+	public static function link($url, $title = null, $attributes = array(), $https = null)
 	{
 		$url = URL::to($url, $https);
 
-		return '<a href="'.$url.'"'.static::attributes($attributes).'>'.$title.'</a>';
+		if (is_null($title)) $title = $url;
+
+		return '<a href="'.$url.'"'.static::attributes($attributes).'>'.static::entities($title).'</a>';
 	}
 
 	/**
@@ -49,7 +51,14 @@ class MenuHTML extends HTML {
 			// lists may exist within nested lists, etc.
 			if (is_array($value))
 			{
-				$html .= static::listing($type, $value);
+				if (is_int($key))
+				{
+					$html .= static::listing($type, $value);
+				}
+				else
+				{
+					$html .= '<li>'.$key.static::listing($type, $value).'</li>';
+				}
 			}
 			else
 			{
