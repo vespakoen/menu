@@ -5,54 +5,73 @@ use Laravel\HTML;
 class Menu {
 
 	/**
-	 * All the menu containers
+	 * All the registered names and the associated itemlists
 	 *
 	 * @var array
 	 */
-	public static $containers = array();
+	public static $names = array();
 
 	/**
-	 * Create a new MenuItems array
+	 * Create a new ItemList
 	 * 
-	 * @return MenuItems
+	 * @param string	$name		The name of the ItemList
+	 * @param array		$attributes	The HTML attributes for the list element
+	 * @param string	$element	The HTML element for the list (ul or dd)
+	 * 
+	 * @return ItemList
 	 */
-	public static function items($attributes = array(), $element = 'ul')
+	public static function items($name = null, $attributes = array(), $element = 'ul')
 	{
-		return new MenuItems($attributes, $element);
+		return new ItemList($name, $attributes, $element);
 	}
 
 	/**
 	 * Get a MenuHandler.
 	 *
+	 * This method will retrieve itemlists by name,
+	 * If an ItemList doesn't already exist, it will
+	 * be registered and added to the handler.
+	 * 
 	 * <code>
-	 *		// Get the menu handler that handles the default container
+	 *		// Get the menu handler that handles the default name
 	 *		$handler = Menu::handler();
 	 *
-	 *		// Get a named menu handler for a single container
+	 *		// Get a named menu handler for a single name
 	 *		$handler = Menu::handler('backend');
 	 * 
-	 *		// Get a menu handler that handles multiple containers
+	 *		// Get a menu handler that handles multiple names
 	 *		$handler = Menu::handler(array('admin', 'sales'));
 	 * </code>
 	 *
-	 * @param  string            $container
-	 * @return Menu
+	 * @param  string	$name
+	 * 
+	 * @return MenuHandler
 	 */
-	public static function handler($containers = '', $attributes = array(), $element = 'ul')
+	public static function handler($names = '', $attributes = array(), $element = 'ul')
 	{
-		$containers = (array) $containers;
+		$names = (array) $names;
 
-		// Create a new MenuItems instance for the containers that don't exist yet
-		foreach ($containers as $container)
+		// Create a new Items instance for the names that don't exist yet
+		foreach ($names as $name)
 		{
-			if( ! array_key_exists($container, static::$containers))
+			if( ! array_key_exists($name, static::$names))
 			{
-				static::$containers[$container] = new MenuItems($attributes, $element);
+				static::$names[$name] = new ItemList($name, $attributes, $element);
 			}
 		}
 
-		// Return a Handler for the given containers
-		return new MenuHandler($containers);
+		// Return a Handler for the given names
+		return new MenuHandler($names);
+	}
+
+	/**
+	 * Get a MenuHandler for all registered itemlists
+	 * 
+	 * @return MenuHandler
+	 */
+	public static function all()
+	{
+		return new MenuHandler(array_keys(static::$names));
 	}
 
 	/**
@@ -75,203 +94,106 @@ class Menu {
 
 class MenuHandler {
 
+	/**
+	 * The names of the itemlists this handler acts on
+	 * 
+	 * @var array
+	 */
 	public $handles = array();
 
 	/**
-	 * Prefix the links with the container name or a custom string
+	 * Set the names of this handler on which it should act
 	 * 
-	 * @var mixed
-	 */
-	public $prefix = '';
-
-	/**
-	 * Set the container(s) where this handler should act upon
+	 * @param array $names The names of the itemlists
 	 * 
-	 * @param array $containers The containers to forward calls to
+	 * @return void
 	 */
-	public function __construct($containers)
+	public function __construct($names)
 	{
-		$this->handles = $containers;
+		$this->handles = $names;
 	}
 
 	/**
-	 * Magic method that will pass the incoming calls to all of the containers this handler handles
+	 * Magic method that will pass the incoming calls to
+	 * all of the itemlists this handler acts on
 	 * 
-	 * @param  string $method
-	 * @param  array $parameters
+	 * @param string	$method
+	 * @param array		$parameters
+	 * 
 	 * @return MenuHandler
 	 */
 	public function __call($method, $parameters)
 	{
-		// Loop through the containers this handler handles
-		foreach($this->handles as $handle)
+		// Loop through the ItemLists this handler handles
+		foreach($this->handles as $name)
 		{
-			// Pass the call to the container
-			$menuitems = Menu::$containers[$handle];
-			Menu::$containers[$handle] = call_user_func_array(array($menuitems, $method), $parameters);
+			// Forward the call to the ItemList
+			$item_list = Menu::$names[$name];
+			Menu::$names[$name] = call_user_func_array(array($item_list, $method), $parameters);
 		}
 
 		return $this;
 	}
 
 	/**
-	 * Prefix links with a custom string
+	 * Render all the itemlists this handler acts on and return the HTML
 	 * 
- 	 * @return MenuHandler
+	 * @param array $options Optional render settings
+	 * 
+	 * @return string
 	 */
-	public function prefix($prefix = '')
+	public function render($options = array())
 	{
-		$this->prefix = $prefix.'/';
+		$contents = '';
+		// Loop through the ItemLists this handler handles
+		foreach($this->handles as $name)
+		{
+			// Call the render method
+			$contents .= Menu::$names[$name]->render($options);
+		}
 
-		return $this;
+		return $contents;
 	}
 
 	/**
-	 * Prefix links with the name of the container
+	 * Find itemslists by name in any of the itemlists this menuhandler acts on
+	 * 
+	 * @param array $names the names to find
 	 * 
 	 * @return MenuHandler
 	 */
-	public function prefix_container()
+	public function find($names)
 	{
-		$this->prefix = true;
+		$names = (array) $names;
 
-		return $this;
+		$results = array();
+
+		// Loop through the listitems this handler handles
+		foreach($this->handles as $name)
+		{
+			// Find the menuitems
+			foreach(Menu::$names[$name]->find($names) as $item_list)
+			{
+				$results[] = $item_list;
+			}
+		}
+
+		$not_found_list_items = array_diff($names, array_pluck($results, 'name'));
+		if( ! empty($not_found_list_items))
+		{
+			throw new Exception('Some list items you are trying to find do not exist ('.implode(', ', $not_found_list_items).')');
+		}
+
+		foreach ($results as $item_list)
+		{
+			Menu::$names[$item_list->name] = $item_list;
+		}
+
+		return new MenuHandler($names);
 	}
 
 	/**
-	 * Get the evaluated string content for the menu containers this menuhandler acts upon.
-	 *
-	 * @return string
-	 */
-	public function render($attributes = array(), $element = null)
-	{
-		$html = '';
-		foreach($this->handles as $handle)
-		{
-			if(empty($attributes))
-			{
-				$attributes = Menu::$containers[$handle]->attributes;
-			}
-
-			if(is_null($element))
-			{
-				$element = Menu::$containers[$handle]->element;
-			}
-
-			$html .= $this->render_items(Menu::$containers[$handle], $attributes, $element, $handle);
-		}
-
-		return $html;
-	}
-
-	/**
-	 * Get the evaluated string content of the view.
-	 * 
-	 * @param  MenuItems 	$menuitems         	The menu items to render
-	 * @param  array  		$attributes 		Attributes for the element
-	 * @param  string  		$element 			The type of the element (ul or ol)
-	 * @return string
-	 */
-	public function render_items($menuitems, $attributes = array(), $element = null, $handle = null)
-	{
-		if( ! isset($menuitems->items) || is_null($menuitems->items)) return '';
-
-		$items = array();
-		foreach($menuitems->items as $item)
-		{
-			if( ! array_key_exists('html', $item))
-			{
-				$item['url'] = (gettype($this->prefix) == 'string' ? $this->prefix : $handle) . $item['url'];
-
-				if($this->is_active($item))
-				{
-					$item['list_attributes'] = merge_attributes($item['list_attributes'], array('class' => 'active'));
-				}
-
-				if($this->has_active_children($item))
-				{
-					$item['list_attributes'] = merge_attributes($item['list_attributes'], array('class' => 'active-children'));
-				}
-			}
-			
-			if(isset($item['children']->items))
-			{
-				$item['children'] = $this->render_items($item['children'], array(), null, $handle);
-			}
-			else
-			{
-				$item['children'] = '';
-			}
-
-			$items[] = $this->render_item($item);
-		}
-
-		if(empty($attributes))
-		{
-			$attributes = $menuitems->attributes;
-		}
-
-		if(is_null($element))
-		{
-			$element = $menuitems->element;
-		}
-		
-		return MenuHTML::$element($items, $attributes);
-	}
-
-	public function is_active($menuitem)
-	{
-		if($menuitem['url'] == URI::current())
-		{
-			return true;
-		}
-
-		return false;
-	}
-
-	public function has_active_children($menuitem)
-	{
-		if( ! isset($menuitem['children']->items))
-		{
-			return false;
-		}
-
-		foreach ($menuitem['children']->items as $child)
-		{
-			if($this->is_active($child))
-			{
-				return true;
-			}
-
-			if(isset($child['children']->items))
-			{
-				return $this->has_active_children($child);
-			}
-		}
-	}
-
-	/**
-	 * Turn item data into HTML
-	 * 
-	 * @param 	array 	$item 		The menu item
-	 * @return 	string 	The HTML
-	 */
-	protected function render_item($item)
-	{
-		extract($item);
-
-		if(array_key_exists('html', $item))
-		{
-			return MenuHTML::$list_element($html.PHP_EOL.$children, $list_attributes);
-		}
-		else
-		{
-			return MenuHTML::$list_element(MenuHTML::link($url, $title, $link_attributes).PHP_EOL.$children, $list_attributes);
-		}
-	}
-
-	/**
-	 * Get the evaluated string content for the menu containers this menuhandler acts upon.
+	 * Get the evaluated string content for the itemlists this menuhandler acts on.
 	 *
 	 * @return string
 	 */
@@ -282,7 +204,14 @@ class MenuHandler {
 
 }
 
-class MenuItems {
+class ItemList {
+
+	/**
+	 * The name of this itemlist
+	 * 
+	 * @var string
+	 */
+	public $name;
 
 	/**
 	 * The menu items
@@ -290,57 +219,88 @@ class MenuItems {
 	 * @var array
 	 */
 	public $items = array();
-
-	/**
-	 * The menu's attributes
-	 */
-	public $attributes = array();
 	
 	/**
-	 * The menu's element
+	 * The itemlist's parent item
+	 * 
+	 * @var Item
 	 */
-	public $element;
+	public $item;
 
 	/**
-	 * Create a new MenuItems instance
+	 * Prefix the links with a custom string
+	 * 
+	 * @var mixed
 	 */
-	public function __construct($attributes = array(), $element = 'ul')
-	{
-		$this->attributes = $attributes;
-		$this->element = $element;
-	}
+	public $prefix;
 
 	/**
-	 * Create a new MenuItems instance
+	 * Prefix the links with the parent(s) itemlist name(s)
+	 * 
+	 * @var boolean
 	 */
-	public static function factory($attributes = array(), $element = 'ul')
+	public $prefix_parents = false;
+
+	/**
+	 * Prefix links with the name of the itemlist at the very top of the tree
+	 * 
+	 * @var boolean
+	 */
+	public $prefix_handler = false;
+
+	/**
+	 * Create a new Items instance
+	 * 
+	 * @param string	$name 				The itemlist's name
+	 * @param array		$list_attributes	Attributes for the itemlist's HMTL element
+	 * @param string	$list_element		The HTML element for the itemlist
+	 * 
+	 * @return void
+	 */
+	public function __construct($name = null, $list_attributes = array(), $list_element = 'ul')
 	{
-		return new static($attributes, $element);
+		$this->name = $name;
+		$this->options = compact(
+			'list_attributes',
+			'list_element'
+		);
 	}
 	
 	/**
-	 * Add a menu item to the MenuItems instance.
+	 * Add a link item to the itemlist instance.
 	 *
 	 * <code>
-	 *		// Add a item to the default main menu
+	 *		// Add a item to the default menu
 	 *		Menu::add('home', 'Homepage');
 	 *
-	 *		// Add a subitem to the homepage
+	 *		// Add a item with a subitem to the default menu
 	 *		Menu::add('home', 'Homepage', Menu::items()->add('home/sub', 'Subitem'));
 	 *
-	 *		// Add a item that has attributes applied to its tag
+	 *		// Add a item with attributes for the item's HTML element
 	 *		Menu::add('home', 'Homepage', null, array('class' => 'fancy'));
 	 * </code>
 	 *
-	 * @param  string  $url
-	 * @param  string  $title
-	 * @param  array   $attributes
-	 * @param  array   $children
+	 * @param string	$url				
+	 * @param string	$title			
+	 * @param ItemList	$children			
+	 * @param array		$link_attributes	
+	 * @param array		$item_attributes	
+	 * @param string	$item_element		
+	 * 
 	 * @return MenuItems
 	 */
-	public function add($url, $title, $children = null, $link_attributes = array(), $list_attributes = array(), $list_element = 'li')
+	public function add($url, $title, $children = null, $link_attributes = array(), $item_attributes = array(), $item_element = 'li')
 	{
-		$this->items[] = compact('url', 'title', 'children', 'link_attributes', 'list_attributes', 'list_element');
+		$options = compact('link_attributes', 'item_attributes', 'item_element');
+
+		$item = new Item($this, 'link', $title, $children, $options, $url);
+
+		if( ! is_null($children))
+		{
+			$children->item = $item;
+		}
+
+		$this->items[] = $item;
 
 		return $this;
 	}
@@ -357,34 +317,445 @@ class MenuItems {
 	 * @param  string  $title
 	 * @param  array   $attributes
 	 * @param  array   $children
+	 * 
 	 * @return MenuItems
 	 */
-	public function raw($html, $children = null, $list_attributes = array(), $list_element = 'li')
+	public function raw($html, $children = null, $item_attributes = array(), $item_element = 'li')
 	{
-		$this->items[] = compact('html', 'children', 'list_attributes', 'list_element');
+		$options = compact('item_attributes', 'item_element');
+
+		$item = new Item($this, 'raw', $html, $children, $options);
+
+		if( ! is_null($children))
+		{
+			$children->item = $item;
+		}
+
+		$this->items[] = $item;
 		
 		return $this;
 	}
 
 	/**
-	 * Add menu items to another MenuItems instance.
+	 * Prefix this itemlist with a string
+	 * 
+	 * @param string $prefix
+	 * 
+	 * @return ItemList
+	 */
+	public function prefix($prefix)
+	{
+		$this->prefix = $prefix;
+
+		return $this;
+	}
+
+	/**
+	 * Prefix this itemlist with the parent itemlist(s) name(s)
+	 * 
+	 * @return ItemList
+	 */
+	public function prefix_parents()
+	{
+		$this->prefix_parents = true;
+
+		return $this;
+	}
+
+	/**
+	 * Prefix this itemlist with the name of the itemlist at the very top of the tree
+	 * 
+	 * @return ItemList
+	 */
+	public function prefix_handler()
+	{
+		$this->prefix_handler = true;
+
+		return $this;
+	}
+
+	/**
+	 * Add menu items to another itemlist.
 	 *
 	 * <code>
-	 * 		// Attach menu items to the default menu handler
+	 * 		// Attach menu items to the default menuhandler
 	 *		Menu::attach(Menu::items()->add('home', 'Homepage'));
 	 * </code>
 	 *
 	 * @param  MenuItems  $menuitems
 	 * @return Void
 	 */	
-	public function attach($menuitems)
+	public function attach($item_list)
 	{
-		foreach ($menuitems->items as $item)
+		foreach ($item_list->items as $item)
 		{
+			$item->list = $this;
+
 			$this->items[] = $item;
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Set the name for this itemlist
+	 * 
+	 * @param string	$name
+	 * 
+	 * @return ItemList
+	 */
+	public function name($name)
+	{
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * Get the evaluated string content of the itemlist.
+	 * 
+	 * @param  array  		$options
+	 * 
+	 * @return string
+	 */
+	public function render($options = array())
+	{
+		$options = array_merge($this->options, $options);
+
+		if( ! array_key_exists('current_depth', $options))
+		{
+			$options['current_depth'] = 1;
+		}
+		else
+		{
+			$options['current_depth']++;
+		}
+
+		if(array_key_exists('max_depth', $options) && $options['current_depth'] > $options['max_depth'])
+		{
+			return;
+		}
+
+		extract($options);
+
+		$contents = '';
+		foreach ($this->items as $item)
+		{
+			$contents .= $item->render($options);
+		}
+
+		return MenuHTML::$list_element($contents, $list_attributes);
+	}
+
+	/**
+	 * Find itemslists by name (itself, or on of it's children)
+	 * 
+	 * @param array $names the names to find
+	 * 
+	 * @return ItemList
+	 */
+	public function find($names)
+	{
+		$names = (array) $names;
+
+		$results = array();
+
+		foreach ($names as $name)
+		{
+			if($this->name == $name)
+			{
+				$results[] = $this;
+			}
+
+			foreach ($this->items as $item)
+			{
+				if($item->has_children() && $found = $item->children->find($name))
+				{
+					foreach ($found as $list_item)
+					{
+						$results[] = $list_item;
+					}
+				}
+			}
+		}
+
+		return $results;
+	}
+
+	public function __toString()
+	{
+		return $this->render();
+	}
+
+}
+
+class Item {
+
+	/**
+	 * The list this item is in
+	 * 
+	 * @var ItemList
+	 */
+	public $list;
+
+	/**
+	 * The type of this item (link / raw)
+	 * 
+	 * @var string
+	 */
+	public $type;
+
+	/**
+	 * The text of this item
+	 * 
+	 * @var string
+	 */
+	public $text;
+
+	/**
+	 * The children this item has
+	 * 
+	 * @var ItemList
+	 */
+	public $children;
+
+	/**
+	 * The default render options for this item
+	 * 
+	 * @var string
+	 */
+	public $options = array(
+		'active_class' => 'active',
+		'active_child_class' => 'active-child'
+	);
+
+	/**
+	 * The URL for this item (without prefixes)
+	 * 
+	 * @var string
+	 */
+	public $url;
+
+	/**
+	 * Create a new item instance
+	 * 
+	 * @param ItemList	$list
+	 * @param string	$type
+	 * @param string	$text
+	 * @param ItemList	$children
+	 * @param array		$options
+	 * @param string	$url
+	 * 
+	 * @return void
+	 */
+	public function __construct($list, $type, $text, $children, $options, $url = null)
+	{
+		$this->list = $list;
+		$this->type = $type;
+		$this->text = $text;
+		$this->children = $children;
+		$this->options = $options;
+		$this->url = $url;
+	}
+
+	/**
+	 * Get all the parent items of this item
+	 * 
+	 * @return array
+	 */
+	public function get_parents()
+	{
+		$parents = array();
+
+		$list = $this->list;
+
+		while( ! is_null($list->item))
+		{
+			$parents[] = $list->item;
+
+			$list = isset($list->item->list) ? $list->item->list : null;
+		}
+
+		$parents = array_reverse($parents);
+
+		return $parents;
+	}
+
+	public function get_parent_items()
+	{
+		$parents = array();
+
+		$list = $this->list;
+
+		while( ! is_null($list->item))
+		{
+			$parents[] = $list->item;
+
+			$list = isset($list->item->list) ? $list->item->list : null;
+		}
+
+		$parents = array_reverse($parents);
+
+		return $parents;
+	}
+
+
+	public function get_parent_lists()
+	{
+		$parents = array();
+
+		$list = $this->list;
+
+		$parents[] = $list;
+
+		while(isset($list->item->list) && ! is_null($list->item->list))
+		{
+			$parents[] = $list->item->list;
+
+			$list = isset($list->item->list) ? $list->item->list : null;
+		}
+
+		$parents = array_reverse($parents);
+
+		return $parents;	
+	}
+
+	public function get_handler_segment()
+	{
+		$parent_lists = $this->get_parent_lists();
+
+		$handler = array_pop($parent_lists);
+
+		return is_null($handler->name) ? '' : $handler->name;
+	}
+
+	public function get_parent_item_urls()
+	{
+		$urls = array();
+
+		$parent_items = $this->get_parent_items();
+
+		foreach ($parent_items as $item)
+		{
+			if($item->type == 'link' && ! is_null($item->url))
+			{
+				$urls[] = $item->url;
+			}
+		}
+
+		return $urls;
+	}
+
+	/**
+	 * Get the evaluated URL based on the prefix settings
+	 * 
+	 * @return string
+	 */
+	public function get_url()
+	{
+		$segments = array();
+
+		if( ! is_null($this->list->prefix))
+		{
+			$segments[] = $this->list->prefix;
+		}
+
+		if($this->list->prefix_parents)
+		{
+			$segments = $segments + $this->get_parent_item_urls();
+		}
+		
+		if($this->list->prefix_handler)
+		{
+			$segments[] = $this->get_handler_segment();
+		}
+
+		$segments[] = $this->url;
+
+		return implode('/', $segments);
+	}
+
+	/**
+	 * Check if this item is active
+	 * 
+	 * @return boolean
+	 */
+	public function is_active()
+	{
+		return $this->get_url() == URI::current();
+	}
+
+	/**
+	 * Check if this item has children
+	 * 
+	 * @return boolean
+	 */
+	public function has_children()
+	{
+		return ! is_null($this->children);
+	}
+
+	/**
+	 * Check if this item has an active child
+	 * 
+	 * @return boolean
+	 */
+	public function has_active_child()
+	{
+		if( ! $this->has_children())
+		{
+			return false;
+		}
+
+		foreach ($this->children->items as $child)
+		{
+			if($child->is_active())
+			{
+				return true;
+			}
+
+			if($child->has_children())
+			{
+				return $child->has_active_child();
+			}
+		}
+	}
+
+	/**
+	 * Render the item
+	 * 
+	 * @param array
+	 * 
+	 * @return string
+	 */
+	public function render($options = array())
+	{
+		$options = array_merge($this->options, $options);
+
+		extract($options);
+
+		if($this->is_active())
+		{
+			$item_attributes = merge_attributes($item_attributes, array('class' => $options['active_class']));
+		}
+
+		if($this->has_active_child())
+		{
+			$item_attributes = merge_attributes($item_attributes, array('class' => $options['active_child_class']));
+		}
+
+		$children = $this->has_children() ? $this->children->render($options) : '';
+
+		if($this->type == 'raw')
+		{
+			$content = $this->text;
+		}
+		else
+		{
+			$content = MenuHTML::link($this->get_url(), $this->text, $link_attributes);
+		}
+						
+		return MenuHTML::$item_element($content, $item_attributes).$children;
 	}
 
 }

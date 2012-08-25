@@ -2,7 +2,20 @@
 
 use Laravel\HTML;
 
-class MenuHTML extends HTML {
+class MenuHTML {
+
+	/**
+	 * Convert HTML characters to entities.
+	 *
+	 * The encoding specified in the application configuration file will be used.
+	 *
+	 * @param  string  $value
+	 * @return string
+	 */
+	public static function entities($value)
+	{
+		return htmlentities($value, ENT_QUOTES, Config::get('application.encoding'), false);
+	}
 
 	/**
 	 * Generate a HTML link.
@@ -21,43 +34,13 @@ class MenuHTML extends HTML {
 	 * @param  bool    $https
 	 * @return string
 	 */
-	public static function link($url, $title, $attributes = array(), $https = false)
+	public static function link($url, $title = null, $attributes = array(), $https = false)
 	{
 		$url = URL::to($url, $https);
 
+		if (is_null($title)) $title = $url;
+
 		return '<a href="'.$url.'"'.static::attributes($attributes).'>'.$title.'</a>';
-	}
-
-	/**
-	 * Generate an ordered or un-ordered list.
-	 *
-	 * @param  string  $type
-	 * @param  array   $list
-	 * @param  array   $attributes
-	 * @return string
-	 */
-	public static function listing($type, $list, $attributes = array())
-	{
-		$html = '';
-
-		if (count($list) == 0) return $html;
-
-		foreach ($list as $key => $value)
-		{
-			// If the value is an array, we will recurse the function so that we can
-			// produce a nested list within the list being built. Of course, nested
-			// lists may exist within nested lists, etc.
-			if (is_array($value))
-			{
-				$html .= static::listing($type, $value);
-			}
-			else
-			{
-				$html .= $value;
-			}
-		}
-
-		return '<'.$type.static::attributes($attributes).'>'.$html.'</'.$type.'>';
 	}
 
 	/**
@@ -120,6 +103,11 @@ class MenuHTML extends HTML {
 	public static function dd($value, $attributes)
 	{
 		return '<dd'.static::attributes($attributes).'>'.$value.'</dd>';
+	}
+
+	public static function ul($value, $attributes)
+	{
+		return '<ul'.static::attributes($attributes).'>'.$value.'</ul>';
 	}
 
 }

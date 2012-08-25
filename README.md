@@ -2,14 +2,15 @@
 
 ## Why?
 
-There are some great Menu builders out there already, but this has some extra features that make it really cool and handy to use
+There are some great Menu builders out there already,
+but this has some extra features that make it really cool and handy to use
 
 
 ## What?
 
 A Menu bundle that will make managing links a breeze!
-This Menu bundle allows you to have **Menu Containers**, they basically allow you to make multiple Menus. As an added bonus, you interact with Menu Containers via
-a **Menu Handler**
+This Menu bundle allows you to have **item lists**, they basically allow you to make multiple Menus. As an added bonus, you interact with ItemLists via
+a **menu handler**
 
 Menu Handlers allow you to interact with multiple Menu Containers at once, or render multiple containers at once.
 
@@ -89,17 +90,14 @@ By doing this, every link (including subs) will be prefixed with the given strin
 	*/
 ```
 
-What if we want the url prefix to be the container name? we can do that by adding `->prefix_container()` at the end
+What if we want the url prefix to be the parent item's URLs? we can do that by adding `->prefix_parents()` at the end
 
 ```php
 	<?php
-	Menu::handler('storeowner')
+	Menu::handler('reseller')
 		->add('accounts', 'Accounts');
-	
-	Menu::handler('storeowner')
-		->add('pages', 'Pages');
 
-	echo Menu::handler('reseller')->prefix_container();
+	echo Menu::handler('reseller')->prefix_parents();
 	/* returns:
 	 * <ul>
 	 *     <li>
@@ -107,15 +105,6 @@ What if we want the url prefix to be the container name? we can do that by addin
 	 *     </li>
 	 * </ul>
 	 */
-
-
-	echo Menu::handler('storeowner');
-	/* returns:
-	 * <ul>
-	 *     <li><a href="http://domain.com/storeowner/accounts">Accounts</a></li>
-	 *     <li><a href="http://domain.com/storeowner/pages">Pages</a></li>
-	 * </ul>
-	*/
 ```
 
 Here is an example that shows you how to add children to a menu, how to set some additional attributes for the link and list item and how to specify a custom listitem element type. Wow that was a lot! Just take a close look at the example ;)
@@ -181,5 +170,91 @@ In this example, we use an "ol" (ordered list) element in stead of the default "
 
 This Menu builder will automatically add a "active" class to a list item in case the URL matches, and will add an "active-children" class to all items that have a child item that is active.
 
+## Some other examples
+
+```php
+<?php
+	function initialize_menu($parent_id = 0)
+	{
+		$pages = DB::table('pages')
+			->where_parent_id($parent_id)
+			->get();
+
+		foreach ($pages as $page)
+		{
+			if($parent_id == 0)
+			{
+				$menus = Menu::handler(explode(',', $page->menus));
+			}
+			else
+			{
+				$menus = Menu::all()
+					->find($parent_id);
+			}
+
+			$menus->add($page->url, $page->menu, Menu::items($page->id));
+
+			initialize_menu($page->id);
+		}
+	}
+
+	
+	$menu = Menu::handler('menu');
+	
+	$languages = array(
+		'en' => 'English',
+		'nl' => 'Nederlands'
+	);
+
+	foreach ($languages as $code => $name)
+	{
+		$menu->add($code, $name, Menu::items($code));
+	}
+
+	// Add some items to the dutch menu
+	$menu
+		->find('nl')
+		->prefix_parents()
+		->add('welkom', 'Welkom')
+		->add('over-ons', 'Over ons');
+		
+
+	// Add some items to the english menu
+	$menu
+		->find('en')
+		->prefix_parents()
+		->add('welcome', 'Welcome')
+		->add('about-us', 'About us');
+		
+
+	// Render the top level only (languages)
+	echo $menu->render(array(
+		'max_depth' => 1
+	));
+
+	// Render the english menu
+	echo $menu->find('en');
+
+	// I used the $menu variable (for less typing in this example)
+	// If you want to render the menu in another file, just reference
+	// It by the handler again.
+	
+	// Render the dutch menu
+	echo Menu::handler('menu')->find('nl');
+
+	// Render some categories
+	Menu::handler('categories')
+		->add('algorithms', 'Algorithms', Menu::items()->prefix_parents()
+			->add('cryptography', 'Cryptography')
+			->add('data-structures', 'Data Structures')
+			->add('digital-image-processing', 'Digital Image Processing')
+			->add('memory-management', 'Memory Management'))
+		->add('graphics-and-multimedia', 'Graphics & Multimedia', Menu::items()->prefix_parents()
+			->add('directx', 'DirectX')
+			->add('flash', 'Flash')
+			->add('opengl', 'OpenGL'));
+
+	echo Menu::handler('categories');
+```
 
 # Enjoy it, improvements are welcome!
