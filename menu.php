@@ -313,10 +313,10 @@ class ItemList {
 	 *		Menu::raw('<img src="img/seperator.gif">');
 	 * </code>
 	 *
-	 * @param  string  $url
-	 * @param  string  $title
-	 * @param  array   $attributes
-	 * @param  array   $children
+	 * @param  string	$html
+	 * @param  ItemList	$children
+	 * @param  array	$attributes
+	 * @param  array	$children
 	 * 
 	 * @return MenuItems
 	 */
