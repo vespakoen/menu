@@ -1,0 +1,240 @@
+
+<html>
+<head>
+	<title>Koen Schmeets - Freelancer</title>
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
+	<link href="css/style.css" rel="stylesheet" type="text/css">
+	<link href="css/prettyprint/sunburst.css" rel="stylesheet" type="text/css">
+	<script src="http://paste.laravel.com/js/prettify.js"></script>
+</head>
+<body onload="prettyPrint()">
+	<div id="header">
+		<a href="http://www.koenschmeets.nl"><img src="img/logo_black.png"></a>
+		<div class="me">
+			Koen Schmeets<br>
+			<br>
+			+31 (0)6 312 054 27<br>
+			<a target="_blank" href="mailto:hello@koenschmeets.nl">hello@koenschmeets.nl</a>
+		</div>
+		<div class="clear"></div>
+	</div>
+	<div class="content">
+		<h1>Laravel Menu</h1>
+		<p>
+			Are you the type of person that writes menus by hand in view files or do you find yourself looking for the best place to store links to pages on your website? then Laravel Menu is for you!
+		</p>
+		<h2>Key concepts</h2>
+		<h4>Item lists</h4>
+		<p>
+			An item list is what a menu is all about and it should be pretty self explanatory because it simply stores a list of items.<br>
+			there are some configurations available for an item list.<br>
+			You can, for example set the HMTL element that will be used to render the list, prefix every item in the list with all the parent's url segments, and a lot more.
+			We will explore these options later.
+		</p>
+		<h4>Menu handlers</h4>
+		<p>
+			Menu handlers allow us to create and interact with item lists and act as a place to store and retrieve our menus.<br>
+			Because we are able to interact with multiple item lists at the same time some interesting possibilities become available to us.
+		</p>
+		<h4>Items</h4>
+		<p>
+			The Laravel Menu bundle has 2 types of items available out of the box.
+			<ul>
+				<li>
+					<h4>Link</h4>
+					For creating links to other pages
+				</li>
+				<li>
+					<h4>Raw</h4>
+					Be free to add anything you like in the item.<br>
+					This type is usually used for dividers, titles etc.
+				</li>
+			</ul>
+			The HTML element and attributes for the item can also be changed, more on this topic later.
+		</p>
+	</div>
+	<div class="code">
+		<h2>Installing</h2>
+		<p>
+			The Laravel Menu bundle is installable via the artisan command line tool.<br>
+			Open the terminal and navigate to your Laravel project's root.<br>
+			Now type the following command
+		</p>
+		<code class="prettyprint">
+			php artisan bundle:install menu
+		</code>
+		<h2>Activating</h2>
+		<p>
+			To let Laravel know the Laravel Menu bundle should be started, open up <i>application/bundles.php</i> and add the following lines to the bundles array.
+		</p>
+		<code class="prettyprint">
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;'menu' =&gt; array(<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'auto' =&gt; true<br>&nbsp;&nbsp;&nbsp;&nbsp;),<br>		</code>
+		<h2>Diving in</h2>
+		<p>
+			The Laravel Menu bundles consists of a couple of classes, but you can interact with all of them via the <i>Menu</i> class.<br>
+			Let's take a look at the <strong>handler</strong> method. it takes a string or an array as the only argument, the string(s) given are the names for the item lists we want to retrieve.<br>
+			If an itemlist we asked for didn't exist yet, it will create it for us.<br>
+			After the menu class has found and created the item lists we want, it will hand back a menuhandler that handles the item lists we asked for.
+		</p>
+		<code class="prettyprint lang-php">
+			// Get a MenuHandler instance that handles an ItemList named "main"<br>
+			Menu::handler('main');		</code>
+		<p>
+			When we call a method on this menu handler, it will simply forward the call to all the item lists that it handles.<br>
+			In order to find out what we can do now that we have a handler, we need to take a look at the methods on the <i>ItemList</i> class.<br>
+			<br>
+			The <i>ItemList</i> class has a method called <strong>add</strong> that you are probably going to use a lot. It adds an <i>Item</i> of type "link" to the <i>ItemList</i>.
+		</p>
+		<code class="prettyprint lang-php">
+			Menu::handler('main')-&gt;add('home', 'Homepage');<br>
+			<br>
+			/* The <strong>add</strong> method takes these arguments<br>
+			<table>
+				<tr>
+					<th>$url</th>
+					<td>string</td>
+					<td>The URL to another page</td>
+				</tr>
+				<tr>
+					<th>$title</th>
+					<td>string</td>
+					<td>The visible string on the link</td>
+				</tr>
+				<tr>
+					<th>$children (default = null)</th>
+					<td>ItemList</td>
+					<td>(optional) The children of this page</td>
+				</tr>
+				<tr>
+					<th>$link_attributes (default = array())</th>
+					<td>array</td>
+					<td>(optional) HTML attributes for the &lt;a&gt; element</td>
+				</tr>
+				<tr>
+					<th>$item_attributes (default = array())</th>
+					<td>array</td>
+					<td>(optional) HTML attributes for the list element (usually &lt;li&gt;)</td>
+				</tr>
+				<tr>
+					<th>$item_element (default = 'li')</th>
+					<td>string</td>
+					<td>(optional) The type of the list element</td>
+				</tr>
+			</table>
+			*/
+		</code>
+		<p>
+			Let's take a look at the <strong>raw</strong> method, for adding "anything" to the list.
+		</p>
+		<code class="prettyprint lang-php">
+			Menu::handler('main')-&gt;raw('&lt;img src=&quot;img/seperator.gif&quot;&gt;');<br>
+			<br>
+			/* The <strong>raw</strong> method takes these arguments
+			<table>
+				<tr>
+					<th>$html</th>
+					<td>string</td>
+					<td>The contents of the item</td>
+				</tr>
+				<tr>
+					<th>$children (default = null)</th>
+					<td>ItemList</td>
+					<td>(optional) The children of this item</td>
+				</tr>
+				<tr>
+					<th>$item_attributes (default = array())</th>
+					<td>array</td>
+					<td>(optional) HTML attributes for the list element (usually &lt;li&gt;)</td>
+				</tr>
+				<tr>
+					<th>$item_element (default = 'li')</th>
+					<td>string</td>
+					<td>(optional) The type of the list element</td>
+				</tr>
+			</table>
+			*/
+		</code>
+		<p>
+			Great! Now that we have learned how to add items to an item list, let's have a look at how we add children to a item.<br>
+			Every item can have children, the children object is just another <i>ItemList</i>. As we have seen before, we can create item lists via the <strong>handler</strong> method, but this method returns a MenuHandler, making it unusable for item children.<br>
+			So what do we use? the <strong>items</strong> method returns a fresh <i>ItemList</i> object. Let's have a look.
+		</p>
+		<code class="prettyprint lang-php">
+			<br>Menu::handler('main')<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('home', 'Homepage', Menu::items()<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('sub-of-home', 'Sub of homepage'));<br><br>
+			<br>
+			/* The <strong>items</strong> method takes these arguments
+			<table>
+				<tr>
+					<th>$name (default = null)</th>
+					<td>string</td>
+					<td>(optional) The name (=identifier) of this ItemList</td>
+				</tr>
+				<tr>
+					<th>$attributes (default = array())</th>
+					<td>array</td>
+					<td>(optional) HTML attributes for the ItemList element (usually &lt;ul&gt;)</td>
+				</tr>
+				<tr>
+					<th>$element (default = 'ul')</th>
+					<td>string</td>
+					<td>(optional) The type of the ItemList element</td>
+				</tr>
+			</table>
+			*/
+		</code>
+		<p>
+			So now we know how to build menus, add items and items with children.<br>
+			Let's find out how to display the menus.<br>
+			The <i>MenuHandler</i> and <i>ItemList</i> classes implement the "__toString" method, that calls the <strong>render</strong> method.<br>
+			This means you can simply echo the MenuHandler or ItemList object.<br>
+			Here is an example to make things more clear.
+		</p>
+		<code class="prettyprint lang-php">
+			<br>&nbsp;&nbsp;&nbsp;&nbsp;echo Menu::handler('main');<br><br>&nbsp;&nbsp;&nbsp;&nbsp;// Is the same as<br><br>&nbsp;&nbsp;&nbsp;&nbsp;echo Menu::handler('main')-&gt;render();<br>		</code>
+		<p>
+			The render method (only) takes an array with render options, presented below.
+			<ul>
+				<li>
+					<strong>max_depth</strong><br>
+					Hide items below a certain depth
+				</li>
+				<li>
+					<strong>active_class</strong><br>
+					Change the (automatically added) class for the active item
+				</li>
+				<li>
+					<strong>active_child_class</strong><br>
+					Change the (automatically added) class for the item that has an active child item
+				</li>
+			</ul><br>
+			Now that we have the basics under control, we are going to explore some other cool features this bundle provides.
+		</p>
+		<h2>Extra features</h2>
+		<p>
+			You might have noticed earlier that the <strong>items</strong> method takes a "name" as the first argument.<br>
+			And you also might have wondered what it is for.<br>
+			<br>
+			<h3>Sorry mates, I've got some work todo below</h3>
+			TODO: explain the <strong>all</strong> and <strong>find</strong> method (see Practical example #1 & #2 for more info)<br>
+			TODO: explain the <strong>prefix</strong>, <strong>prefix_parents</strong> and <strong>prefix_handler</strong> methods
+		</p>
+		<h2>Practical examples</h2>
+		<h4>#1</h4>
+		<code class="prettyprint lang-php">
+			<br>function initialize_menu($parent_id = 0)<br>{<br>&nbsp;&nbsp;&nbsp;&nbsp;// Load the pages from the database<br>&nbsp;&nbsp;&nbsp;&nbsp;$pages = DB::table('pages')<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;where_parent_id($parent_id)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;get();<br><br>&nbsp;&nbsp;&nbsp;&nbsp;// Loop through the pages<br>&nbsp;&nbsp;&nbsp;&nbsp;foreach ($pages as $page)<br>&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if($parent_id == 0)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Get a menu handler for the menus this page should go in<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$menus = Menu::handler(explode(',', $page-&gt;menus));<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Find the item list that has a name of the parent_id we are looking for<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$menus = Menu::all()<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;find($parent_id);<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Add the page to the item list, and add the children item list (empty)<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// but named with the page's id<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$menus-&gt;add($page-&gt;url, $page-&gt;menu, Menu::items($page-&gt;id));<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Attach the children (if any) of this page<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialize_menu($page-&gt;id);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>}<br>		</code>
+		<h4>#2</h4>
+		<code class="prettyprint lang-php">
+			<br>$menu = Menu::handler('menu');<br><br>$languages = array(<br>&nbsp;&nbsp;&nbsp;&nbsp;'en' =&gt; 'English',<br>&nbsp;&nbsp;&nbsp;&nbsp;'nl' =&gt; 'Nederlands'<br>);<br><br>foreach ($languages as $code =&gt; $name)<br>{<br>&nbsp;&nbsp;&nbsp;&nbsp;$menu-&gt;add($code, $name, Menu::items($code));<br>}<br><br>// Add some items to the dutch menu<br>$menu<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;find('nl')<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;prefix_parents()<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('welkom', 'Welkom')<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('over-ons', 'Over ons');<br><br><br>// Add some items to the english menu<br>$menu<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;find('en')<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;prefix_parents()<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('welcome', 'Welcome')<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('about-us', 'About us');<br><br><br>// Render the top level only (languages)<br>echo $menu-&gt;render(array(<br>&nbsp;&nbsp;&nbsp;&nbsp;'max_depth' =&gt; 1<br>));<br><br>// Render the english menu<br>echo $menu-&gt;find('en');<br><br>// I used the $menu variable (for less typing in this example)<br>// If you want to render the menu in another file, just reference<br>// It by the handler again.<br><br>// Render the dutch menu<br>echo Menu::handler('menu')-&gt;find('nl');<br>		</code>
+		<h4>#3</h4>
+		<code class="prettyprint lang-php">
+			<br>// Render some categories<br>Menu::handler('categories')<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('algorithms', 'Algorithms', Menu::items()-&gt;prefix_parents()<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('cryptography', 'Cryptography')<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('data-structures', 'Data Structures')<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('digital-image-processing', 'Digital Image Processing')<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('memory-management', 'Memory Management'))<br>&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('graphics-and-multimedia', 'Graphics &amp; Multimedia', Menu::items()-&gt;prefix_parents()<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('directx', 'DirectX')<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('flash', 'Flash')<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&gt;add('opengl', 'OpenGL'));<br><br>echo Menu::handler('categories');<br>		</code>
+	</div>
+	<div class="content">
+		<h2>Some last words</h2>
+		<p>
+			Thanks for following along and using this bundle.<br>
+			More last words soon ;)
+		</p>
+	</div>
+</body>
+</html>
