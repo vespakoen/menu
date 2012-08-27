@@ -235,6 +235,13 @@ class ItemList {
 	public $prefix;
 
 	/**
+	 * The default render options for this item list
+	 * 
+	 * @var array
+	 */
+	public $options;
+
+	/**
 	 * Prefix the links with the parent(s) itemlist name(s)
 	 * 
 	 * @var boolean
@@ -522,7 +529,7 @@ class Item {
 	/**
 	 * The default render options for this item
 	 * 
-	 * @var string
+	 * @var array
 	 */
 	public $options = array(
 		'active_class' => 'active',
@@ -554,7 +561,7 @@ class Item {
 		$this->type = $type;
 		$this->text = $text;
 		$this->children = $children;
-		$this->options = $options;
+		$this->options = array_merge($this->options, $options);
 		$this->url = $url;
 	}
 
@@ -736,12 +743,12 @@ class Item {
 
 		if($this->is_active())
 		{
-			$item_attributes = merge_attributes($item_attributes, array('class' => $options['active_class']));
+			$item_attributes = merge_attributes($item_attributes, array('class' => $active_class));
 		}
 
 		if($this->has_active_child())
 		{
-			$item_attributes = merge_attributes($item_attributes, array('class' => $options['active_child_class']));
+			$item_attributes = merge_attributes($item_attributes, array('class' => $active_child_class));
 		}
 
 		$children = $this->has_children() ? $this->children->render($options) : '';
