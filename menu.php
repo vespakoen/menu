@@ -239,7 +239,7 @@ class ItemList {
 	 * 
 	 * @var array
 	 */
-	public $options;
+	public $options = array();
 
 	/**
 	 * Prefix the links with the parent(s) itemlist name(s)
@@ -256,7 +256,7 @@ class ItemList {
 	public $prefix_handler = false;
 
 	/**
-	 * Create a new Items instance
+	 * Create a new Item List instance
 	 * 
 	 * @param string	$name 				The itemlist's name
 	 * @param array		$list_attributes	Attributes for the itemlist's HMTL element
@@ -427,15 +427,17 @@ class ItemList {
 	 */
 	public function render($options = array())
 	{
-		$options = array_merge($this->options, $options);
+		$options = array_replace_recursive($this->options, $options);
 
 		if( ! array_key_exists('current_depth', $options))
 		{
 			$options['current_depth'] = 1;
+			$options['render_depth'] = 1;
 		}
 		else
 		{
 			$options['current_depth']++;
+			$options['render_depth']++;
 		}
 
 		if(array_key_exists('max_depth', $options) && $options['current_depth'] > $options['max_depth'])
@@ -451,7 +453,7 @@ class ItemList {
 			$contents .= $item->render($options);
 		}
 
-		return MenuHTML::$list_element($contents, $list_attributes);
+		return str_repeat("\t", $render_depth - 1).MenuHTML::$list_element(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $render_depth - 1), $list_attributes).PHP_EOL;
 	}
 
 	/**
@@ -561,7 +563,7 @@ class Item {
 		$this->type = $type;
 		$this->text = $text;
 		$this->children = $children;
-		$this->options = array_merge($this->options, $options);
+		$this->options = array_replace_recursive($this->options, $options);
 		$this->url = $url;
 	}
 
@@ -644,7 +646,7 @@ class Item {
 
 		foreach ($parent_items as $item)
 		{
-			if($item->type == 'link' && ! is_null($item->url))
+			if($item->type == 'link' && ! is_null($item->url) && $item->url !== '#')
 			{
 				$urls[] = $item->url;
 			}
@@ -661,6 +663,11 @@ class Item {
 	public function get_url()
 	{
 		$segments = array();
+
+		if($this->url == '#')
+		{
+			return $this->url;
+		}
 
 		if( ! is_null($this->list->prefix))
 		{
@@ -737,7 +744,9 @@ class Item {
 	 */
 	public function render($options = array())
 	{
-		$options = array_merge($this->options, $options);
+		unset($options['list_attributes'], $options['list_element']);
+		
+		$options = array_replace_recursive($this->options, $options);
 
 		extract($options);
 
@@ -751,7 +760,10 @@ class Item {
 			$item_attributes = merge_attributes($item_attributes, array('class' => $active_child_class));
 		}
 
-		$children = $this->has_children() ? $this->children->render($options) : '';
+		$children_options = $options;
+		$children_options['render_depth']++;
+
+		$children = $this->has_children() ? PHP_EOL.$this->children->render($children_options).str_repeat("\t", $render_depth) : '';
 
 		if($this->type == 'raw')
 		{
@@ -759,10 +771,9 @@ class Item {
 		}
 		else
 		{
-			$content = MenuHTML::link($this->get_url(), $this->text, $link_attributes);
+			$content = PHP_EOL.str_repeat("\t", $render_depth + 1).MenuHTML::link($this->get_url(), $this->text, $link_attributes);
 		}
-						
-		return MenuHTML::$item_element($content, $item_attributes).$children;
+		return str_repeat("\t", $render_depth).MenuHTML::$item_element($content.$children, $item_attributes).PHP_EOL;
 	}
 
 }
