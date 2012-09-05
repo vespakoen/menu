@@ -762,6 +762,7 @@ class Item {
 
 		$children_options = $options;
 		$children_options['render_depth']++;
+		unset($children_options['item_attributes'], $children_options['item_element']);
 
 		$children = $this->has_children() ? PHP_EOL.$this->children->render($children_options).str_repeat("\t", $render_depth) : '';
 
@@ -773,7 +774,7 @@ class Item {
 		{
 			$content = PHP_EOL.str_repeat("\t", $render_depth + 1).MenuHTML::link($this->get_url(), $this->text, $link_attributes);
 		}
-		return str_repeat("\t", $render_depth).MenuHTML::$item_element($content.$children, $item_attributes).PHP_EOL;
+		return str_repeat("\t", $render_depth).MenuHTML::$item_element($content.$children.PHP_EOL.str_repeat("\t", $render_depth), $item_attributes).PHP_EOL;
 	}
 
 }
