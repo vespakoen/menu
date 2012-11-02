@@ -1,5 +1,7 @@
 <?php
-namespace Menu;
+namespace Menu\Items;
+
+use \Menu\MenuHTML;
 
 class ItemList
 {

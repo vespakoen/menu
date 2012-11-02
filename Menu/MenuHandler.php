@@ -35,6 +35,7 @@ class MenuHandler
   {
     // Loop through the ItemLists this handler handles
     foreach ($this->handles as $name) {
+
       // Forward the call to the ItemList
       $item_list = Menu::$names[$name];
       Menu::$names[$name] = call_user_func_array(array($item_list, $method), $parameters);
@@ -55,6 +56,7 @@ class MenuHandler
     $contents = '';
     // Loop through the ItemLists this handler handles
     foreach ($this->handles as $name) {
+
       // Call the render method
       $contents .= Menu::$names[$name]->render($options);
     }
@@ -77,6 +79,7 @@ class MenuHandler
 
     // Loop through the listitems this handler handles
     foreach ($this->handles as $name) {
+
       // Find the menuitems
       foreach (Menu::$names[$name]->find($names) as $item_list) {
         $results[] = $item_list;

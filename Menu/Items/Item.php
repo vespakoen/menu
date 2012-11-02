@@ -1,5 +1,9 @@
 <?php
-namespace Menu;
+namespace Menu\Items;
+
+use \Laravel\URI;
+use \Menu\Helpers;
+use \Menu\MenuHTML;
 
 class Item
 {
@@ -189,7 +193,7 @@ class Item
    */
   public function is_active()
   {
-    return $this->get_url() == \URI::current();
+    return $this->get_url() == URI::current();
   }
 
   /**
