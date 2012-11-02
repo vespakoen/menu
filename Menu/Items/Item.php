@@ -1,6 +1,7 @@
 <?php
 namespace Menu\Items;
 
+use \Laravel\HTML;
 use \Laravel\URI;
 use \Menu\Helpers;
 use \Menu\MenuHTML;
@@ -260,7 +261,7 @@ class Item
     if ($this->type == 'raw') {
       $content = $this->text;
     } else {
-      $content = PHP_EOL.str_repeat("\t", $render_depth + 1).MenuHTML::link($this->get_url(), $this->text, $link_attributes);
+      $content = PHP_EOL.str_repeat("\t", $render_depth + 1).HTML::link($this->get_url(), $this->text, $link_attributes);
     }
 
     return str_repeat("\t", $render_depth).MenuHTML::$item_element($content.$children.PHP_EOL.str_repeat("\t", $render_depth), $item_attributes).PHP_EOL;
