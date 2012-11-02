@@ -13,11 +13,11 @@ class Menu {
 
 	/**
 	 * Create a new ItemList
-	 * 
+	 *
 	 * @param string	$name		The name of the ItemList
 	 * @param array		$attributes	The HTML attributes for the list element
 	 * @param string	$element	The HTML element for the list (ul or dd)
-	 * 
+	 *
 	 * @return ItemList
 	 */
 	public static function items($name = null, $attributes = array(), $element = 'ul')
@@ -31,20 +31,20 @@ class Menu {
 	 * This method will retrieve itemlists by name,
 	 * If an ItemList doesn't already exist, it will
 	 * be registered and added to the handler.
-	 * 
+	 *
 	 * <code>
 	 *		// Get the menu handler that handles the default name
 	 *		$handler = Menu::handler();
 	 *
 	 *		// Get a named menu handler for a single name
 	 *		$handler = Menu::handler('backend');
-	 * 
+	 *
 	 *		// Get a menu handler that handles multiple names
 	 *		$handler = Menu::handler(array('admin', 'sales'));
 	 * </code>
 	 *
 	 * @param  string	$name
-	 * 
+	 *
 	 * @return MenuHandler
 	 */
 	public static function handler($names = '', $attributes = array(), $element = 'ul')
@@ -66,7 +66,7 @@ class Menu {
 
 	/**
 	 * Get a MenuHandler for all registered itemlists
-	 * 
+	 *
 	 * @return MenuHandler
 	 */
 	public static function all()
@@ -96,16 +96,16 @@ class MenuHandler {
 
 	/**
 	 * The names of the itemlists this handler acts on
-	 * 
+	 *
 	 * @var array
 	 */
 	public $handles = array();
 
 	/**
 	 * Set the names of this handler on which it should act
-	 * 
+	 *
 	 * @param array $names The names of the itemlists
-	 * 
+	 *
 	 * @return void
 	 */
 	public function __construct($names)
@@ -116,10 +116,10 @@ class MenuHandler {
 	/**
 	 * Magic method that will pass the incoming calls to
 	 * all of the itemlists this handler acts on
-	 * 
+	 *
 	 * @param string	$method
 	 * @param array		$parameters
-	 * 
+	 *
 	 * @return MenuHandler
 	 */
 	public function __call($method, $parameters)
@@ -137,9 +137,9 @@ class MenuHandler {
 
 	/**
 	 * Render all the itemlists this handler acts on and return the HTML
-	 * 
+	 *
 	 * @param array $options Optional render settings
-	 * 
+	 *
 	 * @return string
 	 */
 	public function render($options = array())
@@ -157,9 +157,9 @@ class MenuHandler {
 
 	/**
 	 * Find itemslists by name in any of the itemlists this menuhandler acts on
-	 * 
+	 *
 	 * @param array $names the names to find
-	 * 
+	 *
 	 * @return MenuHandler
 	 */
 	public function find($names)
@@ -208,60 +208,60 @@ class ItemList {
 
 	/**
 	 * The name of this itemlist
-	 * 
+	 *
 	 * @var string
 	 */
 	public $name;
 
 	/**
 	 * The menu items
-	 * 
+	 *
 	 * @var array
 	 */
 	public $items = array();
-	
+
 	/**
 	 * The itemlist's parent item
-	 * 
+	 *
 	 * @var Item
 	 */
 	public $item;
 
 	/**
 	 * Prefix the links with a custom string
-	 * 
+	 *
 	 * @var mixed
 	 */
 	public $prefix;
 
 	/**
 	 * The default render options for this item list
-	 * 
+	 *
 	 * @var array
 	 */
 	public $options = array();
 
 	/**
 	 * Prefix the links with the parent(s) itemlist name(s)
-	 * 
+	 *
 	 * @var boolean
 	 */
 	public $prefix_parents = false;
 
 	/**
 	 * Prefix links with the name of the itemlist at the very top of the tree
-	 * 
+	 *
 	 * @var boolean
 	 */
 	public $prefix_handler = false;
 
 	/**
 	 * Create a new Item List instance
-	 * 
+	 *
 	 * @param string	$name 				The itemlist's name
 	 * @param array		$list_attributes	Attributes for the itemlist's HMTL element
 	 * @param string	$list_element		The HTML element for the itemlist
-	 * 
+	 *
 	 * @return void
 	 */
 	public function __construct($name = null, $list_attributes = array(), $list_element = 'ul')
@@ -272,7 +272,7 @@ class ItemList {
 			'list_element'
 		);
 	}
-	
+
 	/**
 	 * Add a link item to the itemlist instance.
 	 *
@@ -287,13 +287,13 @@ class ItemList {
 	 *		Menu::add('home', 'Homepage', null, array('class' => 'fancy'));
 	 * </code>
 	 *
-	 * @param string	$url				
-	 * @param string	$title			
-	 * @param ItemList	$children			
-	 * @param array		$link_attributes	
-	 * @param array		$item_attributes	
-	 * @param string	$item_element		
-	 * 
+	 * @param string	$url
+	 * @param string	$title
+	 * @param ItemList	$children
+	 * @param array		$link_attributes
+	 * @param array		$item_attributes
+	 * @param string	$item_element
+	 *
 	 * @return MenuItems
 	 */
 	public function add($url, $title, $children = null, $link_attributes = array(), $item_attributes = array(), $item_element = 'li')
@@ -324,7 +324,7 @@ class ItemList {
 	 * @param  ItemList	$children
 	 * @param  array	$attributes
 	 * @param  array	$children
-	 * 
+	 *
 	 * @return MenuItems
 	 */
 	public function raw($html, $children = null, $item_attributes = array(), $item_element = 'li')
@@ -339,15 +339,15 @@ class ItemList {
 		}
 
 		$this->items[] = $item;
-		
+
 		return $this;
 	}
 
 	/**
 	 * Prefix this itemlist with a string
-	 * 
+	 *
 	 * @param string $prefix
-	 * 
+	 *
 	 * @return ItemList
 	 */
 	public function prefix($prefix)
@@ -359,7 +359,7 @@ class ItemList {
 
 	/**
 	 * Prefix this itemlist with the parent itemlist(s) name(s)
-	 * 
+	 *
 	 * @return ItemList
 	 */
 	public function prefix_parents()
@@ -371,7 +371,7 @@ class ItemList {
 
 	/**
 	 * Prefix this itemlist with the name of the itemlist at the very top of the tree
-	 * 
+	 *
 	 * @return ItemList
 	 */
 	public function prefix_handler()
@@ -391,7 +391,7 @@ class ItemList {
 	 *
 	 * @param  MenuItems  $menuitems
 	 * @return Void
-	 */	
+	 */
 	public function attach($item_list)
 	{
 		foreach ($item_list->items as $item)
@@ -406,9 +406,9 @@ class ItemList {
 
 	/**
 	 * Set the name for this itemlist
-	 * 
+	 *
 	 * @param string	$name
-	 * 
+	 *
 	 * @return ItemList
 	 */
 	public function name($name)
@@ -420,9 +420,9 @@ class ItemList {
 
 	/**
 	 * Get the evaluated string content of the itemlist.
-	 * 
+	 *
 	 * @param  array  		$options
-	 * 
+	 *
 	 * @return string
 	 */
 	public function render($options = array())
@@ -458,9 +458,9 @@ class ItemList {
 
 	/**
 	 * Find itemslists by name (itself, or on of it's children)
-	 * 
+	 *
 	 * @param array $names the names to find
-	 * 
+	 *
 	 * @return ItemList
 	 */
 	public function find($names)
@@ -502,35 +502,35 @@ class Item {
 
 	/**
 	 * The list this item is in
-	 * 
+	 *
 	 * @var ItemList
 	 */
 	public $list;
 
 	/**
 	 * The type of this item (link / raw)
-	 * 
+	 *
 	 * @var string
 	 */
 	public $type;
 
 	/**
 	 * The text of this item
-	 * 
+	 *
 	 * @var string
 	 */
 	public $text;
 
 	/**
 	 * The children this item has
-	 * 
+	 *
 	 * @var ItemList
 	 */
 	public $children;
 
 	/**
 	 * The default render options for this item
-	 * 
+	 *
 	 * @var array
 	 */
 	public $options = array(
@@ -540,21 +540,21 @@ class Item {
 
 	/**
 	 * The URL for this item (without prefixes)
-	 * 
+	 *
 	 * @var string
 	 */
 	public $url;
 
 	/**
 	 * Create a new item instance
-	 * 
+	 *
 	 * @param ItemList	$list
 	 * @param string	$type
 	 * @param string	$text
 	 * @param ItemList	$children
 	 * @param array		$options
 	 * @param string	$url
-	 * 
+	 *
 	 * @return void
 	 */
 	public function __construct($list, $type, $text, $children, $options, $url = null)
@@ -569,7 +569,7 @@ class Item {
 
 	/**
 	 * Get all the parent items of this item
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_parents()
@@ -626,7 +626,7 @@ class Item {
 
 		$parents = array_reverse($parents);
 
-		return $parents;	
+		return $parents;
 	}
 
 	public function get_handler_segment()
@@ -657,7 +657,7 @@ class Item {
 
 	/**
 	 * Get the evaluated URL based on the prefix settings
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_url()
@@ -678,7 +678,7 @@ class Item {
 		{
 			$segments = $segments + $this->get_parent_item_urls();
 		}
-		
+
 		if($this->list->prefix_handler)
 		{
 			$segments[] = $this->get_handler_segment();
@@ -691,7 +691,7 @@ class Item {
 
 	/**
 	 * Check if this item is active
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function is_active()
@@ -701,7 +701,7 @@ class Item {
 
 	/**
 	 * Check if this item has children
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function has_children()
@@ -711,7 +711,7 @@ class Item {
 
 	/**
 	 * Check if this item has an active child
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function has_active_child()
@@ -737,15 +737,15 @@ class Item {
 
 	/**
 	 * Render the item
-	 * 
+	 *
 	 * @param array
-	 * 
+	 *
 	 * @return string
 	 */
 	public function render($options = array())
 	{
 		unset($options['list_attributes'], $options['list_element']);
-		
+
 		$options = array_replace_recursive($this->options, $options);
 
 		extract($options);
