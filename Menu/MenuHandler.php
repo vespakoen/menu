@@ -1,8 +1,8 @@
 <?php
 namespace Menu;
 
-class MenuHandler {
-
+class MenuHandler
+{
   /**
    * The names of the itemlists this handler acts on
    *
@@ -34,8 +34,7 @@ class MenuHandler {
   public function __call($method, $parameters)
   {
     // Loop through the ItemLists this handler handles
-    foreach($this->handles as $name)
-    {
+    foreach ($this->handles as $name) {
       // Forward the call to the ItemList
       $item_list = Menu::$names[$name];
       Menu::$names[$name] = call_user_func_array(array($item_list, $method), $parameters);
@@ -55,8 +54,7 @@ class MenuHandler {
   {
     $contents = '';
     // Loop through the ItemLists this handler handles
-    foreach($this->handles as $name)
-    {
+    foreach ($this->handles as $name) {
       // Call the render method
       $contents .= Menu::$names[$name]->render($options);
     }
@@ -78,23 +76,19 @@ class MenuHandler {
     $results = array();
 
     // Loop through the listitems this handler handles
-    foreach($this->handles as $name)
-    {
+    foreach ($this->handles as $name) {
       // Find the menuitems
-      foreach(Menu::$names[$name]->find($names) as $item_list)
-      {
+      foreach (Menu::$names[$name]->find($names) as $item_list) {
         $results[] = $item_list;
       }
     }
 
     $not_found_list_items = array_diff($names, array_pluck($results, 'name'));
-    if( ! empty($not_found_list_items))
-    {
+    if ( ! empty($not_found_list_items)) {
       throw new Exception('Some list items you are trying to find do not exist ('.implode(', ', $not_found_list_items).')');
     }
 
-    foreach ($results as $item_list)
-    {
+    foreach ($results as $item_list) {
       Menu::$names[$item_list->name] = $item_list;
     }
 

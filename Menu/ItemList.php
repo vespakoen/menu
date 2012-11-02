@@ -1,8 +1,8 @@
 <?php
 namespace Menu;
 
-class ItemList {
-
+class ItemList
+{
   /**
    * The name of this itemlist
    *
@@ -99,8 +99,7 @@ class ItemList {
 
     $item = new Item($this, 'link', $title, $children, $options, $url);
 
-    if( ! is_null($children))
-    {
+    if ( ! is_null($children)) {
       $children->item = $item;
     }
 
@@ -130,8 +129,7 @@ class ItemList {
 
     $item = new Item($this, 'raw', $html, $children, $options);
 
-    if( ! is_null($children))
-    {
+    if ( ! is_null($children)) {
       $children->item = $item;
     }
 
@@ -191,8 +189,7 @@ class ItemList {
    */
   public function attach($item_list)
   {
-    foreach ($item_list->items as $item)
-    {
+    foreach ($item_list->items as $item) {
       $item->list = $this;
 
       $this->items[] = $item;
@@ -226,27 +223,22 @@ class ItemList {
   {
     $options = array_replace_recursive($this->options, $options);
 
-    if( ! array_key_exists('current_depth', $options))
-    {
+    if ( ! array_key_exists('current_depth', $options)) {
       $options['current_depth'] = 1;
       $options['render_depth'] = 1;
-    }
-    else
-    {
+    } else {
       $options['current_depth']++;
       $options['render_depth']++;
     }
 
-    if(array_key_exists('max_depth', $options) && $options['current_depth'] > $options['max_depth'])
-    {
+    if (array_key_exists('max_depth', $options) && $options['current_depth'] > $options['max_depth']) {
       return;
     }
 
     extract($options);
 
     $contents = '';
-    foreach ($this->items as $item)
-    {
+    foreach ($this->items as $item) {
       $contents .= $item->render($options);
     }
 
@@ -266,19 +258,14 @@ class ItemList {
 
     $results = array();
 
-    foreach ($names as $name)
-    {
-      if($this->name == $name)
-      {
+    foreach ($names as $name) {
+      if ($this->name == $name) {
         $results[] = $this;
       }
 
-      foreach ($this->items as $item)
-      {
-        if($item->has_children() && $found = $item->children->find($name))
-        {
-          foreach ($found as $list_item)
-          {
+      foreach ($this->items as $item) {
+        if ($item->has_children() && $found = $item->children->find($name)) {
+          foreach ($found as $list_item) {
             $results[] = $list_item;
           }
         }

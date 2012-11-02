@@ -1,8 +1,8 @@
 <?php
 namespace Menu;
 
-class Item {
-
+class Item
+{
   /**
    * The list this item is in
    *
@@ -81,8 +81,7 @@ class Item {
 
     $list = $this->list;
 
-    while( ! is_null($list->item))
-    {
+    while ( ! is_null($list->item)) {
       $parents[] = $list->item;
 
       $list = isset($list->item->list) ? $list->item->list : null;
@@ -99,8 +98,7 @@ class Item {
 
     $list = $this->list;
 
-    while( ! is_null($list->item))
-    {
+    while ( ! is_null($list->item)) {
       $parents[] = $list->item;
 
       $list = isset($list->item->list) ? $list->item->list : null;
@@ -111,7 +109,6 @@ class Item {
     return $parents;
   }
 
-
   public function get_parent_lists()
   {
     $parents = array();
@@ -120,8 +117,7 @@ class Item {
 
     $parents[] = $list;
 
-    while(isset($list->item->list) && ! is_null($list->item->list))
-    {
+    while (isset($list->item->list) && ! is_null($list->item->list)) {
       $parents[] = $list->item->list;
 
       $list = isset($list->item->list) ? $list->item->list : null;
@@ -147,10 +143,8 @@ class Item {
 
     $parent_items = $this->get_parent_items();
 
-    foreach ($parent_items as $item)
-    {
-      if($item->type == 'link' && ! is_null($item->url) && $item->url !== '#')
-      {
+    foreach ($parent_items as $item) {
+      if ($item->type == 'link' && ! is_null($item->url) && $item->url !== '#') {
         $urls[] = $item->url;
       }
     }
@@ -167,23 +161,19 @@ class Item {
   {
     $segments = array();
 
-    if($this->url == '#')
-    {
+    if ($this->url == '#') {
       return $this->url;
     }
 
-    if( ! is_null($this->list->prefix))
-    {
+    if ( ! is_null($this->list->prefix)) {
       $segments[] = $this->list->prefix;
     }
 
-    if($this->list->prefix_parents)
-    {
+    if ($this->list->prefix_parents) {
       $segments = $segments + $this->get_parent_item_urls();
     }
 
-    if($this->list->prefix_handler)
-    {
+    if ($this->list->prefix_handler) {
       $segments[] = $this->get_handler_segment();
     }
 
@@ -219,20 +209,16 @@ class Item {
    */
   public function has_active_child()
   {
-    if( ! $this->has_children())
-    {
+    if ( ! $this->has_children()) {
       return false;
     }
 
-    foreach ($this->children->items as $child)
-    {
-      if($child->is_active())
-      {
+    foreach ($this->children->items as $child) {
+      if ($child->is_active()) {
         return true;
       }
 
-      if($child->has_children())
-      {
+      if ($child->has_children()) {
         return $child->has_active_child();
       }
     }
@@ -253,13 +239,11 @@ class Item {
 
     extract($options);
 
-    if($this->is_active())
-    {
+    if ($this->is_active()) {
       $item_attributes = Helpers::merge_attributes($item_attributes, array('class' => $active_class));
     }
 
-    if($this->has_active_child())
-    {
+    if ($this->has_active_child()) {
       $item_attributes = Helpers::merge_attributes($item_attributes, array('class' => $active_child_class));
     }
 
@@ -269,14 +253,12 @@ class Item {
 
     $children = $this->has_children() ? PHP_EOL.$this->children->render($children_options).str_repeat("\t", $render_depth) : '';
 
-    if($this->type == 'raw')
-    {
+    if ($this->type == 'raw') {
       $content = $this->text;
-    }
-    else
-    {
+    } else {
       $content = PHP_EOL.str_repeat("\t", $render_depth + 1).MenuHTML::link($this->get_url(), $this->text, $link_attributes);
     }
+
     return str_repeat("\t", $render_depth).MenuHTML::$item_element($content.$children.PHP_EOL.str_repeat("\t", $render_depth), $item_attributes).PHP_EOL;
   }
 
