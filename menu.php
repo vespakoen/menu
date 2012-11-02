@@ -764,6 +764,7 @@ class Item {
 		$options = array_replace_recursive($this->options, $options);
 
 		extract($options);
+		$options['link_attributes'] = array();
 
 		if($this->is_active())
 		{
