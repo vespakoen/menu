@@ -1,7 +1,9 @@
 <?php
 namespace Menu;
 
+use \Laravel\Config;
 use \Laravel\HTML;
+use \Laravel\URL;
 
 class MenuHTML {
 
