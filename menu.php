@@ -696,7 +696,9 @@ class Item {
 	 */
 	public function is_active()
 	{
-		return $this->get_url() == URI::current();
+		return
+			$this->get_url() == URI::current() or
+			$this->get_url() == URI::full();
 	}
 
 	/**
