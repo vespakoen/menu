@@ -546,6 +546,19 @@ class Item {
 	public $url;
 
 	/**
+	 * URL segments that you want to hide from the
+	 * generated URL when using ->prefix_parents()
+	 *
+	 * @var array
+	 */
+	public static $hidden = array(
+		'#',
+		'javascript:;',
+		'javascript:void(0);',
+		'javascript:void(0)',
+	);
+
+	/**
 	 * Create a new item instance
 	 *
 	 * @param ItemList	$list
@@ -646,7 +659,7 @@ class Item {
 
 		foreach ($parent_items as $item)
 		{
-			if($item->type == 'link' && ! is_null($item->url) && $item->url !== '#')
+			if($item->type == 'link' && ! is_null($item->url) && ! in_array($item->url, static::$hidden))
 			{
 				$urls[] = $item->url;
 			}
@@ -664,7 +677,7 @@ class Item {
 	{
 		$segments = array();
 
-		if($this->url == '#')
+		if (in_array($this->url, static::$hidden))
 		{
 			return $this->url;
 		}
@@ -674,14 +687,14 @@ class Item {
 			$segments[] = $this->list->prefix;
 		}
 
-		if($this->list->prefix_parents)
-		{
-			$segments = $segments + $this->get_parent_item_urls();
-		}
-
 		if($this->list->prefix_handler)
 		{
 			$segments[] = $this->get_handler_segment();
+		}
+
+		if($this->list->prefix_parents)
+		{
+			$segments = $segments + $this->get_parent_item_urls();
 		}
 
 		$segments[] = $this->url;
@@ -746,7 +759,7 @@ class Item {
 	 */
 	public function render($options = array())
 	{
-		unset($options['list_attributes'], $options['list_element']);
+		unset($options['list_attributes'], $options['list_element'], $options['link_attributes']);
 
 		$options = array_replace_recursive($this->options, $options);
 
