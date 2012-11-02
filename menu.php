@@ -774,7 +774,12 @@ class Item {
 		{
 			$content = PHP_EOL.str_repeat("\t", $render_depth + 1).MenuHTML::link($this->get_url(), $this->text, $link_attributes);
 		}
-		return str_repeat("\t", $render_depth).MenuHTML::$item_element($content.$children.PHP_EOL.str_repeat("\t", $render_depth), $item_attributes).PHP_EOL;
+
+		// Wrap link in an element if one is provided
+		$link = $content.$children.PHP_EOL.str_repeat("\t", $render_depth);
+		if($item_element) $link = MenuHTML::$item_element($link, $item_attributes);
+
+		return str_repeat("\t", $render_depth).$link.PHP_EOL;
 	}
 
 }
