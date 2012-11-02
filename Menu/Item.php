@@ -37,7 +37,7 @@ class Item
    * @var array
    */
   public $options = array(
-    'active_class' => 'active',
+    'active_class'       => 'active',
     'active_child_class' => 'active-child'
   );
 
@@ -51,12 +51,12 @@ class Item
   /**
    * Create a new item instance
    *
-   * @param ItemList  $list
-   * @param string  $type
-   * @param string  $text
-   * @param ItemList  $children
-   * @param array   $options
-   * @param string  $url
+   * @param ItemList $list
+   * @param string   $type
+   * @param string   $text
+   * @param ItemList $children
+   * @param array    $options
+   * @param string   $url
    *
    * @return void
    */

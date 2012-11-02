@@ -55,9 +55,9 @@ class ItemList
   /**
    * Create a new Item List instance
    *
-   * @param string  $name         The itemlist's name
+   * @param string  $name             The itemlist's name
    * @param array   $list_attributes  Attributes for the itemlist's HMTL element
-   * @param string  $list_element   The HTML element for the itemlist
+   * @param string  $list_element     The HTML element for the itemlist
    *
    * @return void
    */
@@ -84,12 +84,12 @@ class ItemList
    *    Menu::add('home', 'Homepage', null, array('class' => 'fancy'));
    * </code>
    *
-   * @param string  $url
-   * @param string  $title
-   * @param ItemList  $children
-   * @param array   $link_attributes
-   * @param array   $item_attributes
-   * @param string  $item_element
+   * @param string   $url
+   * @param string   $title
+   * @param ItemList $children
+   * @param array    $link_attributes
+   * @param array    $item_attributes
+   * @param string   $item_element
    *
    * @return MenuItems
    */
@@ -116,10 +116,10 @@ class ItemList
    *    Menu::raw('<img src="img/seperator.gif">');
    * </code>
    *
-   * @param  string $html
+   * @param  string   $html
    * @param  ItemList $children
-   * @param  array  $attributes
-   * @param  array  $children
+   * @param  array    $attributes
+   * @param  array    $children
    *
    * @return MenuItems
    */
@@ -184,7 +184,7 @@ class ItemList
    *    Menu::attach(Menu::items()->add('home', 'Homepage'));
    * </code>
    *
-   * @param  MenuItems  $menuitems
+   * @param  MenuItems $menuitems
    * @return Void
    */
   public function attach($item_list)
@@ -215,7 +215,7 @@ class ItemList
   /**
    * Get the evaluated string content of the itemlist.
    *
-   * @param  array      $options
+   * @param  array $options
    *
    * @return string
    */
