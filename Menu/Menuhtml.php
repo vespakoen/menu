@@ -1,6 +1,7 @@
 <?php
+namespace Menu;
 
-use Laravel\HTML;
+use \Laravel\HTML;
 
 class MenuHTML {
 

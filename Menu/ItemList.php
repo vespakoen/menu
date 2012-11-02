@@ -1,4 +1,6 @@
 <?php
+namespace Menu;
+
 class ItemList {
 
   /**
