@@ -1,7 +1,7 @@
 <?php
 namespace Menu\Items;
 
-use \Menu\MenuHTML;
+use \Menu\HTML;
 
 class ItemList
 {
@@ -244,7 +244,7 @@ class ItemList
       $contents .= $item->render($options);
     }
 
-    return str_repeat("\t", $render_depth - 1).MenuHTML::$list_element(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $render_depth - 1), $list_attributes).PHP_EOL;
+    return str_repeat("\t", $render_depth - 1).HTML::$list_element(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $render_depth - 1), $list_attributes).PHP_EOL;
   }
 
   /**

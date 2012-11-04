@@ -1,6 +1,7 @@
 <?php
 
-// Autoload menu classes
-Autoloader::namespaces(array(
-	'Menu' => __DIR__ . DS . 'Menu',
-));
+require 'vendor/autoload.php';
+
+use Menu\Request;
+
+Request::start();

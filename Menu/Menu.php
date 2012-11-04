@@ -1,8 +1,6 @@
 <?php
 namespace Menu;
 
-use \Laravel\HTML;
-
 class Menu
 {
   /**
