@@ -19,12 +19,12 @@ class Request
   }
 
   /**
-     * Creates a new request with values from PHP's super globals.
-     *
-     * @return Request A new request
-     *
-     * @api
-     */
+   * Creates a new request with values from PHP's super globals.
+   *
+   * @return Request A new request
+   *
+   * @api
+   */
   public static function createFromGlobals()
   {
     $request = new SymfonyRequest($_GET, $_POST, array(), $_COOKIE, $_FILES, $_SERVER);
