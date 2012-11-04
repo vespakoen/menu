@@ -237,7 +237,7 @@ class Item
    */
   public function render($options = array())
   {
-    unset($options['list_attributes'], $options['list_element']);
+    unset($options['list_attributes'], $options['link_attributes'], $options['list_element']);
 
     $options = array_replace_recursive($this->options, $options);
 
