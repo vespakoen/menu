@@ -1,6 +1,8 @@
 <?php
 namespace Menu;
 
+use \Exception;
+
 class MenuHandler
 {
   /**
