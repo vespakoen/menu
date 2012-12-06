@@ -13,7 +13,7 @@ class Request
    */
   public static $foundation;
 
-  public function start()
+  public static function start()
   {
     static::$foundation = static::createFromGlobals();
   }
