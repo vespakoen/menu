@@ -745,7 +745,8 @@ class Item {
 
 			if($child->has_children())
 			{
-				return $child->has_active_child();
+				if($child->has_active_child())
+					return true;
 			}
 		}
 	}
