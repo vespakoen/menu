@@ -535,6 +535,7 @@ class Item {
 	 */
 	public $options = array(
 		'active_class' => 'active',
+		'selected_class' => 'selected',
 		'active_child_class' => 'active-child'
 	);
 
@@ -715,6 +716,18 @@ class Item {
 	}
 
 	/**
+     * Check if this item is selected
+     * @author la2ha <la2ha@la2ha.com>
+     * @return boolean
+     */
+    public function is_selected()
+    {
+        $item_url=str_replace(URL::base(),'',$this->get_url());
+        $current_url=str_replace(URL::base().'/','',URI::full());
+        return (strpos($current_url, $item_url)===0);
+    }
+
+	/**
 	 * Check if this item has children
 	 *
 	 * @return boolean
@@ -772,6 +785,10 @@ class Item {
 		{
 			$item_attributes = merge_attributes($item_attributes, array('class' => $active_class));
 		}
+
+		if($this->is_selected()){
+            $item_attributes = merge_attributes($item_attributes, array('class' => $selected_class));
+        }
 
 		if($this->has_active_child())
 		{
