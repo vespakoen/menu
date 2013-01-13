@@ -448,7 +448,8 @@ class ItemList {
 		extract($options);
 
 		$contents = '';
-		foreach ($this->items as $item)
+        if(empty($this->items)) return '';
+        foreach ($this->items as $item)
 		{
 			$contents .= $item->render($options);
 		}
