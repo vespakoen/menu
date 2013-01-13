@@ -57,12 +57,26 @@ class Menu {
 			if( ! array_key_exists($name, static::$names))
 			{
 				static::$names[$name] = new ItemList($name, $attributes, $element);
-			}
+			} else {
+                static::update(static::$names[$name], $attributes, $element);
+            }
 		}
 
 		// Return a Handler for the given names
 		return new MenuHandler($names);
 	}
+
+    /**
+     * Update attributes and element for changing these data after creating
+     * @param $item_list
+     * @param array $attributes new atributes
+     * @param $element
+     */
+    private static function update(&$item_list, $attributes, $element)
+    {
+        $item_list->options['list_attributes'] = $attributes;
+        $item_list->options['element'] = $element;
+    }
 
 	/**
 	 * Get a MenuHandler for all registered itemlists
