@@ -711,7 +711,8 @@ class Item {
 	{
 		return
 			$this->get_url() == URI::current() or
-			$this->get_url() == URI::full();
+			$this->get_url() == URI::full() or
+            		$this->get_url() == URL::base().'/'.URI::current();
 	}
 
 	/**
