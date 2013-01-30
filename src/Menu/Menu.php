@@ -1,4 +1,10 @@
 <?php
+/**
+ * Menu
+ *
+ * Basic interface between the package and the user
+ * Redirects and dispatch calls to the different menus in memory
+ */
 namespace Menu;
 
 class Menu
