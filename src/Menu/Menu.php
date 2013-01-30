@@ -163,17 +163,17 @@ class Menu
    */
   public static function getContainer($dependency = null)
   {
-    if (!static::$container) {
-      static::$container = new Container;
+    if (!static::$container) static::$container = new Container;
 
-      // Create basic Request
-      static::$container->bind('Symfony\Component\HttpFoundation\Request', function() {
-        return Request::createFromGlobals();
-      });
-    }
+    // Create basic Request instance to use
+    static::$container->bindIf('Symfony\Component\HttpFoundation\Request', function() {
+      return Request::createFromGlobals();
+    });
 
     // Shortcut for getting a dependency
-    if ($dependency) return static::$container->make($dependency);
+    if ($dependency) {
+      return static::$container->make($dependency);
+    }
 
     return static::$container;
   }
