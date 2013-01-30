@@ -47,7 +47,8 @@ class Menu
     // Create a new Items instance for the names that don't exist yet
     foreach ($names as $name) {
       if ( ! array_key_exists($name, static::$names)) {
-        static::$names[$name] = new ItemList($name, $attributes, $element);
+        $itemList = new ItemList($name, $attributes, $element);
+        static::setItemList($name, $itemList);
       }
     }
 
@@ -56,7 +57,7 @@ class Menu
   }
 
   /**
-   * Get a MenuHandler for all registered itemlists
+   * Get a MenuHandler for all registered ItemLists
    *
    * @return MenuHandler
    */
@@ -65,6 +66,14 @@ class Menu
     $handles = array_keys(static::$names);
 
     return new MenuHandler($handles);
+  }
+
+  /**
+   * Erase all menus in memory
+   */
+  public static function reset()
+  {
+    static::$names = array();
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -107,8 +116,10 @@ class Menu
    *
    * @return ItemList
    */
-  public static function getItemList($name)
+  public static function getItemList($name = null)
   {
+    if (!$name) return static::$names;
+
     return static::$names[$name];
   }
 

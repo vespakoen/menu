@@ -15,7 +15,7 @@ class MenuHandler
    *
    * @var array
    */
-  public $handles = array();
+  protected $handles = array();
 
   /**
    * Set the handles on which this menu should act
@@ -51,6 +51,20 @@ class MenuHandler
     }
 
     return $contents;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////// PUBLIC INTERFACE ////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get the handles this Menu hooks into
+   *
+   * @return array
+   */
+  public function getHandles()
+  {
+    return $this->handles;
   }
 
   ////////////////////////////////////////////////////////////////////
