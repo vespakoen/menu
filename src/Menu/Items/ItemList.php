@@ -244,6 +244,7 @@ class ItemList extends MenuObject
     foreach ($this->items as $item) {
       $contents .= $item->render($options);
     }
+
     return str_repeat("\t", $renderDepth - 1).HTML::$listElement(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $renderDepth - 1), $listAttributes).PHP_EOL;
   }
 
@@ -276,10 +277,4 @@ class ItemList extends MenuObject
 
     return $results;
   }
-
-  public function __toString()
-  {
-    return $this->render();
-  }
-
 }

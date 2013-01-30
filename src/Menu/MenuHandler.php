@@ -6,9 +6,10 @@
  */
 namespace Menu;
 
+use \Menu\Traits\MenuObject;
 use \Exception;
 
-class MenuHandler
+class MenuHandler extends MenuObject
 {
   /**
    * The names of the itemlists this handler acts on
@@ -127,15 +128,4 @@ class MenuHandler
 
     return new MenuHandler($names);
   }
-
-  /**
-   * Get the evaluated string content for the itemlists this menuhandler acts on.
-   *
-   * @return string
-   */
-  public function __toString()
-  {
-    return $this->render();
-  }
-
 }
