@@ -2,8 +2,9 @@
 namespace Menu\Items;
 
 use \Menu\HTML;
+use \Menu\Traits\MenuObject;
 
-class ItemList
+class ItemList extends MenuObject
 {
   /**
    * The name of this itemlist
@@ -45,30 +46,30 @@ class ItemList
    *
    * @var boolean
    */
-  public $prefix_parents = false;
+  public $prefixParents = false;
 
   /**
    * Prefix links with the name of the itemlist at the very top of the tree
    *
    * @var boolean
    */
-  public $prefix_handler = false;
+  public $prefixHandler = false;
 
   /**
    * Create a new Item List instance
    *
    * @param string  $name             The itemlist's name
-   * @param array   $list_attributes  Attributes for the itemlist's HMTL element
-   * @param string  $list_element     The HTML element for the itemlist
+   * @param array   $listAttributes  Attributes for the itemlist's HMTL element
+   * @param string  $listElement     The HTML element for the itemlist
    *
    * @return void
    */
-  public function __construct($name = null, $list_attributes = array(), $list_element = 'ul')
+  public function __construct($name = null, $listAttributes = array(), $listElement = 'ul')
   {
     $this->name = $name;
     $this->options = compact(
-      'list_attributes',
-      'list_element'
+      'listAttributes',
+      'listElement'
     );
   }
 
@@ -89,15 +90,15 @@ class ItemList
    * @param string   $url
    * @param string   $title
    * @param ItemList $children
-   * @param array    $link_attributes
-   * @param array    $item_attributes
-   * @param string   $item_element
+   * @param array    $linkAttributes
+   * @param array    $itemAttributes
+   * @param string   $itemElement
    *
    * @return MenuItems
    */
-  public function add($url, $title, $children = null, $link_attributes = array(), $item_attributes = array(), $item_element = 'li')
+  public function add($url, $title, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = 'li')
   {
-    $options = compact('link_attributes', 'item_attributes', 'item_element');
+    $options = compact('linkAttributes', 'itemAttributes', 'itemElement');
 
     $item = new Item($this, 'link', $title, $children, $options, $url);
 
@@ -127,7 +128,7 @@ class ItemList
    */
   public function raw($html, $children = null, $item_attributes = array(), $item_element = 'li')
   {
-    $options = compact('item_attributes', 'item_element');
+    $options = compact('itemAttributes', 'itemElement');
 
     $item = new Item($this, 'raw', $html, $children, $options);
 
@@ -161,7 +162,7 @@ class ItemList
    */
   public function prefix_parents()
   {
-    $this->prefix_parents = true;
+    $this->prefixParents = true;
 
     return $this;
   }
@@ -173,7 +174,7 @@ class ItemList
    */
   public function prefix_handler()
   {
-    $this->prefix_handler = true;
+    $this->prefixHandler = true;
 
     return $this;
   }
@@ -225,15 +226,15 @@ class ItemList
   {
     $options = array_replace_recursive($this->options, $options);
 
-    if ( ! array_key_exists('current_depth', $options)) {
-      $options['current_depth'] = 1;
-      $options['render_depth'] = 1;
+    if ( ! array_key_exists('currentDepth', $options)) {
+      $options['currentDepth'] = 1;
+      $options['renderDepth'] = 1;
     } else {
-      $options['current_depth']++;
-      $options['render_depth']++;
+      $options['currentDepth']++;
+      $options['renderDepth']++;
     }
 
-    if (array_key_exists('max_depth', $options) && $options['current_depth'] > $options['max_depth']) {
+    if (array_key_exists('max_depth', $options) && $options['currentDepth'] > $options['maxDepth']) {
       return;
     }
 
@@ -243,7 +244,7 @@ class ItemList
     foreach ($this->items as $item) {
       $contents .= $item->render($options);
     }
-    return str_repeat("\t", $render_depth - 1).HTML::$list_element(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $render_depth - 1), $list_attributes).PHP_EOL;
+    return str_repeat("\t", $renderDepth - 1).HTML::$listElement(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $renderDepth - 1), $listAttributes).PHP_EOL;
   }
 
   /**

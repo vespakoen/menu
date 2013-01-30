@@ -1,11 +1,18 @@
 <?php
+/**
+ * Item
+ *
+ * An Item in a list
+ */
 namespace Menu\Items;
 
+use \Underscore\Types\Arrays;
+use \Menu\Traits\MenuObject;
 use \Menu\Helpers;
 use \Menu\Html;
 use \Menu\Menu;
 
-class Item
+class Item extends MenuObject
 {
   /**
    * The list this item is in
@@ -29,6 +36,12 @@ class Item
   public $text;
 
   /**
+   * The item attributes
+   * @var array
+   */
+  private $attributes = array();
+
+  /**
    * The children this item has
    *
    * @var ItemList
@@ -41,8 +54,9 @@ class Item
    * @var array
    */
   public $options = array(
-    'active_class'       => 'active',
-    'active_child_class' => 'active-child'
+    'itemElement'      => 'li',
+    'activeClass'      => 'active',
+    'activeChildClass' => 'active-child'
   );
 
   /**
@@ -64,7 +78,7 @@ class Item
    *
    * @return void
    */
-  public function __construct($list, $type, $text, $children, $options, $url = null)
+  public function __construct($list, $type, $text, $children = array(), $options = array(), $url = null)
   {
     $this->list = $list;
     $this->type = $type;
@@ -173,11 +187,11 @@ class Item
       $segments[] = $this->list->prefix;
     }
 
-    if ($this->list->prefix_parents) {
+    if ($this->list->prefixParents) {
       $segments = $segments + $this->get_parent_item_urls();
     }
 
-    if ($this->list->prefix_handler) {
+    if ($this->list->prefixHandler) {
       $segments[] = $this->get_handler_segment();
     }
 
@@ -185,6 +199,126 @@ class Item
 
     return implode('/', $segments);
   }
+
+  /**
+   * Render the item
+   *
+   * @param array
+   *
+   * @return string
+   */
+  public function render()
+  {
+    // Add the active classes
+    $this->addActiveClasses($this->attributes);
+
+    // Increment the render depth
+    $this->options['renderDepth'] = $this->getOption('renderDepth', 0) + 1;
+
+    // Render children if any
+    if (!$this->hasChildren()) $children = null;
+    else $children =
+      PHP_EOL.
+      $this->children->render($childrenOptions).
+      str_repeat("\t", $this->options['renderDepth']);
+
+    if ($this->type == 'raw') {
+      $content = $this->text;
+    } else {
+      $content = HTML::to($this->get_url(), $this->text, $this->getOption('linkAttributes'));
+      $content = $this->renderTabbed($content, $this->options['renderDepth'] + 1);
+    }
+
+    $element = $this->getOption('itemElement');
+    $content = HTML::$element($content.$children.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
+
+    return $this->renderTabbed($content, $this->options['renderDepth']);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////// PUBLIC INTERFACE /////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Check if this item is active
+   *
+   * @return boolean
+   */
+  public function isActive()
+  {
+    return $this->get_url() == $this->getRequest()->fullUrl();
+  }
+
+  /**
+   * Check if this item has children
+   *
+   * @return boolean
+   */
+  public function hasChildren()
+  {
+    return !is_null($this->children) and !empty($this->children);
+  }
+
+  /**
+   * Check if this item has an active child
+   *
+   * @return boolean
+   */
+  public function hasActiveChild()
+  {
+    if (!$this->hasChildren()) {
+      return false;
+    }
+
+    foreach ($this->children->items as $child) {
+      if ($child->isActive()) {
+        return true;
+      }
+
+      if ($child->hasChildren()) {
+        return $child->hasActiveChild();
+      }
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////// HELPERS /////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get an option from the options array
+   *
+   * @param string $option The option key
+   *
+   * @return string Its content
+   */
+  private function getOption($option, $fallback = null)
+  {
+    return Arrays::get($this->options, $option, $fallback);
+  }
+
+  /**
+   * Add the various active classes to an array of attributes
+   *
+   * @param  array $attributes
+   * @return array
+   */
+  private function addActiveClasses($attributes)
+  {
+    if ($this->isActive()) {
+      $attributes = Helpers::addClass($attributes, $this->getOption('activeClass'));
+    }
+
+    if ($this->hasActiveChild()) {
+      $attributes = Helpers::addClass($attributes, $this->getOption('activeChildClass'));
+    }
+
+    return $attributes;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// DEPENDENCIES //////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Get the Request instance
@@ -199,86 +333,6 @@ class Item
     }
 
     return Menu::getContainer('Symfony\Component\HttpFoundation\Request');
-  }
-
-  /**
-   * Check if this item is active
-   *
-   * @return boolean
-   */
-  public function is_active()
-  {
-    return $this->get_url() == $this->getRequest()->fullUrl();
-  }
-
-  /**
-   * Check if this item has children
-   *
-   * @return boolean
-   */
-  public function has_children()
-  {
-    return ! is_null($this->children);
-  }
-
-  /**
-   * Check if this item has an active child
-   *
-   * @return boolean
-   */
-  public function has_active_child()
-  {
-    if ( ! $this->has_children()) {
-      return false;
-    }
-
-    foreach ($this->children->items as $child) {
-      if ($child->is_active()) {
-        return true;
-      }
-
-      if ($child->has_children()) {
-        return $child->has_active_child();
-      }
-    }
-  }
-
-  /**
-   * Render the item
-   *
-   * @param array
-   *
-   * @return string
-   */
-  public function render($options = array())
-  {
-    unset($options['list_attributes'], $options['link_attributes'], $options['list_element']);
-
-    $options = array_replace_recursive($this->options, $options);
-
-    extract($options);
-
-    if ($this->is_active()) {
-      $item_attributes = Helpers::mergeAttributes($item_attributes, array('class' => $active_class));
-    }
-
-    if ($this->has_active_child()) {
-      $item_attributes = Helpers::mergeAttributes($item_attributes, array('class' => $active_child_class));
-    }
-
-    $children_options = $options;
-    $children_options['render_depth']++;
-    unset($children_options['item_attributes'], $children_options['item_element']);
-
-    $children = $this->has_children() ? PHP_EOL.$this->children->render($children_options).str_repeat("\t", $render_depth) : '';
-
-    if ($this->type == 'raw') {
-      $content = $this->text;
-    } else {
-      $content = PHP_EOL.str_repeat("\t", $render_depth + 1).HTML::to($this->get_url(), $this->text, $link_attributes);
-    }
-
-    return str_repeat("\t", $render_depth).Html::$item_element($content.$children.PHP_EOL.str_repeat("\t", $render_depth), $item_attributes).PHP_EOL;
   }
 
 }

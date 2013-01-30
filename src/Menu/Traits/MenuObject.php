@@ -5,7 +5,7 @@
  * Allows dynamic setting and getting of attributes
  * on the various parts of a menu (items, itemlists, etc)
  */
-namespace Menu;
+namespace Menu\Traits;
 
 abstract class MenuObject
 {
@@ -21,7 +21,7 @@ abstract class MenuObject
    *
    * @return string
    */
-  private function renderTabbed($content, $tabs = 0)
+  protected function renderTabbed($content, $tabs = 0)
   {
     return PHP_EOL.str_repeat("\t", $tabs).$content;
   }
