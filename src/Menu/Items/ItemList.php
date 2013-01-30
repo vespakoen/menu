@@ -58,7 +58,7 @@ class ItemList extends MenuObject
   /**
    * Create a new Item List instance
    *
-   * @param string  $name             The itemlist's name
+   * @param string  $name            The itemlist's name
    * @param array   $listAttributes  Attributes for the itemlist's HMTL element
    * @param string  $listElement     The HTML element for the itemlist
    *
@@ -160,7 +160,7 @@ class ItemList extends MenuObject
    *
    * @return ItemList
    */
-  public function prefix_parents()
+  public function prefixPandler()
   {
     $this->prefixParents = true;
 
@@ -172,7 +172,7 @@ class ItemList extends MenuObject
    *
    * @return ItemList
    */
-  public function prefix_handler()
+  public function prefixHandler()
   {
     $this->prefixHandler = true;
 
