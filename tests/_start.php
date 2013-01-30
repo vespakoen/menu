@@ -17,10 +17,10 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
    *
    * @return array
    */
-  protected function matchItem()
+  protected function matchItem($element = 'li')
   {
     return array(
-      'tag' => 'li',
+      'tag' => $element,
       'child' => array(
         'tag' => 'a',
         'content' => 'foo',

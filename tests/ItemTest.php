@@ -9,8 +9,17 @@ class ItemTest extends MenuTests
   public function testCanCreateAnItem()
   {
     $list = new ItemList();
-    $item = new Item($list, 'li', 'foo');
+    $item = new Item($list, 'link', 'foo');
 
     $this->assertHTML($this->matchItem(), $item->render());
+  }
+
+  public function testCanCreateItemOfADifferentElement()
+  {
+    $list = new ItemList();
+    $item = new Item($list, 'link', 'foo');
+    $item->element('dl');
+
+    $this->assertHTML($this->matchItem('dl'), $item->render());
   }
 }

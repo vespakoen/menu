@@ -22,6 +22,12 @@ class Item extends MenuObject
   public $list;
 
   /**
+   * The item element
+   * @var string
+   */
+  protected $element = 'li';
+
+  /**
    * The type of this item (link / raw)
    *
    * @var string
@@ -54,7 +60,6 @@ class Item extends MenuObject
    * @var array
    */
   public $options = array(
-    'itemElement'      => 'li',
     'activeClass'      => 'active',
     'activeChildClass' => 'active-child'
   );
@@ -87,6 +92,28 @@ class Item extends MenuObject
     $this->options = array_replace_recursive($this->options, $options);
     $this->url = $url;
   }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////// PUBLIC INTERFACE /////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Change the element used by the Item
+   *
+   * @param string $element The element
+   *
+   * @return Item
+   */
+  public function element($element)
+  {
+    $this->element = $element;
+
+    return $this;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////// CORE METHODS ///////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Get all the parent items of this item
@@ -229,7 +256,7 @@ class Item extends MenuObject
       $content = $this->renderTabbed($content, $this->options['renderDepth'] + 1);
     }
 
-    $element = $this->getOption('itemElement');
+    $element = $this->element;
     $content = HTML::$element($content.$children.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
 
     return $this->renderTabbed($content, $this->options['renderDepth']);
