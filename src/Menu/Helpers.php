@@ -1,5 +1,12 @@
 <?php
+/**
+ * Helpers
+ *
+ * Various helpers used troughout the classes
+ */
 namespace Menu;
+
+use Underscore\Types\Methods;
 
 class Helpers
 {
@@ -10,11 +17,11 @@ class Helpers
    * @param  array $array2
    * @return array         A merged array of attributes
    */
-  public static function merge_attributes($array1, $array2)
+  public static function mergeAttributes($array1, $array2)
   {
     $array = $array1;
     foreach ($array2 as $key => $value) {
-      if($key !== 'class') return;
+      if($key !== 'class') continue;
 
       if (array_key_exists($key, $array1)) {
         $array[$key] = $array1[$key] .= ' '.$array2[$key];

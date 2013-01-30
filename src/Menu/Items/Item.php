@@ -259,11 +259,11 @@ class Item
     extract($options);
 
     if ($this->is_active()) {
-      $item_attributes = Helpers::merge_attributes($item_attributes, array('class' => $active_class));
+      $item_attributes = Helpers::mergeAttributes($item_attributes, array('class' => $active_class));
     }
 
     if ($this->has_active_child()) {
-      $item_attributes = Helpers::merge_attributes($item_attributes, array('class' => $active_child_class));
+      $item_attributes = Helpers::mergeAttributes($item_attributes, array('class' => $active_child_class));
     }
 
     $children_options = $options;
