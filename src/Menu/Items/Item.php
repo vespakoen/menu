@@ -3,7 +3,7 @@ namespace Menu\Items;
 
 use \Menu\Helpers;
 use \Menu\Html;
-use \Menu\Uri;
+use \Menu\Menu;
 
 class Item
 {
@@ -187,13 +187,28 @@ class Item
   }
 
   /**
+   * Get the Request instance
+   *
+   * @return Request
+   */
+  public function getRequest()
+  {
+    // Defer to Illuminate/Request if possible
+    if (class_exists('App')) {
+      return App::make('Request');
+    }
+
+    return Menu::getContainer('Symfony\Component\HttpFoundation\Request');
+  }
+
+  /**
    * Check if this item is active
    *
    * @return boolean
    */
   public function is_active()
   {
-    return $this->get_url() == Uri::current();
+    return $this->get_url() == $this->getRequest()->fullUrl();
   }
 
   /**
@@ -260,7 +275,7 @@ class Item
     if ($this->type == 'raw') {
       $content = $this->text;
     } else {
-      $content = PHP_EOL.str_repeat("\t", $render_depth + 1).Html::link($this->get_url(), $this->text, $link_attributes);
+      $content = PHP_EOL.str_repeat("\t", $render_depth + 1).HTML::to($this->get_url(), $this->text, $link_attributes);
     }
 
     return str_repeat("\t", $render_depth).Html::$item_element($content.$children.PHP_EOL.str_repeat("\t", $render_depth), $item_attributes).PHP_EOL;

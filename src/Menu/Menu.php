@@ -7,10 +7,19 @@
  */
 namespace Menu;
 
+use \Illuminate\Container\Container;
+use \Illuminate\Http\Request;
+use \Illuminate\Routing\UrlGenerator;
 use Menu\Items\ItemList;
 
 class Menu
 {
+  /**
+   * The current IoC container
+   * @var Container
+   */
+  private static $container;
+
   /**
    * All the registered names and the associated itemlists
    *
@@ -141,6 +150,32 @@ class Menu
   public static function __callStatic($method, $parameters)
   {
     return call_user_func_array(array(static::handler(), $method), $parameters);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////// DEPENDENCY INJECTIONS //////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get the current dependencies
+   *
+   * @return Container
+   */
+  public static function getContainer($dependency = null)
+  {
+    if (!static::$container) {
+      static::$container = new Container;
+
+      // Create basic Request
+      static::$container->bind('Symfony\Component\HttpFoundation\Request', function() {
+        return Request::createFromGlobals();
+      });
+    }
+
+    // Shortcut for getting a dependency
+    if ($dependency) return static::$container->make($dependency);
+
+    return static::$container;
   }
 
 }

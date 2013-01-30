@@ -1,104 +1,58 @@
 <?php
 namespace Menu;
 
-class Html
+use \Meido\HTML\HTMLFacade;
+
+class Html extends HTMLFacade
 {
   /**
-   * Generate a HTML link.
+   * Defer calls to Meido's HTML
    *
-   * <code>
-   *    // Generate a link to a location within the application
-   *    echo HTML::link('user/profile', 'User Profile');
-   *
-   *    // Generate a link to a location outside of the application
-   *    echo HTML::link('http://google.com', 'Google');
-   * </code>
-   *
-   * @param  string  $url
-   * @param  string  $title
-   * @param  array   $attributes
-   * @param  bool    $https
-   * @return string
+   * @return HTML
    */
-  public static function link($url, $title = null, $attributes = array())
+  public static function getFacadeAccessor()
   {
-    if (is_null($title)) $title = $url;
+    if (class_exists('App')) return 'html';
 
-    return '<a href="'.$url.'"'.static::attributes($attributes).'>'.$title.'</a>';
+    return Menu::getContainer('Meido\HTML\HTML');
   }
 
   /**
-   * Build a list of HTML attributes from an array.
+   * Dynamic generation of tags
    *
-   * @param  array   $attributes
-   * @return string
+   * @param string $method     The tag to create
+   * @param array  $parameters Value and attributes
+   *
+   * @return string The tag
    */
-  public static function attributes($attributes)
+  public static function __callStatic($method, $parameters)
   {
-    $html = array();
+    // Magic method for quickly generating basic tags
+    if (in_array($method, array('li', 'ul', 'dl', 'dt', 'dd'))) {
+      $value = isset($parameters[0]) ? $parameters[0] : null;
+      $attributes = isset($parameters[1]) ? $parameters[1] : array();
 
-    foreach ((array) $attributes as $key => $value)
-    {
-      // For numeric keys, we will assume that the key and the value are the
-      // same, as this will convert HTML attributes such as "required" that
-      // may be specified as required="required", etc.
-      if (is_numeric($key)) $key = $value;
-
-      if ( ! is_null($value))
-      {
-        $html[] = $key.'="'.$value.'"';
-      }
+      return static::element($method, $value, $attributes);
     }
 
-    return (count($html) > 0) ? ' '.implode(' ', $html) : '';
+    return parent::__callStatic($method, $parameters);
   }
 
+  ////////////////////////////////////////////////////////////////////
+  ////////////////////////////// HELPERS /////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
   /**
-   * Create a LI item
+   * Create a generic tag
    *
-   * @param  string $value
-   * @param  array  $attributes
+   * @param string $element    The element
+   * @param string $value      Its value
+   * @param array  $attributes Potential attributes
+   *
    * @return string
    */
-  public static function li($value, $attributes)
+  private static function element($element, $value, $attributes)
   {
-    return '<li'.static::attributes($attributes).'>'.$value.'</li>';
+    return '<'.$element.static::attributes($attributes).'>'.$value.'</' .$element. '>';
   }
-
-  /**
-   * Create a DT item
-   *
-   * @param  string $value
-   * @param  array  $attributes
-   * @return string
-   */
-  public static function dt($value, $attributes)
-  {
-    return '<dt'.static::attributes($attributes).'>'.$value.'</dt>';
-  }
-
-  /**
-   * Create a set of DD breasts
-   *
-   * @param  string $value
-   * @param  array  $attributes
-   * @return string
-   */
-  public static function dd($value, $attributes)
-  {
-    return '<dd'.static::attributes($attributes).'>'.$value.'</dd>';
-  }
-
-  /**
-   * Creates an unordered list
-   *
-   * @param  string $value      Its content
-   * @param  array  $attributes Its attributes
-   * @return string             An unordered list
-   */
-  public static function ul($value, $attributes)
-  {
-    return '<ul'.static::attributes($attributes).'>'.$value.'</ul>';
-  }
-
 }

@@ -243,7 +243,6 @@ class ItemList
     foreach ($this->items as $item) {
       $contents .= $item->render($options);
     }
-
     return str_repeat("\t", $render_depth - 1).HTML::$list_element(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $render_depth - 1), $list_attributes).PHP_EOL;
   }
 
