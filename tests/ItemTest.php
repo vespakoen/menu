@@ -1,6 +1,4 @@
 <?php
-include '_start.php';
-
 use Menu\Items\Item;
 use Menu\Items\ItemList;
 

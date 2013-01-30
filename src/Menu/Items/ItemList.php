@@ -58,19 +58,17 @@ class ItemList extends MenuObject
   /**
    * Create a new Item List instance
    *
-   * @param string  $name            The itemlist's name
-   * @param array   $listAttributes  Attributes for the itemlist's HMTL element
-   * @param string  $listElement     The HTML element for the itemlist
+   * @param string  $name        The ItemList's name
+   * @param array   $attributes  Attributes for the itemlist's HMTL element
+   * @param string  $element     The HTML element for the itemlist
    *
    * @return void
    */
-  public function __construct($name = null, $listAttributes = array(), $listElement = 'ul')
+  public function __construct($name = null, $attributes = array(), $element = 'ul')
   {
-    $this->name = $name;
-    $this->options = compact(
-      'listAttributes',
-      'listElement'
-    );
+    $this->name       = $name;
+    $this->attributes = $attributes;
+    $this->element    = $element;
   }
 
   /**
@@ -98,9 +96,11 @@ class ItemList extends MenuObject
    */
   public function add($url, $title, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = 'li')
   {
-    $options = compact('linkAttributes', 'itemAttributes', 'itemElement');
+    $options = compact('linkAttributes');
 
     $item = new Item($this, 'link', $title, $children, $options, $url);
+    $item->element($itemElement);
+    $item->setAttributes($itemAttributes);
 
     if ( ! is_null($children)) {
       $children->item = $item;
@@ -128,8 +128,6 @@ class ItemList extends MenuObject
    */
   public function raw($html, $children = null, $item_attributes = array(), $item_element = 'li')
   {
-    $options = compact('itemAttributes', 'itemElement');
-
     $item = new Item($this, 'raw', $html, $children, $options);
 
     if ( ! is_null($children)) {
@@ -245,7 +243,11 @@ class ItemList extends MenuObject
       $contents .= $item->render($options);
     }
 
-    return str_repeat("\t", $renderDepth - 1).HTML::$listElement(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $renderDepth - 1), $listAttributes).PHP_EOL;
+    $element = $this->element;
+    $content = HTML::$element(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $renderDepth - 1), $this->attributes).PHP_EOL;
+    $content = $this->renderTabbed($content, $renderDepth - 1);
+
+    return $content;
   }
 
   /**

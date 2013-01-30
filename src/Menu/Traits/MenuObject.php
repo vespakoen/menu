@@ -11,9 +11,17 @@ abstract class MenuObject
 {
   /**
    * The object element
+   *
    * @var string
    */
   protected $element;
+
+  /**
+   * The object attributes
+   *
+   * @var array
+   */
+  protected $attributes = array();
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////// PUBLIC INTERFACE ////////////////////////
@@ -29,6 +37,18 @@ abstract class MenuObject
   public function element($element)
   {
     $this->element = $element;
+
+    return $this;
+  }
+
+  /**
+   * Replace the current attributes with other ones
+   *
+   * @param array $attributes The new attributes
+   */
+  public function setAttributes($attributes)
+  {
+    $this->attributes = $attributes;
 
     return $this;
   }

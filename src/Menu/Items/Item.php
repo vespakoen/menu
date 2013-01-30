@@ -42,12 +42,6 @@ class Item extends MenuObject
   public $text;
 
   /**
-   * The item attributes
-   * @var array
-   */
-  private $attributes = array();
-
-  /**
    * The children this item has
    *
    * @var ItemList

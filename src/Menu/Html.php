@@ -29,7 +29,7 @@ class Html extends HTMLFacade
   public static function __callStatic($method, $parameters)
   {
     // Magic method for quickly generating basic tags
-    if (in_array($method, array('li', 'ul', 'dl', 'dt', 'dd'))) {
+    if (in_array($method, array('li', 'ol', 'ul', 'dl', 'dt', 'dd'))) {
       $value = Arrays::get($parameters, 0);
       $attributes = Arrays::get($parameters, 1, array());
 

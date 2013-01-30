@@ -13,7 +13,23 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
   ////////////////////////////////////////////////////////////////////
 
   /**
+   * Basic matcher for an ItemList
+   *
+   * @param string $element
+   *
+   * @return array
+   */
+  protected function matchList($element = 'ul')
+  {
+    return array(
+      'tag' => $element,
+    );
+  }
+
+  /**
    * Basic matcher for an Item
+   *
+   * @param string $element
    *
    * @return array
    */
