@@ -73,7 +73,7 @@ class MenuHandler
 
   /**
    * Magic method that will pass the incoming calls to
-   * all of the itemlists this handler acts on
+   * all of the ItemLists this handler acts on
    *
    * @param string  $method
    * @param array   $parameters
@@ -86,9 +86,9 @@ class MenuHandler
     foreach ($this->handles as $name) {
 
       // Forward the call to the ItemList
-      $item_list = Menu::getItemList($name);
-      $item_list = call_user_func_array(array($item_list, $method), $parameters);
-      Menu::setItemList($name, $item_list);
+      $itemList = Menu::getItemList($name);
+      $itemList = call_user_func_array(array($itemList, $method), $parameters);
+      Menu::setItemList($name, $itemList);
     }
 
     return $this;
@@ -111,8 +111,8 @@ class MenuHandler
     foreach ($this->handles as $name) {
 
       // Find the menuitems
-      foreach (Menu::getItemList($name)->find($names) as $item_list) {
-        $results[] = $item_list;
+      foreach (Menu::getItemList($name)->find($names) as $itemList) {
+        $results[] = $itemList;
       }
     }
 
@@ -121,8 +121,8 @@ class MenuHandler
       throw new Exception('Some list items you are trying to find do not exist ('.implode(', ', $not_found_list_items).')');
     }
 
-    foreach ($results as $item_list) {
-      Menu::setItemList($item_list->name, $item_list);
+    foreach ($results as $itemList) {
+      Menu::setItemList($itemList->name, $itemList);
     }
 
     return new MenuHandler($names);

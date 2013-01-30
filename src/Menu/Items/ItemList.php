@@ -189,9 +189,9 @@ class ItemList
    * @param  MenuItems $menuitems
    * @return Void
    */
-  public function attach($item_list)
+  public function attach($itemList)
   {
-    foreach ($item_list->items as $item) {
+    foreach ($itemList->items as $item) {
       $item->list = $this;
 
       $this->items[] = $item;
