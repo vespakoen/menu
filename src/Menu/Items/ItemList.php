@@ -7,7 +7,7 @@ use \Menu\Traits\MenuObject;
 class ItemList extends MenuObject
 {
   /**
-   * The name of this itemlist
+   * The name of this ItemList
    *
    * @var string
    */
@@ -21,7 +21,7 @@ class ItemList extends MenuObject
   public $items = array();
 
   /**
-   * The itemlist's parent item
+   * The ItemList's parent item
    *
    * @var Item
    */
@@ -42,14 +42,14 @@ class ItemList extends MenuObject
   public $options = array();
 
   /**
-   * Prefix the links with the parent(s) itemlist name(s)
+   * Prefix the links with the parent(s) ItemList name(s)
    *
    * @var boolean
    */
   public $prefixParents = false;
 
   /**
-   * Prefix links with the name of the itemlist at the very top of the tree
+   * Prefix links with the name of the ItemList at the very top of the tree
    *
    * @var boolean
    */
@@ -59,8 +59,8 @@ class ItemList extends MenuObject
    * Create a new Item List instance
    *
    * @param string  $name        The ItemList's name
-   * @param array   $attributes  Attributes for the itemlist's HMTL element
-   * @param string  $element     The HTML element for the itemlist
+   * @param array   $attributes  Attributes for the ItemList's HMTL element
+   * @param string  $element     The HTML element for the ItemList
    *
    * @return void
    */
@@ -72,7 +72,7 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Add a link item to the itemlist instance.
+   * Add a link item to the ItemList instance.
    *
    * <code>
    *    // Add a item to the default menu
@@ -140,7 +140,7 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Prefix this itemlist with a string
+   * Prefix this ItemList with a string
    *
    * @param string $prefix
    *
@@ -154,7 +154,7 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Prefix this itemlist with the parent itemlist(s) name(s)
+   * Prefix this ItemList with the parent ItemList(s) name(s)
    *
    * @return ItemList
    */
@@ -166,7 +166,7 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Prefix this itemlist with the name of the itemlist at the very top of the tree
+   * Prefix this ItemList with the name of the ItemList at the very top of the tree
    *
    * @return ItemList
    */
@@ -178,7 +178,7 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Add menu items to another itemlist.
+   * Add menu items to another ItemList.
    *
    * <code>
    *    // Attach menu items to the default menuhandler
@@ -200,7 +200,7 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Set the name for this itemlist
+   * Set the name for this ItemList
    *
    * @param string  $name
    *
@@ -214,7 +214,7 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Get the evaluated string content of the itemlist.
+   * Get the evaluated string content of the ItemList.
    *
    * @param  array $options
    *

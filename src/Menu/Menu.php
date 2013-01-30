@@ -21,7 +21,7 @@ class Menu
   private static $container;
 
   /**
-   * All the registered names and the associated itemlists
+   * All the registered names and the associated ItemLists
    *
    * @var array
    */
@@ -30,7 +30,7 @@ class Menu
   /**
    * Get a MenuHandler.
    *
-   * This method will retrieve itemlists by name,
+   * This method will retrieve ItemLists by name,
    * If an ItemList doesn't already exist, it will
    * be registered and added to the handler.
    *

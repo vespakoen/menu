@@ -12,7 +12,7 @@ use \Exception;
 class MenuHandler extends MenuObject
 {
   /**
-   * The names of the itemlists this handler acts on
+   * The names of the ItemLists this handler acts on
    *
    * @var array
    */
@@ -96,7 +96,7 @@ class MenuHandler extends MenuObject
   }
 
   /**
-   * Find itemslists by name in any of the itemlists this menuhandler acts on
+   * Find itemslists by name in any of the ItemLists this menuhandler acts on
    *
    * @param array $names the names to find
    *

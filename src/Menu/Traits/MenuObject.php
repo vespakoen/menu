@@ -3,7 +3,7 @@
  * MenuObject
  *
  * Allows dynamic setting and getting of attributes
- * on the various parts of a menu (items, itemlists, etc)
+ * on the various parts of a menu (items, ItemLists, etc)
  */
 namespace Menu\Traits;
 
