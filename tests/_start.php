@@ -9,6 +9,29 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
   }
 
   ////////////////////////////////////////////////////////////////////
+  ////////////////////////////// MATCHERS ////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Basic matcher for an Item
+   *
+   * @return array
+   */
+  protected function matchItem()
+  {
+    return array(
+      'tag' => 'li',
+      'child' => array(
+        'tag' => 'a',
+        'content' => 'foo',
+        'attributes' => array(
+          'href' => 'http://:'
+        ),
+      ),
+    );
+  }
+
+  ////////////////////////////////////////////////////////////////////
   ////////////////////////////// HELPERS /////////////////////////////
   ////////////////////////////////////////////////////////////////////
 
@@ -22,9 +45,9 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
   {
     $this->assertTag(
       $matcher,
-      $input,
+      $html,
       "Failed asserting that the HTML matches the provided format :\n\t"
-        .$input."\n\t"
+        .$html."\n\t"
         .json_encode($matcher));
   }
 }

@@ -10,8 +10,7 @@ class ItemTest extends MenuTests
   {
     $list = new ItemList();
     $item = new Item($list, 'li', 'foo');
-    $matcher = "\r\n\t<li>\r\n\t\t<a href=\"http://:\">foo</a>\r\n\t</li>";
 
-    $this->assertEquals($matcher, $item->render());
+    $this->assertHTML($this->matchItem(), $item->render());
   }
 }
