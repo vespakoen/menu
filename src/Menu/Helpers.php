@@ -11,25 +11,21 @@ use Underscore\Types\Methods;
 class Helpers
 {
   /**
-   * Merges two arrays of attributes together
+   * Adds a class to an array of attributes
    *
-   * @param  array $array1
-   * @param  array $array2
-   * @return array         A merged array of attributes
+   * @param array  $attributes The attributes
+   * @param string $class      The class to add
    */
-  public static function mergeAttributes($array1, $array2)
+  public static function addClassTo($attributes, $class)
   {
-    $array = $array1;
-    foreach ($array2 as $key => $value) {
-      if($key !== 'class') continue;
+    $classes = Arrays::get($attributes, 'class');
 
-      if (array_key_exists($key, $array1)) {
-        $array[$key] = $array1[$key] .= ' '.$array2[$key];
-      } else {
-        $array[$key] = $array2[$key];
-      }
-    }
+    // Append class if it's not already here
+    if (!$classes) $classes = $class;
+    elseif (!String::contains($classes, $class)) $classes .= ' ' .$class;
 
-    return $array;
+    $attributes['class'] = $classes;
+
+    return $attributes;
   }
 }
