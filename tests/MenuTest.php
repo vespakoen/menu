@@ -14,7 +14,7 @@ class MenuTest extends MenuTests
   {
     Menu::handler('foo');
     Menu::handler('bar');
-    $menu = Menu::all();
+    $menu = Menu::allHandlers();
 
     $this->assertEquals(array('foo', 'bar'), $menu->getHandles());
   }

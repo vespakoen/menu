@@ -70,7 +70,7 @@ class Menu
    *
    * @return MenuHandler
    */
-  public static function all()
+  public static function allHandlers()
   {
     $handles = array_keys(static::$names);
 
