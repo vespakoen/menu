@@ -1,6 +1,4 @@
 <?php
-include '_start.php';
-
 use Menu\Menu;
 
 class MenuTest extends MenuTests
