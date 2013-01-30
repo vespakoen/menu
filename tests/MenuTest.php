@@ -3,7 +3,7 @@ use Menu\Menu;
 
 class MenuTest extends PHPUnit_Framework_TestCase
 {
-  public function testCanGetAMenu()
+  public function testCanReturnAMenuHandler()
   {
     $menu = Menu::handler('foo');
 

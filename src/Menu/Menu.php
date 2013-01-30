@@ -7,6 +7,8 @@
  */
 namespace Menu;
 
+use Menu\Items\ItemList;
+
 class Menu
 {
   /**
@@ -14,21 +16,7 @@ class Menu
    *
    * @var array
    */
-  public static $names = array();
-
-  /**
-   * Create a new ItemList
-   *
-   * @param string $name       The name of the ItemList
-   * @param array  $attributes The HTML attributes for the list element
-   * @param string $element    The HTML element for the list (ul or dd)
-   *
-   * @return ItemList
-   */
-  public static function items($name = null, $attributes = array(), $element = 'ul')
-  {
-    return new Items\ItemList($name, $attributes, $element);
-  }
+  protected static $names = array();
 
   /**
    * Get a MenuHandler.
@@ -59,7 +47,7 @@ class Menu
     // Create a new Items instance for the names that don't exist yet
     foreach ($names as $name) {
       if ( ! array_key_exists($name, static::$names)) {
-        static::$names[$name] = new Items\ItemList($name, $attributes, $element);
+        static::$names[$name] = new ItemList($name, $attributes, $element);
       }
     }
 
@@ -74,8 +62,59 @@ class Menu
    */
   public static function all()
   {
-    return new MenuHandler(array_keys(static::$names));
+    $handles = array_keys(static::$names);
+
+    return new MenuHandler($handles);
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////// ITEM LISTS MANAGING ///////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Create a new ItemList
+   *
+   * @param string $name       The name of the ItemList
+   * @param array  $attributes The HTML attributes for the list element
+   * @param string $element    The HTML element for the list (ul or dd)
+   *
+   * @return ItemList
+   */
+  public static function items($name = null, $attributes = array(), $element = 'ul')
+  {
+    return new ItemList($name, $attributes, $element);
+  }
+
+  /**
+   * Store an ItemList in memory
+   *
+   * @param  string   $name     The handle to store it to
+   * @param  ItemList $itemList
+   *
+   * @return ItemList
+   */
+  public static function setItemList($name, $itemList)
+  {
+    static::$names[$name] = $itemList;
+
+    return $itemList;
+  }
+
+  /**
+   * Get an ItemList from the memory
+   *
+   * @param string $name The ItemList handle
+   *
+   * @return ItemList
+   */
+  public static function getItemList($name)
+  {
+    return static::$names[$name];
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////// MAGIC METHODS //////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Magic Method for calling methods on the default handler.

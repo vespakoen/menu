@@ -1,4 +1,9 @@
 <?php
+/**
+ * MenuHandler
+ *
+ * Handles various instances of ItemList at once
+ */
 namespace Menu;
 
 use \Exception;
@@ -13,9 +18,9 @@ class MenuHandler
   public $handles = array();
 
   /**
-   * Set the names of this handler on which it should act
+   * Set the handles on which this menu should act
    *
-   * @param array $names The names of the itemlists
+   * @param array $names The names of the ItemLists
    *
    * @return void
    */
@@ -23,6 +28,34 @@ class MenuHandler
   {
     $this->handles = $names;
   }
+
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// CODE METHODS //////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Render all the ItemLists this handler acts on and return the HTML
+   *
+   * @param array $options Optional render settings
+   *
+   * @return string
+   */
+  public function render($options = array())
+  {
+    $contents = '';
+
+    // Loop through the ItemLists this handler handles
+    // And render each one in the content
+    foreach ($this->handles as $name) {
+      $contents .= Menu::getItemList($name)->render($options);
+    }
+
+    return $contents;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////// MAGIC METHODS //////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
   /**
    * Magic method that will pass the incoming calls to
@@ -39,31 +72,12 @@ class MenuHandler
     foreach ($this->handles as $name) {
 
       // Forward the call to the ItemList
-      $item_list = Menu::$names[$name];
-      Menu::$names[$name] = call_user_func_array(array($item_list, $method), $parameters);
+      $item_list = Menu::getItemList($name);
+      $item_list = call_user_func_array(array($item_list, $method), $parameters);
+      Menu::setItemList($name, $item_list);
     }
 
     return $this;
-  }
-
-  /**
-   * Render all the itemlists this handler acts on and return the HTML
-   *
-   * @param array $options Optional render settings
-   *
-   * @return string
-   */
-  public function render($options = array())
-  {
-    $contents = '';
-    // Loop through the ItemLists this handler handles
-    foreach ($this->handles as $name) {
-
-      // Call the render method
-      $contents .= Menu::$names[$name]->render($options);
-    }
-
-    return $contents;
   }
 
   /**
@@ -83,7 +97,7 @@ class MenuHandler
     foreach ($this->handles as $name) {
 
       // Find the menuitems
-      foreach (Menu::$names[$name]->find($names) as $item_list) {
+      foreach (Menu::getItemList($name)->find($names) as $item_list) {
         $results[] = $item_list;
       }
     }
@@ -94,7 +108,7 @@ class MenuHandler
     }
 
     foreach ($results as $item_list) {
-      Menu::$names[$item_list->name] = $item_list;
+      Menu::setItemList($item_list->name, $item_list);
     }
 
     return new MenuHandler($names);
