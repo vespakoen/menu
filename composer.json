@@ -12,7 +12,8 @@
     "require": {
         "php": ">=5.3.0",
         "illuminate/http": "dev-master",
-        "meido/html": "dev-master"
+        "meido/html": "dev-master",
+        "anahkiasen/underscore-php": "dev-master"
     },
     "autoload": {
         "psr-0": {

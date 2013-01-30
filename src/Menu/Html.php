@@ -2,6 +2,7 @@
 namespace Menu;
 
 use \Meido\HTML\HTMLFacade;
+use \Underscore\Types\Arrays;
 
 class Html extends HTMLFacade
 {
@@ -29,8 +30,8 @@ class Html extends HTMLFacade
   {
     // Magic method for quickly generating basic tags
     if (in_array($method, array('li', 'ul', 'dl', 'dt', 'dd'))) {
-      $value = isset($parameters[0]) ? $parameters[0] : null;
-      $attributes = isset($parameters[1]) ? $parameters[1] : array();
+      $value = Arrays::get($parameters, 0);
+      $attributes = Arrays::get($parameters, 1, array());
 
       return static::element($method, $value, $attributes);
     }
