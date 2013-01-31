@@ -75,7 +75,7 @@ class ItemList extends MenuObject
   {
     $this->name       = $name;
     $this->attributes = $attributes;
-    $this->element    = $element ?: Menu::getOption('item_list.element');
+    $this->element    = $element ?: $this->getOption('item_list.element');
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -266,7 +266,7 @@ class ItemList extends MenuObject
   public function render($depth = 0)
   {
     // Check for maximal depth
-    $maxDepth = Menu::getOption('max_depth');
+    $maxDepth = $this->getOption('max_depth');
     if ($maxDepth != 0 and $depth > $maxDepth) return false;
 
     // Render contained items

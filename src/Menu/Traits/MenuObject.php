@@ -7,6 +7,7 @@
  */
 namespace Menu\Traits;
 
+use \Menu\Menu;
 use \Underscore\Types\Arrays;
 
 abstract class MenuObject
@@ -24,6 +25,13 @@ abstract class MenuObject
    * @var array
    */
   protected $attributes = array();
+
+  /**
+   * Per-element configuration
+   *
+   * @var array
+   */
+  protected $options;
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////// PUBLIC INTERFACE ////////////////////////
@@ -84,6 +92,56 @@ abstract class MenuObject
     $this->attributes = Arrays::set($this->attributes, $attribute, $value);
 
     return $this;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////////// CONFIGURATION //////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Replace an array of options
+   *
+   * @return MenuObject
+   */
+  public function replaceOptions($options)
+  {
+    $this->options = $options;
+
+    return $this;
+  }
+
+  /**
+   * Set a particular option in the array
+   *
+   * @param string $option The option
+   * @param mixed  $value  Its new value
+   *
+   * @return MenuObject
+   */
+  public function setOption($option, $value)
+  {
+    // Load the config file if it isn't yet
+    if (!$this->options) $this->options = Menu::getOption();
+
+    Arrays::set($this->options, $option, $value);
+
+    return $this;
+  }
+
+  /**
+   * Get a particular option in the array
+   *
+   * @param string $option An option
+   *
+   * @return mixed Its value
+   */
+  protected function getOption($option = null)
+  {
+    // Load the config file if it isn't yet
+    if (!$this->options) $this->options = Menu::getOption();
+    if (!$option) return $this->options;
+
+    return Arrays::get($this->options, $option);
   }
 
   ////////////////////////////////////////////////////////////////////

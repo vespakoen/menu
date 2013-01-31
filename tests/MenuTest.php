@@ -58,4 +58,13 @@ class MenuTest extends MenuTests
     $config = Menu::getOption();
     $this->assertInternalType('array', $config);
   }
+
+  public function testClassesPassTheirConfigurationToChildren()
+  {
+    $ul = static::$itemList;
+    $ul->setOption('item.element', 'dl');
+    $ul->add('#', 'foo');
+
+    $this->assertEquals('<ul><li><a href="#">foo</a></li></ul>', $ul->render());
+  }
 }

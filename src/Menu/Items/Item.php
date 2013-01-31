@@ -47,9 +47,10 @@ class Item extends MenuObject
   {
     $this->list     = $list;
     $this->children = $children;
+    $this->replaceOptions($list->getOption());
 
     // Load various defaults
-    $this->element = Menu::getOption('item.element');
+    $this->element = $this->getOption('item.element');
 
     // Create content
     $this->content = $content->inItem($this);
@@ -162,11 +163,11 @@ class Item extends MenuObject
   private function addActiveClasses($attributes)
   {
     if ($this->isActive()) {
-      $attributes = Helpers::addClass($attributes, Menu::getOption('item.active_class'));
+      $attributes = Helpers::addClass($attributes, $this->getOption('item.active_class'));
     }
 
     if ($this->hasActiveChild()) {
-      $attributes = Helpers::addClass($attributes, Menu::getOption('item.active_child_class'));
+      $attributes = Helpers::addClass($attributes, $this->getOption('item.active_child_class'));
     }
 
     return $attributes;
