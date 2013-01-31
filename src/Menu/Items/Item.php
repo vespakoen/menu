@@ -9,6 +9,7 @@ namespace Menu\Items;
 use \Underscore\Types\Arrays;
 use \Menu\Traits\MenuObject;
 use \Menu\Helpers;
+use \Menu\Traits\Content;
 use \Menu\Html;
 use \Menu\Menu;
 
@@ -29,7 +30,7 @@ class Item extends MenuObject
 
   /**
    * The item's content
-   * @var Link/Raw
+   * @var Content
    */
   public $content;
 
@@ -53,26 +54,19 @@ class Item extends MenuObject
   /**
    * Create a new item instance
    *
-   * @param ItemList $list
-   * @param string   $type
-   * @param string   $text
-   * @param ItemList $children
-   * @param array    $options
-   * @param string   $url
-   *
-   * @return void
+   * @param ItemList $list     The parent
+   * @param Content  $content  The content
+   * @param array    $children Facultative children ItemLists
+   * @param array    $options  Options
    */
-  public function __construct($list, $type, $text, $children = array(), $options = array(), $url = null)
+  public function __construct(ItemList $list, Content $content, $children = array(), $options = array())
   {
     $this->list     = $list;
     $this->children = $children;
     $this->options  = array_replace_recursive($this->options, $options);
 
     // Create content
-    $this->content = ($type == 'link')
-      ? new Contents\Link($url, $text)
-      : new Contents\Raw($text);
-    $this->content->inItem($this);
+    $this->content = $content->inItem($this);
   }
 
   /**

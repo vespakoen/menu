@@ -5,21 +5,17 @@ class LinkTest extends MenuTests
 {
   public function testCanCreateRawContent()
   {
-    $link = new Link('', 'foo');
-
-    $this->assertHTML($this->matchLink(), $link->render());
+    $this->assertHTML($this->matchLink(), static::$link->render());
   }
 
   public function testLinksAreLinks()
   {
-    $link = new Link('', 'foo');
-
-    $this->assertTrue($link->isLink());
+    $this->assertTrue(static::$link->isLink());
   }
 
   public function testCanSetAttributesOnLinks()
   {
-    $link = new Link('', 'foo');
+    $link = static::$link;
     $link->setClass('foobar');
 
     $matcher = $this->matchLink();

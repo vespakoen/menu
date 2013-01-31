@@ -8,14 +8,12 @@ class ItemListTest extends MenuTests
 {
   public function testCanCreateItemList()
   {
-    $list = new ItemList();
-
-    $this->assertHTML($this->matchList(), $list->render());
+    $this->assertHTML($this->matchList(), static::$itemList->render());
   }
 
   public function testCanCreateListsOfADifferentElement()
   {
-    $list = new ItemList();
+    $list = static::$itemList;
     $list->element('ol');
 
     $this->assertHTML($this->matchList('ol'), $list->render());

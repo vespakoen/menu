@@ -1,8 +1,14 @@
 <?php
+/**
+ * ItemList
+ *
+ * A container for Items
+ */
 namespace Menu\Items;
 
 use \Menu\HTML;
 use \Menu\Traits\MenuObject;
+use \Menu\Items\Contents\Link;
 
 class ItemList extends MenuObject
 {
@@ -90,7 +96,7 @@ class ItemList extends MenuObject
    * </code>
    *
    * @param string   $url
-   * @param string   $title
+   * @param string   $value
    * @param ItemList $children
    * @param array    $linkAttributes
    * @param array    $itemAttributes
@@ -98,16 +104,17 @@ class ItemList extends MenuObject
    *
    * @return MenuItems
    */
-  public function add($url, $title, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = 'li')
+  public function add($url, $value, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = 'li')
   {
-    $options = compact('linkAttributes');
+    $content = new Link($url, $value, $linkAttributes);
 
-    $item = new Item($this, 'link', $title, $children, $options, $url);
+    $item = new Item($this, $content, $children);
     $item->element($itemElement);
     $item->setAttributes($itemAttributes);
 
-    if ( ! is_null($children)) {
-      $children->item = $item;
+    // Set Item as parent of its children
+    if (!is_null($children)) {
+      $children->inItem($item);
     }
 
     $this->items[] = $item;
@@ -130,12 +137,16 @@ class ItemList extends MenuObject
    *
    * @return MenuItems
    */
-  public function raw($html, $children = null, $item_attributes = array(), $item_element = 'li')
+  public function raw($html, $children = null, $itemAttributes = array(), $itemElement = 'li')
   {
-    $item = new Item($this, 'raw', $html, $children, $options);
+    // Create Item
+    $content = new Raw($html);
+    $item = new Item($this, $content, $children);
+    $item->setAttributes($itemAttributes)->element($itemElement);
 
-    if ( ! is_null($children)) {
-      $children->item = $item;
+    // Set Item as parent of its children
+    if (!is_null($children)) {
+      $children->inItem($item);
     }
 
     $this->items[] = $item;
@@ -175,6 +186,20 @@ class ItemList extends MenuObject
   public function name($name)
   {
     $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * Set the parent of the ItemList
+   *
+   * @param Item $item
+   *
+   * @return ItemList
+   */
+  public function inItem($item)
+  {
+    $this->item = $item;
 
     return $this;
   }

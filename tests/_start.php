@@ -1,11 +1,27 @@
 <?php
 use Menu\Menu;
+use Menu\Items\Item;
+use Menu\Items\ItemList;
+use Menu\Items\Contents\Link;
+use Menu\Items\Contents\Raw;
 
 abstract class MenuTests extends PHPUnit_Framework_TestCase
 {
+  protected static $link;
+  protected static $raw;
+  protected static $itemList;
+  protected static $item;
+
   public function setUp()
   {
+    // Reset all menus
     Menu::reset();
+
+    // Precreate somme Dummy data
+    static::$link     = new Link('#', 'foo');
+    static::$raw      = new Raw('foo');
+    static::$itemList = new ItemList;
+    static::$item     = new Item(static::$itemList, static::$link);
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -52,7 +68,7 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
       'tag' => 'a',
       'content' => 'foo',
       'attributes' => array(
-        'href' => 'http://:'
+        'href' => 'http://:/#'
       ),
     );
   }
