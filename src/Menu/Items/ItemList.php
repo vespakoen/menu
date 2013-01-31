@@ -199,7 +199,7 @@ class ItemList extends MenuObject
    */
   public function prefix($prefix)
   {
-    $this->setOption('prefix', $prefix);
+    $this->setOption('item_list.prefix', $prefix);
 
     return $this;
   }
@@ -211,7 +211,7 @@ class ItemList extends MenuObject
    */
   public function prefixParents($prefixParents = true)
   {
-    $this->setOption('prefix_parents', $prefixParents);
+    $this->setOption('item_list.prefix_parents', $prefixParents);
 
     return $this;
   }
@@ -223,7 +223,7 @@ class ItemList extends MenuObject
    */
   public function prefixHandler($prefixHandler = true)
   {
-    $this->setOption('prefix_handler', $prefixHandler);
+    $this->setOption('item_list.prefix_handler', $prefixHandler);
 
     return $this;
   }

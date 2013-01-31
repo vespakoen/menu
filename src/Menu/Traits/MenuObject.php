@@ -123,7 +123,7 @@ abstract class MenuObject
     // Load the config file if it isn't yet
     if (!$this->options) $this->options = Menu::getOption();
 
-    Arrays::set($this->options, $option, $value);
+    $this->options = Arrays::set($this->options, $option, $value);
 
     return $this;
   }

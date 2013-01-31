@@ -3,6 +3,7 @@
   // Global options ------------------------------------------------ /
 
   // The maximum depth a list can be generated
+  // 0 means no limit
   'max_depth' => 0,
 
   // Items --------------------------------------------------------- /
@@ -25,7 +26,7 @@
     // The default ItemList element
     'element' => 'ul',
 
-    // Whether links should have a prefix or not
+    // A prefix to prepend the links URLs with
     'prefix'         => null,
 
     // Whether links should inherit their parent/handler's prefix
