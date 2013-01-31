@@ -60,7 +60,11 @@ class Link extends Content
    */
   public function render()
   {
-    return HTML::to($this->getEvaluatedUrl(), $this->value, $this->attributes);
+    // Create link and correct potential special URLs
+    $link = HTML::to($this->getEvaluatedUrl(), $this->value, $this->attributes);
+    $link = preg_replace('/href="([^"]+)"/', 'href="' .$this->getEvaluatedUrl(). '"', $link);
+
+    return $link;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -75,6 +79,16 @@ class Link extends Content
   public function isLink()
   {
     return true;
+  }
+
+  /**
+   * Whether the link is special or not
+   *
+   * @return boolean
+   */
+  public function isSpecialUrl()
+  {
+    return in_array($this->url, $this->hidden);
   }
 
   /**
@@ -101,7 +115,7 @@ class Link extends Content
     $segments = array();
 
     // If the URL is just an hash, don't do shit
-    if (!$this->item or String::startsWith($this->url, '#')) {
+    if (!$this->item or $this->isSpecialUrl()) {
       return $this->url;
     }
 
@@ -199,7 +213,7 @@ class Link extends Content
     $parent_items = $this->get_parent_items();
 
     foreach ($parent_items as $item) {
-      if ($item->content->isLink() && ! is_null($item->content->getUrl()) && !in_array($item->content->getUrl(), $this->hidden)) {
+      if ($item->content->isLink() && ! is_null($item->content->getUrl()) && !$item->content->isSpecialUrl()) {
         $urls[] = $item->content->getUrl();
       }
     }
