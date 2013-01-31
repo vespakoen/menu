@@ -172,7 +172,7 @@ class Menu
 
     // Create basic Config handler
     static::$container->bind('files', 'Illuminate\Filesystem\Filesystem');
-    static::$container->bindIf('config', function($container) {
+    static::$container->singleton('config', function($container) {
       $fileLoader = new \Illuminate\Config\FileLoader($container['files'], 'src/');
       return new \Illuminate\Config\Repository($fileLoader, 'config');
     });
@@ -197,6 +197,17 @@ class Menu
     if ($option) $option = '.'.$option;
 
     return static::getContainer('config')->get('config'.$option);
+  }
+
+  /**
+   * Set a global option
+   *
+   * @param key   $option The option
+   * @param mixed $value  Its value
+   */
+  public static function setOption($option, $value)
+  {
+    static::getContainer('config')->set('config.'.$option, $value);
   }
 
 }
