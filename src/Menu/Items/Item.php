@@ -150,7 +150,7 @@ class Item extends MenuObject
     $parent_items = $this->get_parent_items();
 
     foreach ($parent_items as $item) {
-      if ($item->type == 'link' && ! is_null($item->url) && $item->url !== '#') {
+      if ($item->content->isLink() && ! is_null($item->url) && $item->url !== '#') {
         $urls[] = $item->url;
       }
     }
