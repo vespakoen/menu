@@ -76,31 +76,21 @@ class Item extends MenuObject
    *
    * @return string
    */
-  public function render($options = array())
+  public function render($depth = 0)
   {
-    $this->options = array_replace_recursive($this->options, $options);
-
     // Add the active classes
+    $content = $this->content->render();
     $this->addActiveClasses($this->attributes);
-
-    // Increment the render depth
-    $this->options['renderDepth'] = $this->getOption('renderDepth', 0) + 1;
-
-    // Render main content
-    $content = $this->renderTabbed($this->content, $this->options['renderDepth'] + 1);
 
     // Render children if any
     if ($this->hasChildren()) {
-      $content .=
-        PHP_EOL.$this->children.
-        str_repeat("\t", $this->options['renderDepth']);
+      $content .= $this->children->render($depth + 1);
     }
 
-    $content .= PHP_EOL.str_repeat("\t", $this->options['renderDepth']);
     $element = $this->element;
     if ($element) $content = HTML::$element($content, $this->attributes);
 
-    return $this->renderTabbed($content, $this->options['renderDepth']);
+    return $content;
   }
 
   ////////////////////////////////////////////////////////////////////

@@ -41,14 +41,14 @@ class MenuHandler extends MenuObject
    *
    * @return string
    */
-  public function render($options = array())
+  public function render()
   {
     $contents = '';
 
     // Loop through the ItemLists this handler handles
     // And render each one in the content
     foreach ($this->handles as $name) {
-      $contents .= Menu::getItemList($name)->render($options);
+      $contents .= Menu::getItemList($name)->render();
     }
 
     return $contents;

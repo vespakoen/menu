@@ -61,6 +61,8 @@ class ItemList extends MenuObject
    */
   public $prefixHandler = false;
 
+  public static $maxDepth = 0;
+
   /**
    * Create a new Item List instance
    *
@@ -262,32 +264,17 @@ class ItemList extends MenuObject
    *
    * @return string
    */
-  public function render($options = array())
+  public function render($depth = 0)
   {
-    $options = array_replace_recursive($this->options, $options);
+    if (static::$maxDepth != 0 and $depth > static::$maxDepth) return false;
 
-    if ( ! array_key_exists('currentDepth', $options)) {
-      $options['currentDepth'] = 1;
-      $options['renderDepth'] = 1;
-    } else {
-      $options['currentDepth']++;
-      $options['renderDepth']++;
-    }
-
-    if (array_key_exists('maxDepth', $options) && $options['currentDepth'] > $options['maxDepth']) {
-      return;
-    }
-
-    extract($options);
-
-    $contents = '';
+    $contents = null;
     foreach ($this->items as $item) {
-      $contents .= $item->render($options);
+      $contents .= $item->render($depth + 1);
     }
 
     $element = $this->element;
-    $content = HTML::$element(PHP_EOL.$contents.PHP_EOL.str_repeat("\t", $renderDepth - 1), $this->attributes).PHP_EOL;
-    $content = $this->renderTabbed($content, $renderDepth - 1);
+    if ($element) $content = HTML::$element($contents, $this->attributes);
 
     return $content;
   }
