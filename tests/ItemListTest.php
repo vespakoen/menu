@@ -30,4 +30,15 @@ class ItemListTest extends MenuTests
 
     $this->assertHTML($matcher, $list->render());
   }
+
+  public function testCanSetClassOnLists()
+  {
+    $list = static::$itemList;
+    $list->addClass('foo')->setAttribute('data-foo', 'bar');
+    $matcher = $this->matchList();
+    $matcher['attributes']['class'] = 'foo';
+    $matcher['attributes']['data-foo'] = 'bar';
+
+    $this->assertHTML($matcher, $list);
+  }
 }

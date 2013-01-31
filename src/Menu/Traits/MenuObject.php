@@ -8,6 +8,7 @@
 namespace Menu\Traits;
 
 use \Menu\Menu;
+use \Menu\Helpers;
 use \Underscore\Types\Arrays;
 
 abstract class MenuObject
@@ -61,6 +62,18 @@ abstract class MenuObject
   public function setClass($class)
   {
     $this->setAttribute('class', $class);
+
+    return $this;
+  }
+
+  /**
+   * Add one or more classes
+   *
+   * @param mixed $classes The new class(es)
+   */
+  public function addClass($classes)
+  {
+    $this->attributes = Helpers::addClassTo($this->attributes, $classes);
 
     return $this;
   }

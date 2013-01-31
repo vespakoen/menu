@@ -6,7 +6,7 @@
  */
 namespace Menu;
 
-use Underscore\Types\Methods;
+use Underscore\Types\Arrays;
 
 class Helpers
 {
@@ -18,6 +18,8 @@ class Helpers
    */
   public static function addClassTo($attributes, $class)
   {
+    // Explode class if array passed
+    if (is_array($class)) $class = explode(' ', $class);
     $classes = Arrays::get($attributes, 'class');
 
     // Append class if it's not already here
