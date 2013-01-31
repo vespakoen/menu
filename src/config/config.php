@@ -17,4 +17,12 @@
     'active_class'       => 'active',
     'active_child_class' => 'active-child',
   ),
+
+  // ItemLists ----------------------------------------------------- /
+
+  'item_list' => array(
+
+    // The default ItemList element
+    'element' => 'ul',
+  ),
 );

@@ -71,11 +71,11 @@ class ItemList extends MenuObject
    *
    * @return void
    */
-  public function __construct($name = null, $attributes = array(), $element = 'ul')
+  public function __construct($name = null, $attributes = array(), $element = null)
   {
     $this->name       = $name;
     $this->attributes = $attributes;
-    $this->element    = $element;
+    $this->element    = $element ?: Menu::getOption('item_list.element');
   }
 
   ////////////////////////////////////////////////////////////////////
