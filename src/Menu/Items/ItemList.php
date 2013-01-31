@@ -116,16 +116,6 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Get all of the list's items
-   *
-   * @return array
-   */
-  public function getItems()
-  {
-    return $this->items;
-  }
-
-  /**
    * Add a raw html item to the MenuItems instance.
    *
    * <code>
@@ -149,44 +139,6 @@ class ItemList extends MenuObject
     }
 
     $this->items[] = $item;
-
-    return $this;
-  }
-
-  /**
-   * Prefix this ItemList with a string
-   *
-   * @param string $prefix
-   *
-   * @return ItemList
-   */
-  public function prefix($prefix)
-  {
-    $this->prefix = $prefix;
-
-    return $this;
-  }
-
-  /**
-   * Prefix this ItemList with the parent ItemList(s) name(s)
-   *
-   * @return ItemList
-   */
-  public function prefixPandler()
-  {
-    $this->prefixParents = true;
-
-    return $this;
-  }
-
-  /**
-   * Prefix this ItemList with the name of the ItemList at the very top of the tree
-   *
-   * @return ItemList
-   */
-  public function prefixHandler()
-  {
-    $this->prefixHandler = true;
 
     return $this;
   }
@@ -223,6 +175,58 @@ class ItemList extends MenuObject
   public function name($name)
   {
     $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * Get all of the list's items
+   *
+   * @return array
+   */
+  public function getItems()
+  {
+    return $this->items;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////////// PREFIXES /////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Prefix this ItemList with a string
+   *
+   * @param string $prefix
+   *
+   * @return ItemList
+   */
+  public function prefix($prefix)
+  {
+    $this->prefix = $prefix;
+
+    return $this;
+  }
+
+  /**
+   * Prefix this ItemList with the parent ItemList(s) name(s)
+   *
+   * @return ItemList
+   */
+  public function prefixParents()
+  {
+    $this->prefixParents = true;
+
+    return $this;
+  }
+
+  /**
+   * Prefix this ItemList with the name of the ItemList at the very top of the tree
+   *
+   * @return ItemList
+   */
+  public function prefixHandler()
+  {
+    $this->prefixHandler = true;
 
     return $this;
   }

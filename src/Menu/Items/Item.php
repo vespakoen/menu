@@ -7,6 +7,7 @@
 namespace Menu\Items;
 
 use \Underscore\Types\Arrays;
+use \Underscore\Types\String;
 use \Menu\Traits\MenuObject;
 use \Menu\Helpers;
 use \Menu\Html;
@@ -106,122 +107,6 @@ class Item extends MenuObject
   }
 
   ////////////////////////////////////////////////////////////////////
-  /////////////////////////// CORE METHODS ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Get all the parent items of this item
-   *
-   * @return array
-   */
-  public function get_parents()
-  {
-    $parents = array();
-
-    $list = $this->list;
-
-    while ( ! is_null($list->item)) {
-      $parents[] = $list->item;
-
-      $list = isset($list->item->list) ? $list->item->list : null;
-    }
-
-    $parents = array_reverse($parents);
-
-    return $parents;
-  }
-
-  public function get_parent_items()
-  {
-    $parents = array();
-
-    $list = $this->list;
-
-    while ( ! is_null($list->item)) {
-      $parents[] = $list->item;
-
-      $list = isset($list->item->list) ? $list->item->list : null;
-    }
-
-    $parents = array_reverse($parents);
-
-    return $parents;
-  }
-
-  public function get_parent_lists()
-  {
-    $parents = array();
-
-    $list = $this->list;
-
-    $parents[] = $list;
-
-    while (isset($list->item->list) && ! is_null($list->item->list)) {
-      $parents[] = $list->item->list;
-
-      $list = isset($list->item->list) ? $list->item->list : null;
-    }
-
-    $parents = array_reverse($parents);
-
-    return $parents;
-  }
-
-  public function get_handler_segment()
-  {
-    $parent_lists = $this->get_parent_lists();
-
-    $handler = array_pop($parent_lists);
-
-    return is_null($handler->name) ? '' : $handler->name;
-  }
-
-  public function get_parent_item_urls()
-  {
-    $urls = array();
-
-    $parent_items = $this->get_parent_items();
-
-    foreach ($parent_items as $item) {
-      if ($item->content->isLink() && ! is_null($item->content->getUrl()) && $item->content->getUrl() !== '#') {
-        $urls[] = $item->url;
-      }
-    }
-
-    return $urls;
-  }
-
-  /**
-   * Get the evaluated URL based on the prefix settings
-   *
-   * @return string
-   */
-  public function getEvaluatedUrl()
-  {
-    $segments = array();
-
-    if ($this->getUrl() == '#') {
-      return $this->getUrl();
-    }
-
-    if ( ! is_null($this->list->prefix)) {
-      $segments[] = $this->list->prefix;
-    }
-
-    if ($this->list->prefixParents) {
-      $segments = $segments + $this->get_parent_item_urls();
-    }
-
-    if ($this->list->prefixHandler) {
-      $segments[] = $this->get_handler_segment();
-    }
-
-    $segments[] = $this->getUrl();
-
-    return implode('/', $segments);
-  }
-
-  ////////////////////////////////////////////////////////////////////
   ///////////////////////// PUBLIC INTERFACE /////////////////////////
   ////////////////////////////////////////////////////////////////////
 
@@ -310,6 +195,124 @@ class Item extends MenuObject
     }
 
     return $attributes;
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  /////////////////////// PREFIXES AND SEGMENTS //////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Get the evaluated URL based on the prefix settings
+   *
+   * @return string
+   */
+  public function getEvaluatedUrl()
+  {
+    $segments = array();
+
+    // If the URL is just an hash, don't do shit
+    if (String::startsWith($this->getUrl(), '#')) {
+      return $this->getUrl();
+    }
+
+    // Prepend parent prefix
+    if (!is_null($this->list->prefix)) {
+      $segments[] = $this->list->prefix;
+    }
+
+    if ($this->list->prefixParents) {
+      $segments += $this->get_parent_item_urls();
+    }
+
+    if ($this->list->prefixHandler) {
+      $segments[] = $this->get_handler_segment();
+    }
+
+    $segments[] = $this->getUrl();
+
+    return implode('/', $segments);
+  }
+
+  /**
+   * Get all the parent items of this item
+   *
+   * @return array
+   */
+  public function get_parents()
+  {
+    $parents = array();
+
+    $list = $this->list;
+
+    while ( ! is_null($list->item)) {
+      $parents[] = $list->item;
+
+      $list = isset($list->item->list) ? $list->item->list : null;
+    }
+
+    $parents = array_reverse($parents);
+
+    return $parents;
+  }
+
+  public function get_parent_items()
+  {
+    $parents = array();
+
+    $list = $this->list;
+
+    while ( ! is_null($list->item)) {
+      $parents[] = $list->item;
+
+      $list = isset($list->item->list) ? $list->item->list : null;
+    }
+
+    $parents = array_reverse($parents);
+
+    return $parents;
+  }
+
+  public function get_parent_lists()
+  {
+    $parents = array();
+
+    $list = $this->list;
+
+    $parents[] = $list;
+
+    while (isset($list->item->list) && ! is_null($list->item->list)) {
+      $parents[] = $list->item->list;
+
+      $list = isset($list->item->list) ? $list->item->list : null;
+    }
+
+    $parents = array_reverse($parents);
+
+    return $parents;
+  }
+
+  public function get_handler_segment()
+  {
+    $parent_lists = $this->get_parent_lists();
+
+    $handler = array_pop($parent_lists);
+
+    return is_null($handler->name) ? '' : $handler->name;
+  }
+
+  public function get_parent_item_urls()
+  {
+    $urls = array();
+
+    $parent_items = $this->get_parent_items();
+
+    foreach ($parent_items as $item) {
+      if ($item->content->isLink() && ! is_null($item->content->getUrl()) && $item->content->getUrl() !== '#') {
+        $urls[] = $item->url;
+      }
+    }
+
+    return $urls;
   }
 
   ////////////////////////////////////////////////////////////////////
