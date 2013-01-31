@@ -170,12 +170,33 @@ class Menu
       return Request::createFromGlobals();
     });
 
+    // Create basic Config handler
+    static::$container->bind('files', 'Illuminate\Filesystem\Filesystem');
+    static::$container->bindIf('config', function($container) {
+      $fileLoader = new \Illuminate\Config\FileLoader($container['files'], 'src/');
+      return new \Illuminate\Config\Repository($fileLoader, 'config');
+    });
+
     // Shortcut for getting a dependency
     if ($dependency) {
       return static::$container->make($dependency);
     }
 
     return static::$container;
+  }
+
+  /**
+   * Get an option from the options array
+   *
+   * @param string $option The option key
+   *
+   * @return mixed Its value
+   */
+  public static function getConfig($option = null)
+  {
+    if ($option) $option = '.'.$option;
+
+    return static::$container->make('config')->get('config'.$option);
   }
 
 }
