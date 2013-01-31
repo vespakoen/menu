@@ -101,7 +101,7 @@ class Item extends MenuObject
     }
 
     $element = $this->element;
-    $content = HTML::$element($content.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
+    if ($element) $content = HTML::$element($content.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
 
     return $this->renderTabbed($content, $this->options['renderDepth']);
   }
@@ -117,7 +117,9 @@ class Item extends MenuObject
    */
   public function isActive()
   {
-    return $this->getUrl() == $this->getRequest()->fullUrl();
+    return
+      $this->getUrl() == $this->getRequest()->fullUrl() or
+      $this->getUrl() == $this->getRequest()->url();
   }
 
   /**
@@ -150,6 +152,8 @@ class Item extends MenuObject
         return $child->hasActiveChild();
       }
     }
+
+    return false;
   }
 
   /**
