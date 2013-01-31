@@ -122,17 +122,20 @@ class Link extends Content
     }
 
     // Prepend list prefix
-    if (!is_null($this->item->getList()->prefix)) {
-      $segments[] = $this->item->getList()->prefix;
+    $listPrefix = $this->item->getList()->getOption('item_list.prefix');
+    if (!is_null($listPrefix)) {
+      $segments[] = $listPrefix;
     }
 
     // Prepend parent item prefix
-    if ($this->item->getList()->prefixParents) {
+    $prefixParents = $this->item->getList()->getOption('item_list.prefix_parents');
+    if ($prefixParents) {
       $segments += $this->get_parent_item_urls();
     }
 
     // Prepend handler prefix
-    if ($this->item->getList()->prefixHandler) {
+    $prefixHandler = $this->item->getList()->getOption('item_list.prefix_handler');
+    if ($prefixHandler) {
       $segments[] = $this->get_handler_segment();
     }
 

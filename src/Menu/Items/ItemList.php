@@ -35,34 +35,6 @@ class ItemList extends MenuObject
   public $parentItem;
 
   /**
-   * The default render options for this item list
-   *
-   * @var array
-   */
-  protected $options = array();
-
-  /**
-   * Prefix the links with a custom string
-   *
-   * @var mixed
-   */
-  public $prefix;
-
-  /**
-   * Prefix the links with the parent(s) ItemList name(s)
-   *
-   * @var boolean
-   */
-  public $prefixParents = false;
-
-  /**
-   * Prefix links with the name of the ItemList at the very top of the tree
-   *
-   * @var boolean
-   */
-  public $prefixHandler = false;
-
-  /**
    * Create a new Item List instance
    *
    * @param string  $name        The ItemList's name
@@ -227,7 +199,7 @@ class ItemList extends MenuObject
    */
   public function prefix($prefix)
   {
-    $this->prefix = $prefix;
+    $this->setOption('prefix', $prefix);
 
     return $this;
   }
@@ -237,9 +209,9 @@ class ItemList extends MenuObject
    *
    * @return ItemList
    */
-  public function prefixParents()
+  public function prefixParents($prefixParents = true)
   {
-    $this->prefixParents = true;
+    $this->setOption('prefix_parents', $prefixParents);
 
     return $this;
   }
@@ -249,9 +221,9 @@ class ItemList extends MenuObject
    *
    * @return ItemList
    */
-  public function prefixHandler()
+  public function prefixHandler($prefixHandler = true)
   {
-    $this->prefixHandler = true;
+    $this->setOption('prefix_handler', $prefixHandler);
 
     return $this;
   }

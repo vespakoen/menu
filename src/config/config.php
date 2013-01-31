@@ -24,5 +24,12 @@
 
     // The default ItemList element
     'element' => 'ul',
+
+    // Whether links should have a prefix or not
+    'prefix'         => null,
+
+    // Whether links should inherit their parent/handler's prefix
+    'prefix_parents' => false,
+    'prefix_handler' => false,
   ),
 );
