@@ -43,6 +43,19 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
   }
 
   /**
+   * Matcher for an ItemList with an Item
+   *
+   * @return array
+   */
+  protected function matchListWithItem()
+  {
+    $list = $this->matchListWithItem();
+    $list['child'] = $this->matchItem();
+
+    return $list;
+  }
+
+  /**
    * Basic matcher for an Item
    *
    * @param string $element

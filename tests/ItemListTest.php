@@ -18,4 +18,16 @@ class ItemListTest extends MenuTests
 
     $this->assertHTML($this->matchList('ol'), $list->render());
   }
+
+  public function testCanPrefixItems()
+  {
+    $list = static::$itemList;
+    $list->prefixParents()->prefix('foo');
+    $list->add('bar', 'foo');
+
+    $matcher = $this->matchListWithItem();
+    $matcher['child']['child'] = $this->matchLink('http://:/foo/bar');
+
+    $this->assertHTML($matcher, $list->render());
+  }
 }
