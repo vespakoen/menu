@@ -136,10 +136,10 @@ class Link extends Content
 
     $list = $this->item->getList();
 
-    while ( ! is_null($list->item)) {
-      $parents[] = $list->item;
+    while ( ! is_null($list->parentItem)) {
+      $parents[] = $list->parentItem;
 
-      $list = isset($list->item->list) ? $list->item->list : null;
+      $list = isset($list->parentItem->list) ? $list->parentItem->list : null;
     }
 
     $parents = array_reverse($parents);
@@ -153,10 +153,10 @@ class Link extends Content
 
     $list = $this->item->getList();
 
-    while ( ! is_null($list->item)) {
-      $parents[] = $list->item;
+    while ( ! is_null($list->parentItem)) {
+      $parents[] = $list->parentItem;
 
-      $list = isset($list->item->list) ? $list->item->list : null;
+      $list = isset($list->parentItem->list) ? $list->parentItem->list : null;
     }
 
     $parents = array_reverse($parents);
@@ -172,10 +172,10 @@ class Link extends Content
 
     $parents[] = $list;
 
-    while (isset($list->item->list) && ! is_null($list->item->list)) {
-      $parents[] = $list->item->list;
+    while (isset($list->parentItem->list) && ! is_null($list->parentItem->list)) {
+      $parents[] = $list->parentItem->list;
 
-      $list = isset($list->item->list) ? $list->item->list : null;
+      $list = isset($list->parentItem->list) ? $list->parentItem->list : null;
     }
 
     $parents = array_reverse($parents);

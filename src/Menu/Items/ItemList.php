@@ -20,7 +20,7 @@ class ItemList extends MenuObject
   public $name;
 
   /**
-   * The menu items
+   * The menu Items
    *
    * @var array
    */
@@ -31,7 +31,14 @@ class ItemList extends MenuObject
    *
    * @var Item
    */
-  public $item;
+  public $parentItem;
+
+  /**
+   * The default render options for this item list
+   *
+   * @var array
+   */
+  protected $options = array();
 
   /**
    * Prefix the links with a custom string
@@ -39,13 +46,6 @@ class ItemList extends MenuObject
    * @var mixed
    */
   public $prefix;
-
-  /**
-   * The default render options for this item list
-   *
-   * @var array
-   */
-  public $options = array();
 
   /**
    * Prefix the links with the parent(s) ItemList name(s)
@@ -130,18 +130,17 @@ class ItemList extends MenuObject
    *    Menu::raw('<img src="img/seperator.gif">');
    * </code>
    *
-   * @param  string   $html
+   * @param  string   $raw
    * @param  ItemList $children
    * @param  array    $attributes
    * @param  array    $children
    *
    * @return MenuItems
    */
-  public function raw($html, $children = null, $itemAttributes = array(), $itemElement = 'li')
+  public function raw($raw, $children = null, $itemAttributes = array(), $itemElement = 'li')
   {
     // Create Item
-    $content = new Raw($html);
-    $item = new Item($this, $content, $children);
+    $item = new Item($this, new Raw($raw), $children);
     $item->setAttributes($itemAttributes)->element($itemElement);
 
     // Set Item as parent of its children
@@ -199,7 +198,7 @@ class ItemList extends MenuObject
    */
   public function inItem($item)
   {
-    $this->item = $item;
+    $this->parentItem = $item;
 
     return $this;
   }
