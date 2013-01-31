@@ -7,6 +7,7 @@
 namespace Menu\Items;
 
 use \Menu\HTML;
+use \Menu\Menu;
 use \Menu\Traits\MenuObject;
 use \Menu\Items\Contents\Link;
 
@@ -60,8 +61,6 @@ class ItemList extends MenuObject
    * @var boolean
    */
   public $prefixHandler = false;
-
-  public static $maxDepth = 0;
 
   /**
    * Create a new Item List instance
@@ -266,8 +265,11 @@ class ItemList extends MenuObject
    */
   public function render($depth = 0)
   {
-    if (static::$maxDepth != 0 and $depth > static::$maxDepth) return false;
+    // Check for maximal depth
+    $maxDepth = Menu::getOption('max_depth');
+    if ($maxDepth != 0 and $depth > $maxDepth) return false;
 
+    // Render contained items
     $contents = null;
     foreach ($this->items as $item) {
       $contents .= $item->render($depth + 1);

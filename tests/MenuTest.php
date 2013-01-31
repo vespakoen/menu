@@ -52,10 +52,10 @@ class MenuTest extends MenuTests
 
   public function testCanGetValueFromConfig()
   {
-    $config = Menu::getConfig('max_depth');
+    $config = Menu::getOption('max_depth');
     $this->assertEquals(0, $config);
 
-    $config = Menu::getConfig();
+    $config = Menu::getOption();
     $this->assertInternalType('array', $config);
   }
 }

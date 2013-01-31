@@ -23,12 +23,6 @@ class Item extends MenuObject
   public $list;
 
   /**
-   * The item element
-   * @var string
-   */
-  protected $element = 'li';
-
-  /**
    * The item's content
    * @var Content
    */
@@ -42,16 +36,6 @@ class Item extends MenuObject
   public $children;
 
   /**
-   * The default render options for this item
-   *
-   * @var array
-   */
-  public $options = array(
-    'activeClass'      => 'active',
-    'activeChildClass' => 'active-child'
-  );
-
-  /**
    * Create a new item instance
    *
    * @param ItemList $list     The parent
@@ -59,11 +43,13 @@ class Item extends MenuObject
    * @param array    $children Facultative children ItemLists
    * @param array    $options  Options
    */
-  public function __construct(ItemList $list, Content $content, $children = array(), $options = array())
+  public function __construct(ItemList $list, Content $content, $children = array())
   {
     $this->list     = $list;
     $this->children = $children;
-    $this->options  = array_replace_recursive($this->options, $options);
+
+    // Load various defaults
+    $this->element = Menu::getOption('item.element');
 
     // Create content
     $this->content = $content->inItem($this);
@@ -168,18 +154,6 @@ class Item extends MenuObject
   ////////////////////////////////////////////////////////////////////
 
   /**
-   * Get an option from the options array
-   *
-   * @param string $option The option key
-   *
-   * @return string Its content
-   */
-  private function getOption($option, $fallback = null)
-  {
-    return Arrays::get($this->options, $option, $fallback);
-  }
-
-  /**
    * Add the various active classes to an array of attributes
    *
    * @param  array $attributes
@@ -188,11 +162,11 @@ class Item extends MenuObject
   private function addActiveClasses($attributes)
   {
     if ($this->isActive()) {
-      $attributes = Helpers::addClass($attributes, $this->getOption('activeClass'));
+      $attributes = Helpers::addClass($attributes, Menu::getOption('item.active_class'));
     }
 
     if ($this->hasActiveChild()) {
-      $attributes = Helpers::addClass($attributes, $this->getOption('activeChildClass'));
+      $attributes = Helpers::addClass($attributes, Menu::getOption('item.active_child_class'));
     }
 
     return $attributes;

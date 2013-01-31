@@ -192,11 +192,11 @@ class Menu
    *
    * @return mixed Its value
    */
-  public static function getConfig($option = null)
+  public static function getOption($option = null)
   {
     if ($option) $option = '.'.$option;
 
-    return static::$container->make('config')->get('config'.$option);
+    return static::getContainer('config')->get('config'.$option);
   }
 
 }
