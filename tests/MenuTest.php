@@ -1,5 +1,6 @@
 <?php
 use Menu\Menu;
+use Menu\Items\ItemList;
 
 class MenuTest extends MenuTests
 {
@@ -61,10 +62,20 @@ class MenuTest extends MenuTests
 
   public function testClassesPassTheirConfigurationToChildren()
   {
-    $ul = static::$itemList;
-    $ul->setOption('item.element', 'dl');
-    $ul->add('#', 'foo');
+    $list = static::$itemList;
+    $list->setOption('item.element', 'dl');
+    $list->add('#', 'foo');
 
-    $this->assertEquals('<ul><li><a href="#">foo</a></li></ul>', $ul->render());
+    $this->assertEquals('<ul><dl><a href="#">foo</a></dl></ul>', $list->render());
+  }
+
+  public function testMenuCanSetGlobalOptions()
+  {
+    Menu::setOption('item.element', 'dl');
+
+    $list = new ItemList;
+    $list->add('#', 'foo');
+
+    $this->assertEquals('<ul><dl><a href="#">foo</a></dl></ul>', $list->render());
   }
 }
