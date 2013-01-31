@@ -8,7 +8,17 @@ class Content extends MenuObject
    *
    * @var string
    */
-  protected $text;
+  protected $value;
+
+  /**
+   * Build a new content
+   *
+   * @param string $value The content
+   */
+  public function __construct($value)
+  {
+    $this->value = $value;
+  }
 
   /**
    * Render the content
@@ -17,7 +27,7 @@ class Content extends MenuObject
    */
   public function render()
   {
-    return $this->text;
+    return $this->value;
   }
 
   ////////////////////////////////////////////////////////////////////

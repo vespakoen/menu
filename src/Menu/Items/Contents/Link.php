@@ -20,10 +20,10 @@ class Link extends Content
    * @param string $text       Its text
    * @param array  $attributes Facultative attributes
    */
-  public function __construct($url, $text = null, $attributes = array())
+  public function __construct($url, $value = null, $attributes = array())
   {
     $this->url        = $url;
-    $this->text       = $text;
+    $this->value      = $value;
     $this->attributes = $attributes;
   }
 
@@ -34,7 +34,7 @@ class Link extends Content
    */
   public function render()
   {
-    return HTML::to($this->url, $this->text, $this->attributes);
+    return HTML::to($this->url, $this->value, $this->attributes);
   }
 
   ////////////////////////////////////////////////////////////////////

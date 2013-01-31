@@ -37,12 +37,22 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
   {
     return array(
       'tag' => $element,
-      'child' => array(
-        'tag' => 'a',
-        'content' => 'foo',
-        'attributes' => array(
-          'href' => 'http://:'
-        ),
+      'child' => $this->matchLink(),
+    );
+  }
+
+  /**
+   * Basic matcher for a Link
+   *
+   * @return array
+   */
+  protected function matchLink()
+  {
+    return array(
+      'tag' => 'a',
+      'content' => 'foo',
+      'attributes' => array(
+        'href' => 'http://:'
       ),
     );
   }
