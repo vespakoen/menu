@@ -62,7 +62,9 @@ class Link extends Content
   {
     // Create link and correct potential special URLs
     $link = HTML::to($this->getEvaluatedUrl(), $this->value, $this->attributes);
-    $link = preg_replace('/href="([^"]+)"/', 'href="' .$this->getEvaluatedUrl(). '"', $link);
+    if ($this->isSpecialUrl()) {
+      $link = preg_replace('/href="([^"]+)"/', 'href="' .$this->getEvaluatedUrl(). '"', $link);
+    }
 
     return $link;
   }

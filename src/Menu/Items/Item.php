@@ -76,8 +76,10 @@ class Item extends MenuObject
    *
    * @return string
    */
-  public function render()
+  public function render($options = array())
   {
+    $this->options = array_replace_recursive($this->options, $options);
+
     // Add the active classes
     $this->addActiveClasses($this->attributes);
 
@@ -94,8 +96,9 @@ class Item extends MenuObject
         str_repeat("\t", $this->options['renderDepth']);
     }
 
+    $content .= PHP_EOL.str_repeat("\t", $this->options['renderDepth']);
     $element = $this->element;
-    if ($element) $content = HTML::$element($content.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
+    if ($element) $content = HTML::$element($content, $this->attributes);
 
     return $this->renderTabbed($content, $this->options['renderDepth']);
   }
