@@ -28,18 +28,10 @@ class Item extends MenuObject
   protected $element = 'li';
 
   /**
-   * The type of this item (link / raw)
-   *
-   * @var string
+   * The item's content
+   * @var Link/Raw
    */
-  public $type;
-
-  /**
-   * The text of this item
-   *
-   * @var string
-   */
-  public $text;
+  protected $content;
 
   /**
    * The children this item has
@@ -59,13 +51,6 @@ class Item extends MenuObject
   );
 
   /**
-   * The URL for this item (without prefixes)
-   *
-   * @var string
-   */
-  public $url;
-
-  /**
    * Create a new item instance
    *
    * @param ItemList $list
@@ -80,11 +65,11 @@ class Item extends MenuObject
   public function __construct($list, $type, $text, $children = array(), $options = array(), $url = null)
   {
     $this->list = $list;
-    $this->type = $type;
-    $this->text = $text;
     $this->children = $children;
     $this->options = array_replace_recursive($this->options, $options);
-    $this->url = $url;
+
+    // Create content
+    $this->content = new Contents\Link($url, $text);
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -178,12 +163,12 @@ class Item extends MenuObject
    *
    * @return string
    */
-  public function get_url()
+  public function getUrl()
   {
     $segments = array();
 
-    if ($this->url == '#') {
-      return $this->url;
+    if ($this->content->getUrl() == '#') {
+      return $this->content->getUrl();
     }
 
     if ( ! is_null($this->list->prefix)) {
@@ -198,7 +183,7 @@ class Item extends MenuObject
       $segments[] = $this->get_handler_segment();
     }
 
-    $segments[] = $this->url;
+    $segments[] = $this->content->getUrl();
 
     return implode('/', $segments);
   }
@@ -225,12 +210,7 @@ class Item extends MenuObject
       $this->children->render($childrenOptions).
       str_repeat("\t", $this->options['renderDepth']);
 
-    if ($this->type == 'raw') {
-      $content = $this->text;
-    } else {
-      $content = HTML::to($this->get_url(), $this->text, $this->getOption('linkAttributes'));
-      $content = $this->renderTabbed($content, $this->options['renderDepth'] + 1);
-    }
+    $content = $this->renderTabbed($this->content, $this->options['renderDepth'] + 1);
 
     $element = $this->element;
     $content = HTML::$element($content.$children.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
@@ -249,7 +229,7 @@ class Item extends MenuObject
    */
   public function isActive()
   {
-    return $this->get_url() == $this->getRequest()->fullUrl();
+    return $this->getUrl() == $this->getRequest()->fullUrl();
   }
 
   /**
