@@ -19,6 +19,13 @@ class Link extends Content
   protected $url;
 
   /**
+   * The link's element
+   *
+   * @var string
+   */
+  protected $element = 'a';
+
+  /**
    * Build a new Link
    *
    * @param string $url        Its URL

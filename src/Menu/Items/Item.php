@@ -205,17 +205,18 @@ class Item extends MenuObject
     // Increment the render depth
     $this->options['renderDepth'] = $this->getOption('renderDepth', 0) + 1;
 
-    // Render children if any
-    if (!$this->hasChildren()) $children = null;
-    else $children =
-      PHP_EOL.
-      $this->children->render($childrenOptions).
-      str_repeat("\t", $this->options['renderDepth']);
-
+    // Render main content
     $content = $this->renderTabbed($this->content, $this->options['renderDepth'] + 1);
 
+    // Render children if any
+    if ($this->hasChildren()) {
+      $content .=
+        PHP_EOL.$this->children.
+        str_repeat("\t", $this->options['renderDepth']);
+    }
+
     $element = $this->element;
-    $content = HTML::$element($content.$children.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
+    $content = HTML::$element($content.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
 
     return $this->renderTabbed($content, $this->options['renderDepth']);
   }
