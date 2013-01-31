@@ -74,6 +74,7 @@ class Item extends MenuObject
       $content .= $this->children->render($depth + 1);
     }
 
+    // Facultatively render an element around the item
     $element = $this->element;
     if ($element) $content = HTML::$element($content, $this->attributes);
 

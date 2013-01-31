@@ -42,4 +42,12 @@ class ItemTest extends MenuTests
     $this->assertHTML($this->matchItem(), $item->render());
     $this->assertHTML($matchSublist, $item->render());
   }
+
+  public function testCanCreateElementlessItems()
+  {
+    $item = new Item(static::$itemList, static::$link);
+    $item->element(null);
+
+    $this->assertHTML($this->matchLink(), $item->render());
+  }
 }
