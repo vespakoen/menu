@@ -69,7 +69,9 @@ class Item extends MenuObject
     $this->options = array_replace_recursive($this->options, $options);
 
     // Create content
-    $this->content = new Contents\Link($url, $text);
+    $this->content = ($type == 'link')
+      ? new Contents\Link($url, $text)
+      : new Contents\Raw($text);
   }
 
   ////////////////////////////////////////////////////////////////////
