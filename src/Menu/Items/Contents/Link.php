@@ -1,4 +1,9 @@
 <?php
+/**
+ * Link
+ *
+ * A Link in an Item
+ */
 namespace Menu\Items\Contents;
 
 use \Menu\HTML;

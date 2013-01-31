@@ -150,7 +150,7 @@ class Item extends MenuObject
     $parent_items = $this->get_parent_items();
 
     foreach ($parent_items as $item) {
-      if ($item->content->isLink() && ! is_null($item->url) && $item->url !== '#') {
+      if ($item->content->isLink() && ! is_null($item->content->getUrl()) && $item->content->getUrl() !== '#') {
         $urls[] = $item->url;
       }
     }
@@ -163,12 +163,12 @@ class Item extends MenuObject
    *
    * @return string
    */
-  public function getUrl()
+  public function getEvaluatedUrl()
   {
     $segments = array();
 
-    if ($this->content->getUrl() == '#') {
-      return $this->content->getUrl();
+    if ($this->getUrl() == '#') {
+      return $this->getUrl();
     }
 
     if ( ! is_null($this->list->prefix)) {
@@ -183,7 +183,7 @@ class Item extends MenuObject
       $segments[] = $this->get_handler_segment();
     }
 
-    $segments[] = $this->content->getUrl();
+    $segments[] = $this->getUrl();
 
     return implode('/', $segments);
   }
@@ -229,7 +229,7 @@ class Item extends MenuObject
    */
   public function isActive()
   {
-    return $this->getUrl() == $this->getRequest()->fullUrl();
+    return $this->getEvaluatedUrl() == $this->getRequest()->fullUrl();
   }
 
   /**
@@ -262,6 +262,16 @@ class Item extends MenuObject
         return $child->hasActiveChild();
       }
     }
+  }
+
+  /**
+   * Get the url of the Item's content
+   *
+   * @return string
+   */
+  protected function getUrl()
+  {
+    return $this->content->isLink() ? $this->content->getUrl() : null;
   }
 
   ////////////////////////////////////////////////////////////////////
