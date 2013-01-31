@@ -36,7 +36,7 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
   protected function matchItem($element = 'li')
   {
     return array(
-      'tag' => $element,
+      'tag'   => $element,
       'child' => $this->matchLink(),
     );
   }
@@ -62,6 +62,19 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
   ////////////////////////////////////////////////////////////////////
 
   /**
+   * Asserts some HTML is, once stripped, equals to a matcher
+   *
+   * @param string $matcher The matcher
+   * @param string $html    The HTML
+   */
+  protected function assertStripedEquals($matcher, $html)
+  {
+    $html = preg_replace("/[\n\r\t]/", null, $html);
+
+    return $this->assertEquals($matcher, $html);
+  }
+
+  /**
    * Enhanced version of assertTag
    *
    * @param array  $matcher The tag matcher
@@ -69,7 +82,7 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
    */
   protected function assertHTML($matcher, $html)
   {
-    $this->assertTag(
+    return $this->assertTag(
       $matcher,
       $html,
       "Failed asserting that the HTML matches the provided format :\n\t"

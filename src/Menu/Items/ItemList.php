@@ -18,7 +18,7 @@ class ItemList extends MenuObject
    *
    * @var array
    */
-  public $items = array();
+  protected $items = array();
 
   /**
    * The ItemList's parent item
@@ -71,6 +71,10 @@ class ItemList extends MenuObject
     $this->element    = $element;
   }
 
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////// PUBLIC INTERFACE /////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
   /**
    * Add a link item to the ItemList instance.
    *
@@ -109,6 +113,16 @@ class ItemList extends MenuObject
     $this->items[] = $item;
 
     return $this;
+  }
+
+  /**
+   * Get all of the list's items
+   *
+   * @return array
+   */
+  public function getItems()
+  {
+    return $this->items;
   }
 
   /**

@@ -64,14 +64,45 @@ class Item extends MenuObject
    */
   public function __construct($list, $type, $text, $children = array(), $options = array(), $url = null)
   {
-    $this->list = $list;
+    $this->list     = $list;
     $this->children = $children;
-    $this->options = array_replace_recursive($this->options, $options);
+    $this->options  = array_replace_recursive($this->options, $options);
 
     // Create content
     $this->content = ($type == 'link')
       ? new Contents\Link($url, $text)
       : new Contents\Raw($text);
+  }
+
+  /**
+   * Render the item
+   *
+   * @param array
+   *
+   * @return string
+   */
+  public function render()
+  {
+    // Add the active classes
+    $this->addActiveClasses($this->attributes);
+
+    // Increment the render depth
+    $this->options['renderDepth'] = $this->getOption('renderDepth', 0) + 1;
+
+    // Render main content
+    $content = $this->renderTabbed($this->content, $this->options['renderDepth'] + 1);
+
+    // Render children if any
+    if ($this->hasChildren()) {
+      $content .=
+        PHP_EOL.$this->children.
+        str_repeat("\t", $this->options['renderDepth']);
+    }
+
+    $element = $this->element;
+    $content = HTML::$element($content.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
+
+    return $this->renderTabbed($content, $this->options['renderDepth']);
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -190,37 +221,6 @@ class Item extends MenuObject
     return implode('/', $segments);
   }
 
-  /**
-   * Render the item
-   *
-   * @param array
-   *
-   * @return string
-   */
-  public function render()
-  {
-    // Add the active classes
-    $this->addActiveClasses($this->attributes);
-
-    // Increment the render depth
-    $this->options['renderDepth'] = $this->getOption('renderDepth', 0) + 1;
-
-    // Render main content
-    $content = $this->renderTabbed($this->content, $this->options['renderDepth'] + 1);
-
-    // Render children if any
-    if ($this->hasChildren()) {
-      $content .=
-        PHP_EOL.$this->children.
-        str_repeat("\t", $this->options['renderDepth']);
-    }
-
-    $element = $this->element;
-    $content = HTML::$element($content.PHP_EOL.str_repeat("\t", $this->options['renderDepth']), $this->attributes);
-
-    return $this->renderTabbed($content, $this->options['renderDepth']);
-  }
-
   ////////////////////////////////////////////////////////////////////
   ///////////////////////// PUBLIC INTERFACE /////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -256,7 +256,7 @@ class Item extends MenuObject
       return false;
     }
 
-    foreach ($this->children->items as $child) {
+    foreach ($this->children->getItems() as $child) {
       if ($child->isActive()) {
         return true;
       }
