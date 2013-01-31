@@ -31,12 +31,15 @@ class ItemTest extends MenuTests
     $sublist->add('#', 'foo');
     $item = new Item(static::$itemList, static::$link, $sublist);
 
-    $matcher =
-    '<li>'.
-      '<a href="http://:/#">foo</a>'.
-      '<ul><li><a href="http://:/#">foo</a></li></ul>'.
-    '</li>';
+    $matchSublist = array(
+      'tag' => 'li',
+      'child' => array(
+        'tag' => 'ul',
+        'child' => $this->matchItem(),
+      ),
+    );
 
-    $this->assertStripedEquals($matcher, $item->render());
+    $this->assertHTML($this->matchItem(), $item->render());
+    $this->assertHTML($matchSublist, $item->render());
   }
 }

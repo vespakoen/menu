@@ -13,6 +13,14 @@ class LinkTest extends MenuTests
     $this->assertTrue(static::$link->isLink());
   }
 
+  public function testDoesntAlterSpecialUrls()
+  {
+    $link = new Link('javascript:void(0);', 'foo');
+    $matcher = $this->matchLink('javascript:void(0);');
+
+    $this->assertHTML($matcher, $link);
+  }
+
   public function testCanSetAttributesOnLinks()
   {
     $link = static::$link;

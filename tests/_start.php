@@ -62,13 +62,13 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
    *
    * @return array
    */
-  protected function matchLink()
+  protected function matchLink($link = '#')
   {
     return array(
       'tag' => 'a',
       'content' => 'foo',
       'attributes' => array(
-        'href' => 'http://:/#'
+        'href' => $link,
       ),
     );
   }
