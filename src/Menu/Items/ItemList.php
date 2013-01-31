@@ -77,12 +77,12 @@ class ItemList extends MenuObject
    *
    * @return MenuItems
    */
-  public function add($url, $value, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = 'li')
+  public function add($url, $value, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = null)
   {
     $content = new Link($url, $value, $linkAttributes);
 
     $item = new Item($this, $content, $children);
-    $item->element($itemElement);
+    if ($itemElement) $item->element($itemElement);
     $item->setAttributes($itemAttributes);
 
     // Set Item as parent of its children
