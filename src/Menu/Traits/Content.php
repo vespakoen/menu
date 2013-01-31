@@ -1,6 +1,8 @@
 <?php
 namespace Menu\Traits;
 
+use \Menu\Items\Item;
+
 class Content extends MenuObject
 {
   /**
@@ -11,6 +13,13 @@ class Content extends MenuObject
   protected $value;
 
   /**
+   * The Item this content belongs to
+   *
+   * @var Item
+   */
+  protected $item;
+
+  /**
    * Build a new content
    *
    * @param string $value The content
@@ -18,6 +27,20 @@ class Content extends MenuObject
   public function __construct($value)
   {
     $this->value = $value;
+  }
+
+  /**
+   * Set the Item this Content belongs to
+   *
+   * @param Item $item
+   *
+   * @return Content
+   */
+  public function inItem(Item $item)
+  {
+    $this->item = $item;
+
+    return $this;
   }
 
   /**
