@@ -31,7 +31,7 @@ class Item extends MenuObject
    * The item's content
    * @var Link/Raw
    */
-  protected $content;
+  public $content;
 
   /**
    * The children this item has

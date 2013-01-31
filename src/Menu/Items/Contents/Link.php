@@ -27,6 +27,19 @@ class Link extends Content
   protected $element = 'a';
 
   /**
+   * URL segments that you want to hide from the
+   * generated URL when using ->prefix_parents()
+   *
+   * @var array
+   */
+  private $hidden = array(
+    '#',
+    'javascript:;',
+    'javascript:void(0);',
+    'javascript:void(0)',
+  );
+
+  /**
    * Build a new Link
    *
    * @param string $url        Its URL
@@ -186,8 +199,8 @@ class Link extends Content
     $parent_items = $this->get_parent_items();
 
     foreach ($parent_items as $item) {
-      if ($item->content->isLink() && ! is_null($item->content->getUrl()) && $item->content->getUrl() !== '#') {
-        $urls[] = $item->getUrl();
+      if ($item->content->isLink() && ! is_null($item->content->getUrl()) && !in_array($item->content->getUrl(), $this->hidden)) {
+        $urls[] = $item->content->getUrl();
       }
     }
 
