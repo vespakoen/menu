@@ -215,15 +215,17 @@ class Item extends MenuObject
       return $this->getUrl();
     }
 
-    // Prepend parent prefix
+    // Prepend list prefix
     if (!is_null($this->list->prefix)) {
       $segments[] = $this->list->prefix;
     }
 
+    // Prepend parent item prefix
     if ($this->list->prefixParents) {
       $segments += $this->get_parent_item_urls();
     }
 
+    // Prepend handler prefix
     if ($this->list->prefixHandler) {
       $segments[] = $this->get_handler_segment();
     }
@@ -308,7 +310,7 @@ class Item extends MenuObject
 
     foreach ($parent_items as $item) {
       if ($item->content->isLink() && ! is_null($item->content->getUrl()) && $item->content->getUrl() !== '#') {
-        $urls[] = $item->url;
+        $urls[] = $item->getUrl();
       }
     }
 

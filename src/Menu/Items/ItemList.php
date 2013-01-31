@@ -250,7 +250,7 @@ class ItemList extends MenuObject
       $options['renderDepth']++;
     }
 
-    if (array_key_exists('max_depth', $options) && $options['currentDepth'] > $options['maxDepth']) {
+    if (array_key_exists('maxDepth', $options) && $options['currentDepth'] > $options['maxDepth']) {
       return;
     }
 
@@ -287,7 +287,7 @@ class ItemList extends MenuObject
       }
 
       foreach ($this->items as $item) {
-        if ($item->has_children() && $found = $item->children->find($name)) {
+        if ($item->hasChildren() && $found = $item->children->find($name)) {
           foreach ($found as $list_item) {
             $results[] = $list_item;
           }
