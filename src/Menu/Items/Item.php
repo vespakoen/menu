@@ -41,16 +41,16 @@ class Item extends MenuObject
    * @param ItemList $list     The parent
    * @param Content  $content  The content
    * @param array    $children Facultative children ItemLists
-   * @param array    $options  Options
+   * @param array    $element  The Item element
    */
-  public function __construct(ItemList $list, Content $content, $children = array())
+  public function __construct(ItemList $list, Content $content, $children = array(), $element = null)
   {
     $this->list     = $list;
     $this->children = $children;
-    $this->replaceOptions($list->getOption());
+    $this->options  = $list->getOption();
 
     // Load various defaults
-    $this->element = $this->getOption('item.element');
+    $this->element = $element ?: $this->getOption('item.element');
 
     // Create content
     $this->content = $content->inItem($this);
