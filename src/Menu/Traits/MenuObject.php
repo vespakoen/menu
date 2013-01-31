@@ -7,6 +7,8 @@
  */
 namespace Menu\Traits;
 
+use \Underscore\Types\Arrays;
+
 abstract class MenuObject
 {
   /**
@@ -32,7 +34,7 @@ abstract class MenuObject
    *
    * @param string $element The element
    *
-   * @return Item
+   * @return MenuObject
    */
   public function element($element)
   {
@@ -42,13 +44,44 @@ abstract class MenuObject
   }
 
   /**
+   * Set the Object's class
+   *
+   * @param string $class The new class
+   *
+   * @return MenuObject
+   */
+  public function setClass($class)
+  {
+    $this->setAttribute('class', $class);
+
+    return $this;
+  }
+
+  /**
    * Replace the current attributes with other ones
    *
    * @param array $attributes The new attributes
+   *
+   * @return MenuObject
    */
   public function setAttributes($attributes)
   {
     $this->attributes = $attributes;
+
+    return $this;
+  }
+
+  /**
+   * Set a single attribute
+   *
+   * @param string $attribute The attribute
+   * @param string $value     Its value
+   *
+   * @return MenuObject
+   */
+  public function setAttribute($attribute, $value)
+  {
+    $this->attributes = Arrays::set($this->attributes, $attribute, $value);
 
     return $this;
   }
