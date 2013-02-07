@@ -6,12 +6,13 @@
  */
 namespace Menu\Items;
 
-use \Underscore\Types\Arrays;
-use \Menu\Traits\MenuObject;
-use \Menu\Helpers;
-use \Menu\Traits\Content;
-use \Menu\Html;
-use \Menu\Menu;
+use App;
+use Menu\Helpers;
+use Menu\Html;
+use Menu\Menu;
+use Menu\Traits\Content;
+use Menu\Traits\MenuObject;
+use Underscore\Types\Arrays;
 
 class Item extends MenuObject
 {
@@ -187,7 +188,7 @@ class Item extends MenuObject
   {
     // Defer to Illuminate/Request if possible
     if (class_exists('App')) {
-      return App::make('Request');
+      return App::make('Illuminate\Http\Request');
     }
 
     return Menu::getContainer('Symfony\Component\HttpFoundation\Request');
