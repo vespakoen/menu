@@ -4,7 +4,7 @@ namespace Menu;
 use \Meido\HTML\HTMLFacade;
 use \Underscore\Types\Arrays;
 
-class Html extends HTMLFacade
+class HTML extends HTMLFacade
 {
   /**
    * Defer calls to Meido's HTML
