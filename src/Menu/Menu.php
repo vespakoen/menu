@@ -173,7 +173,7 @@ class Menu
     // Create basic Config handler
     static::$container->bind('files', 'Illuminate\Filesystem\Filesystem');
     static::$container->singleton('config', function($container) {
-      $fileLoader = new \Illuminate\Config\FileLoader($container['files'], 'src/');
+      $fileLoader = new \Illuminate\Config\FileLoader($container['files'], __DIR__.'/../');
       return new \Illuminate\Config\Repository($fileLoader, 'config');
     });
 
