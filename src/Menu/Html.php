@@ -1,8 +1,8 @@
 <?php
 namespace Menu;
 
-use \Meido\HTML\HTMLFacade;
-use \Underscore\Types\Arrays;
+use Meido\HTML\HTMLFacade;
+use Underscore\Types\Arrays;
 
 class HTML extends HTMLFacade
 {

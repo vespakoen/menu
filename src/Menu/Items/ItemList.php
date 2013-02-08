@@ -6,10 +6,10 @@
  */
 namespace Menu\Items;
 
-use \Menu\HTML;
-use \Menu\Menu;
-use \Menu\Traits\MenuObject;
-use \Menu\Items\Contents\Link;
+use Menu\HTML;
+use Menu\Items\Contents\Link;
+use Menu\Menu;
+use Menu\Traits\MenuObject;
 
 class ItemList extends MenuObject
 {
