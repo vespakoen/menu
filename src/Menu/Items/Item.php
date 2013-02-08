@@ -68,7 +68,7 @@ class Item extends MenuObject
   {
     // Add the active classes
     $content = $this->content->render();
-    $this->addActiveClasses($this->attributes);
+    $this->attributes = $this->addActiveClasses($this->attributes);
 
     // Render children if any
     if ($this->hasChildren()) {
@@ -165,11 +165,11 @@ class Item extends MenuObject
   private function addActiveClasses($attributes)
   {
     if ($this->isActive()) {
-      $attributes = Helpers::addClass($attributes, $this->getOption('item.active_class'));
+      $attributes = Helpers::addClassTo($attributes, $this->getOption('item.active_class'));
     }
 
     if ($this->hasActiveChild()) {
-      $attributes = Helpers::addClass($attributes, $this->getOption('item.active_child_class'));
+      $attributes = Helpers::addClassTo($attributes, $this->getOption('item.active_child_class'));
     }
 
     return $attributes;
@@ -186,11 +186,6 @@ class Item extends MenuObject
    */
   public function getRequest()
   {
-    // Defer to Illuminate/Request if possible
-    if (class_exists('App')) {
-      return App::make('Illuminate\Http\Request');
-    }
-
     return Menu::getContainer('Symfony\Component\HttpFoundation\Request');
   }
 
