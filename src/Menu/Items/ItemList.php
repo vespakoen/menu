@@ -280,7 +280,6 @@ class ItemList extends MenuObject
         }
       }
     }
-
     return $results;
   }
 }

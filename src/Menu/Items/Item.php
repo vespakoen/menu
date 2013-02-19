@@ -8,7 +8,7 @@ namespace Menu\Items;
 
 use App;
 use Menu\Helpers;
-use Menu\Html;
+use Menu\HTML;
 use Menu\Menu;
 use Menu\Traits\Content;
 use Menu\Traits\MenuObject;
@@ -79,7 +79,7 @@ class Item extends MenuObject
     $element = $this->element;
     if ($element) $content = HTML::$element($content, $this->attributes);
 
-    return $content;
+    return HTML::decode($content);
   }
 
   ////////////////////////////////////////////////////////////////////
