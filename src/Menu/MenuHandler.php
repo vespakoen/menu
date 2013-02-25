@@ -48,7 +48,7 @@ class MenuHandler extends MenuObject
     // Loop through the ItemLists this handler handles
     // And render each one in the content
     foreach ($this->handles as $name) {
-      $contents .= Menu::getItemList($name)->render();
+      $contents .= Menu::getItemList($name)->setAttributes($this->attributes)->render();
     }
 
     return $contents;
