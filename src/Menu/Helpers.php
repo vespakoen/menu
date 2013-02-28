@@ -1,14 +1,12 @@
 <?php
-/**
- * Helpers
- *
- * Various helpers used troughout the classes
- */
 namespace Menu;
 
 use Underscore\Types\Arrays;
 use Underscore\Types\String;
 
+/**
+ * Various helpers used troughout the classes
+ */
 class Helpers
 {
   /**

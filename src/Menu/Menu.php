@@ -1,16 +1,14 @@
 <?php
-/**
- * Menu
- *
- * Basic interface between the package and the user
- * Redirects and dispatch calls to the different menus in memory
- */
 namespace Menu;
 
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;
 use Menu\Items\ItemList;
 
+/**
+ * Basic interface between the package and the user
+ * Redirects and dispatch calls to the different menus in memory
+ */
 class Menu
 {
   /**
@@ -44,7 +42,9 @@ class Menu
    *    $handler = Menu::handler(array('admin', 'sales'));
    * </code>
    *
-   * @param string $name
+   * @param string|array $names      The name this handler should respond to
+   * @param array        $attributes Its attributes
+   * @param string       $element    Its element
    *
    * @return MenuHandler
    */
@@ -91,15 +91,15 @@ class Menu
   /**
    * Create a new ItemList
    *
+   * @param string $element    The HTML element for the list (ul or dd)
    * @param string $name       The name of the ItemList
    * @param array  $attributes The HTML attributes for the list element
-   * @param string $element    The HTML element for the list (ul or dd)
    *
    * @return ItemList
    */
-  public static function items($name = null, $attributes = array(), $element = 'ul')
+  public static function items($element = 'ul', $name = null, $attributes = array())
   {
-    return new ItemList($name, $attributes, $element);
+    return new ItemList($element, $name, $attributes);
   }
 
   /**
@@ -144,6 +144,11 @@ class Menu
    *    // Call the "add" method on the default handler
    *    Menu::add('home', 'Home');
    * </code>
+   *
+   * @param string $method
+   * @param array  $parameters
+   *
+   * @return mixed
    */
   public static function __callStatic($method, $parameters)
   {
@@ -156,6 +161,8 @@ class Menu
 
   /**
    * Get the current dependencies
+   *
+   * @param string $dependency A dependency to make on the fly
    *
    * @return Container
    */

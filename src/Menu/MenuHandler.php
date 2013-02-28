@@ -1,14 +1,12 @@
 <?php
-/**
- * MenuHandler
- *
- * Handles various instances of ItemList at once
- */
 namespace Menu;
 
 use Menu\Traits\MenuObject;
 use Exception;
 
+/**
+ * Handles various instances of ItemList at once
+ */
 class MenuHandler extends MenuObject
 {
   /**
@@ -36,8 +34,6 @@ class MenuHandler extends MenuObject
 
   /**
    * Render all the ItemLists this handler acts on and return the HTML
-   *
-   * @param array $options Optional render settings
    *
    * @return string
    */

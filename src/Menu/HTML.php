@@ -4,6 +4,9 @@ namespace Menu;
 use Meido\HTML\HTMLFacade;
 use Underscore\Types\Arrays;
 
+/**
+ * A facade for Meido's HTML class
+ */
 class HTML extends HTMLFacade
 {
   /**

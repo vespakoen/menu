@@ -1,9 +1,4 @@
 <?php
-/**
- * ItemList
- *
- * A container for Items
- */
 namespace Menu\Items;
 
 use Menu\HTML;
@@ -12,6 +7,9 @@ use Menu\Items\Contents\Raw;
 use Menu\Menu;
 use Menu\Traits\MenuObject;
 
+/**
+ * A container for Items
+ */
 class ItemList extends MenuObject
 {
   /**
@@ -24,13 +22,13 @@ class ItemList extends MenuObject
   /**
    * Create a new Item List instance
    *
+   * @param string  $element     The HTML element for the ItemList
    * @param string  $name        The ItemList's name
    * @param array   $attributes  Attributes for the ItemList's HMTL element
-   * @param string  $element     The HTML element for the ItemList
    *
    * @return void
    */
-  public function __construct($name = null, $attributes = array(), $element = null)
+  public function __construct($element = null, $name = null, $attributes = array())
   {
     $this->element    = $element ?: $this->getOption('item_list.element');
     $this->name       = $name;
@@ -90,12 +88,12 @@ class ItemList extends MenuObject
    *    Menu::raw('<img src="img/seperator.gif">');
    * </code>
    *
-   * @param  string   $raw
-   * @param  ItemList $children
-   * @param  array    $attributes
-   * @param  array    $children
+   * @param string $raw            The raw content
+   * @param array $children        Possible children
+   * @param array  $itemAttributes The item attributes
+   * @param string $itemElement    The item element
    *
-   * @return MenuItems
+   * @return ItemList
    */
   public function raw($raw, $children = null, $itemAttributes = array(), $itemElement = 'li')
   {
@@ -121,10 +119,11 @@ class ItemList extends MenuObject
    *    Menu::attach(Menu::items()->add('home', 'Homepage'));
    * </code>
    *
-   * @param  MenuItems $menuitems
-   * @return Void
+   * @param  ItemList $itemList
+   *
+   * @return ItemList
    */
-  public function attach($itemList)
+  public function attach(ItemList $itemList)
   {
     $this->setChildren($itemList->items);
 
@@ -166,6 +165,8 @@ class ItemList extends MenuObject
   /**
    * Prefix this ItemList with the parent ItemList(s) name(s)
    *
+   * @param boolean $prefixParents
+   *
    * @return ItemList
    */
   public function prefixParents($prefixParents = true)
@@ -177,6 +178,8 @@ class ItemList extends MenuObject
 
   /**
    * Prefix this ItemList with the name of the ItemList at the very top of the tree
+   *
+   * @param boolean $prefixHandler
    *
    * @return ItemList
    */
@@ -190,7 +193,7 @@ class ItemList extends MenuObject
   /**
    * Get the evaluated string content of the ItemList.
    *
-   * @param  array $options
+   * @param  integer $depth The depth at which the ItemList should be rendered
    *
    * @return string
    */

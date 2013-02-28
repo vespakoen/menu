@@ -1,9 +1,4 @@
 <?php
-/**
- * Item
- *
- * An Item in a list
- */
 namespace Menu\Items;
 
 use Menu\Helpers;
@@ -12,13 +7,16 @@ use Menu\Menu;
 use Menu\Traits\Content;
 use Menu\Traits\MenuObject;
 
+/**
+ * An Item in a list
+ */
 class Item extends MenuObject
 {
   /**
    * Create a new item instance
    *
    * @param ItemList $list     The parent
-   * @param Content  $content  The content
+   * @param Content  $value    The content
    * @param array    $children Facultative children ItemLists
    * @param array    $element  The Item element
    */

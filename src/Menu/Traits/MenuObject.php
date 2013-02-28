@@ -1,18 +1,17 @@
 <?php
-/**
- * MenuObject
- *
- * Allows dynamic setting and getting of attributes
- * on the various parts of a menu (items, ItemLists, etc)
- */
 namespace Menu\Traits;
 
 use HtmlObject\Element;
 use Menu\Menu;
 use Underscore\Types\Arrays;
 
+/**
+ * Allows dynamic setting and getting of attributes
+ * on the various parts of a menu (items, ItemLists, etc)
+ */
 abstract class MenuObject extends Element
 {
+
   /**
    * Per-element configuration
    *
@@ -26,6 +25,8 @@ abstract class MenuObject extends Element
 
   /**
    * Replace an array of options
+   *
+   * @param array $options The new options
    *
    * @return MenuObject
    */

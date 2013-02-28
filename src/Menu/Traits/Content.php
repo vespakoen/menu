@@ -3,10 +3,14 @@ namespace Menu\Traits;
 
 use HtmlObject\Text;
 
+/**
+ * The base class around the different content types
+ */
 class Content extends Text
 {
+
  /**
-   * Get the content type
+   * Whether the content is a link or not
    *
    * @return boolean
    */
@@ -14,4 +18,5 @@ class Content extends Text
   {
     return false;
   }
+
 }

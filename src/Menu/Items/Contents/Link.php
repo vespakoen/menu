@@ -1,15 +1,13 @@
 <?php
-/**
- * Link
- *
- * A Link in an Item
- */
 namespace Menu\Items\Contents;
 
 use Menu\HTML;
 use Menu\Traits\Content;
 use Underscore\Types\String;
 
+/**
+ * A Link in an Item
+ */
 class Link extends Content
 {
   /**
@@ -36,7 +34,7 @@ class Link extends Content
    * Build a new Link
    *
    * @param string $url        Its URL
-   * @param string $text       Its text
+   * @param string $value      Its text
    * @param array  $attributes Facultative attributes
    */
   public function __construct($url, $value = null, $attributes = array())
