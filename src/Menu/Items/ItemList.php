@@ -22,20 +22,6 @@ class ItemList extends MenuObject
   public $name;
 
   /**
-   * The menu Items
-   *
-   * @var array
-   */
-  protected $items = array();
-
-  /**
-   * The ItemList's parent item
-   *
-   * @var Item
-   */
-  public $parentItem;
-
-  /**
    * Create a new Item List instance
    *
    * @param string  $name        The ItemList's name
@@ -46,9 +32,9 @@ class ItemList extends MenuObject
    */
   public function __construct($name = null, $attributes = array(), $element = null)
   {
+    $this->element    = $element ?: $this->getOption('item_list.element');
     $this->name       = $name;
     $this->attributes = $attributes;
-    $this->element    = $element ?: $this->getOption('item_list.element');
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -83,15 +69,15 @@ class ItemList extends MenuObject
     $content = new Link($url, $value, $linkAttributes);
 
     $item = new Item($this, $content, $children);
-    if ($itemElement) $item->element($itemElement);
+    if ($itemElement) $item->setElement($itemElement);
     $item->setAttributes($itemAttributes);
 
     // Set Item as parent of its children
     if (!is_null($children)) {
-      $children->inItem($item);
+      $children->setParent($item);
     }
 
-    $this->items[] = $item;
+    $this->setChild($item);
 
     return $this;
   }
@@ -115,14 +101,14 @@ class ItemList extends MenuObject
   {
     // Create Item
     $item = new Item($this, new Raw($raw), $children);
-    $item->setAttributes($itemAttributes)->element($itemElement);
+    $item->setAttributes($itemAttributes)->setElement($itemElement);
 
     // Set Item as parent of its children
     if (!is_null($children)) {
-      $children->inItem($item);
+      $children->setParent($item);
     }
 
-    $this->items[] = $item;
+    $this->setChild($item);
 
     return $this;
   }
@@ -140,11 +126,7 @@ class ItemList extends MenuObject
    */
   public function attach($itemList)
   {
-    foreach ($itemList->items as $item) {
-      $item->list = $this;
-
-      $this->items[] = $item;
-    }
+    $this->setChildren($itemList->items);
 
     return $this;
   }
@@ -161,30 +143,6 @@ class ItemList extends MenuObject
     $this->name = $name;
 
     return $this;
-  }
-
-  /**
-   * Set the parent of the ItemList
-   *
-   * @param Item $item
-   *
-   * @return ItemList
-   */
-  public function inItem($item)
-  {
-    $this->parentItem = $item;
-
-    return $this;
-  }
-
-  /**
-   * Get all of the list's items
-   *
-   * @return array
-   */
-  public function getItems()
-  {
-    return $this->items;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -244,13 +202,12 @@ class ItemList extends MenuObject
 
     // Render contained items
     $contents = null;
-    foreach ($this->items as $item) {
+    foreach ($this->children as $item) {
       $contents .= $item->render($depth + 1);
     }
 
     $element = $this->element;
     if ($element) $content = HTML::$element($contents, $this->attributes);
-
     return $content;
   }
 
@@ -272,7 +229,7 @@ class ItemList extends MenuObject
         $results[] = $this;
       }
 
-      foreach ($this->items as $item) {
+      foreach ($this->children as $item) {
         if ($item->hasChildren() && $found = $item->children->find($name)) {
           foreach ($found as $list_item) {
             $results[] = $list_item;
@@ -280,6 +237,7 @@ class ItemList extends MenuObject
         }
       }
     }
+
     return $results;
   }
 }

@@ -12,7 +12,7 @@ class ItemTest extends MenuTests
   public function testCanCreateItemOfADifferentElement()
   {
     $item = static::$item;
-    $item->element('dl');
+    $item->setElement('dl');
 
     $this->assertHTML($this->matchItem('dl'), $item->render());
   }

@@ -6,8 +6,8 @@
  */
 namespace Menu;
 
-use \Menu\Traits\MenuObject;
-use \Exception;
+use Menu\Traits\MenuObject;
+use Exception;
 
 class MenuHandler extends MenuObject
 {

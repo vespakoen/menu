@@ -6,9 +6,9 @@
  */
 namespace Menu\Items\Contents;
 
-use \Menu\HTML;
-use \Menu\Traits\Content;
-use \Underscore\Types\String;
+use Menu\HTML;
+use Menu\Traits\Content;
+use Underscore\Types\String;
 
 class Link extends Content
 {
@@ -18,13 +18,6 @@ class Link extends Content
    * @var string
    */
   protected $url;
-
-  /**
-   * The link's element
-   *
-   * @var string
-   */
-  protected $element = 'a';
 
   /**
    * URL segments that you want to hide from the
@@ -117,24 +110,24 @@ class Link extends Content
     $segments = array();
 
     // If the URL is just an hash, don't do shit
-    if (!$this->item or $this->isSpecialUrl()) {
+    if (!$this->getParent() or $this->isSpecialUrl()) {
       return $this->url;
     }
 
     // Prepend list prefix
-    $listPrefix = $this->item->getList()->getOption('item_list.prefix');
+    $listPrefix = $this->getParent()->getParent()->getOption('item_list.prefix');
     if (!is_null($listPrefix)) {
       $segments[] = $listPrefix;
     }
 
     // Prepend parent item prefix
-    $prefixParents = $this->item->getList()->getOption('item_list.prefix_parents');
+    $prefixParents = $this->getParent()->getParent()->getOption('item_list.prefix_parents');
     if ($prefixParents) {
       $segments += $this->get_parent_item_urls();
     }
 
     // Prepend handler prefix
-    $prefixHandler = $this->item->getList()->getOption('item_list.prefix_handler');
+    $prefixHandler = $this->getParent()->getParent()->getOption('item_list.prefix_handler');
     if ($prefixHandler) {
       $segments[] = $this->get_handler_segment();
     }
@@ -153,12 +146,13 @@ class Link extends Content
   {
     $parents = array();
 
-    $list = $this->item->getList();
+    $list = $this->getParent()->getParent();
 
-    while ( ! is_null($list->parentItem)) {
-      $parents[] = $list->parentItem;
+    while ( ! is_null($list->getParent())) {
+      $parents[] = $list->getParent();
 
-      $list = isset($list->parentItem->list) ? $list->parentItem->list : null;
+      $parent = $list->getParent()->getParent();
+      $list = isset($parent) ? $list->getParent()->getParent() : null;
     }
 
     $parents = array_reverse($parents);
@@ -170,12 +164,13 @@ class Link extends Content
   {
     $parents = array();
 
-    $list = $this->item->getList();
+    $list = $this->getParent()->getParent();
 
-    while ( ! is_null($list->parentItem)) {
-      $parents[] = $list->parentItem;
+    while ( ! is_null($list->getParent())) {
+      $parents[] = $list->getParent();
 
-      $list = isset($list->parentItem->list) ? $list->parentItem->list : null;
+      $parent = $list->getParent()->getParent();
+      $list = isset($parent) ? $list->getParent()->getParent() : null;
     }
 
     $parents = array_reverse($parents);
@@ -187,14 +182,16 @@ class Link extends Content
   {
     $parents = array();
 
-    $list = $this->item->getList();
+    $list = $this->getParent()->getParent();
+    $parent = $list->getParent() ?: null;
 
     $parents[] = $list;
 
-    while (isset($list->parentItem->list) && ! is_null($list->parentItem->list)) {
-      $parents[] = $list->parentItem->list;
+    while ($list and isset($parent) && ! is_null($parent)) {
 
-      $list = isset($list->parentItem->list) ? $list->parentItem->list : null;
+      $parents[] = $parent;
+
+      $list = isset($parent) ? $parent : null;
     }
 
     $parents = array_reverse($parents);
@@ -218,8 +215,8 @@ class Link extends Content
     $parent_items = $this->get_parent_items();
 
     foreach ($parent_items as $item) {
-      if ($item->content->isLink() && ! is_null($item->content->getUrl()) && !$item->content->isSpecialUrl()) {
-        $urls[] = $item->content->getUrl();
+      if ($item->value->isLink() && ! is_null($item->value->getUrl()) && !$item->value->isSpecialUrl()) {
+        $urls[] = $item->value->getUrl();
       }
     }
 

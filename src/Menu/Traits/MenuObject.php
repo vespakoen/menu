@@ -7,105 +7,18 @@
  */
 namespace Menu\Traits;
 
-use \Menu\Menu;
-use \Menu\Helpers;
-use \Underscore\Types\Arrays;
+use HtmlObject\Element;
+use Menu\Menu;
+use Underscore\Types\Arrays;
 
-abstract class MenuObject
+abstract class MenuObject extends Element
 {
-  /**
-   * The object element
-   *
-   * @var string
-   */
-  protected $element;
-
-  /**
-   * The object attributes
-   *
-   * @var array
-   */
-  protected $attributes = array();
-
   /**
    * Per-element configuration
    *
    * @var array
    */
   protected $options;
-
-  ////////////////////////////////////////////////////////////////////
-  ///////////////////////////// ATTRIBUTES ///////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Change the element used by the Item
-   *
-   * @param string $element The element
-   *
-   * @return MenuObject
-   */
-  public function element($element)
-  {
-    $this->element = $element;
-
-    return $this;
-  }
-
-  /**
-   * Set the Object's class
-   *
-   * @param string $class The new class
-   *
-   * @return MenuObject
-   */
-  public function setClass($class)
-  {
-    $this->setAttribute('class', $class);
-
-    return $this;
-  }
-
-  /**
-   * Add one or more classes
-   *
-   * @param mixed $classes The new class(es)
-   */
-  public function addClass($classes)
-  {
-    $this->attributes = Helpers::addClassTo($this->attributes, $classes);
-
-    return $this;
-  }
-
-  /**
-   * Replace the current attributes with other ones
-   *
-   * @param array $attributes The new attributes
-   *
-   * @return MenuObject
-   */
-  public function setAttributes($attributes)
-  {
-    $this->attributes = $attributes;
-
-    return $this;
-  }
-
-  /**
-   * Set a single attribute
-   *
-   * @param string $attribute The attribute
-   * @param string $value     Its value
-   *
-   * @return MenuObject
-   */
-  public function setAttribute($attribute, $value)
-  {
-    $this->attributes = Arrays::set($this->attributes, $attribute, $value);
-
-    return $this;
-  }
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// CONFIGURATION //////////////////////////
@@ -148,26 +61,11 @@ abstract class MenuObject
    *
    * @return mixed Its value
    */
-  protected function getOption($option = null)
+  public function getOption($option = null)
   {
     // Load the config file if it isn't yet
     if (!$this->options) $this->options = Menu::getOption();
     if (!$option) return $this->options;
-
     return Arrays::get($this->options, $option);
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// CORE METHODS //////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Render element on string cast
-   *
-   * @return string
-   */
-  public function __toString()
-  {
-    return $this->render();
   }
 }

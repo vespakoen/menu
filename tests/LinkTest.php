@@ -24,7 +24,7 @@ class LinkTest extends MenuTests
   public function testCanSetAttributesOnLinks()
   {
     $link = static::$link;
-    $link->setClass('foobar');
+    $link->class('foobar');
 
     $matcher = $this->matchLink();
     $matcher['attributes']['class'] = 'foobar';

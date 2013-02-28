@@ -14,7 +14,7 @@ class ItemListTest extends MenuTests
   public function testCanCreateListsOfADifferentElement()
   {
     $list = static::$itemList;
-    $list->element('ol');
+    $list->setElement('ol');
 
     $this->assertHTML($this->matchList('ol'), $list->render());
   }

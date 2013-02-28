@@ -6,8 +6,6 @@
  */
 namespace Menu\Items\Contents;
 
-use \Menu\Traits\Content;
+use Menu\Traits\Content;
 
-class Raw extends Content
-{
-}
+class Raw extends Content {}

@@ -7,9 +7,8 @@
  */
 namespace Menu;
 
-use \Illuminate\Container\Container;
-use \Illuminate\Http\Request;
-use \Illuminate\Routing\UrlGenerator;
+use Illuminate\Container\Container;
+use Illuminate\Http\Request;
 use Menu\Items\ItemList;
 
 class Menu
@@ -56,7 +55,7 @@ class Menu
     // Create a new Items instance for the names that don't exist yet
     foreach ($names as $name) {
       if ( ! array_key_exists($name, static::$names)) {
-        $itemList = new ItemList($name, $attributes, $element);
+        $itemList = new ItemList($element, $name, $attributes);
         static::setItemList($name, $itemList);
       }
     }
@@ -128,7 +127,6 @@ class Menu
   public static function getItemList($name = null)
   {
     if (!$name) return static::$names;
-
     return static::$names[$name];
   }
 
@@ -174,6 +172,7 @@ class Menu
     static::$container->bind('files', 'Illuminate\Filesystem\Filesystem');
     static::$container->singleton('config', function($container) {
       $fileLoader = new \Illuminate\Config\FileLoader($container['files'], __DIR__.'/../');
+
       return new \Illuminate\Config\Repository($fileLoader, 'config');
     });
 
@@ -195,7 +194,6 @@ class Menu
   public static function getOption($option = null)
   {
     if ($option) $option = '.'.$option;
-
     return static::getContainer('config')->get('config'.$option);
   }
 
