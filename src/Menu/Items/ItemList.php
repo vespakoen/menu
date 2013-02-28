@@ -211,6 +211,7 @@ class ItemList extends MenuObject
 
     $element = $this->element;
     if ($element) $content = HTML::$element($contents, $this->attributes);
+
     return $content;
   }
 

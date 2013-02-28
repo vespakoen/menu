@@ -97,7 +97,7 @@ class Menu
    *
    * @return ItemList
    */
-  public static function items($element = 'ul', $name = null, $attributes = array())
+  public static function items($name = null, $attributes = array(), $element = 'ul')
   {
     return new ItemList($element, $name, $attributes);
   }
@@ -127,6 +127,7 @@ class Menu
   public static function getItemList($name = null)
   {
     if (!$name) return static::$names;
+
     return static::$names[$name];
   }
 

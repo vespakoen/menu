@@ -54,6 +54,7 @@ class Item extends MenuObject
     // Facultatively render an element around the item
     $element = $this->element;
     if ($element) $value = HTML::$element($value, $this->attributes);
+
     return HTML::decode($value);
   }
 
