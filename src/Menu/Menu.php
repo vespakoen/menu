@@ -1,6 +1,8 @@
 <?php
 namespace Menu;
 
+use Illuminate\Config\FileLoader;
+use Illuminate\Config\Repository;
 use Illuminate\Container\Container;
 use Illuminate\Http\Request;
 use Menu\Items\ItemList;
@@ -54,7 +56,7 @@ class Menu
 
     // Create a new Items instance for the names that don't exist yet
     foreach ($names as $name) {
-      if ( ! array_key_exists($name, static::$names)) {
+      if (!array_key_exists($name, static::$names)) {
         $itemList = new ItemList($name, $attributes, $element);
         static::setItemList($name, $itemList);
       }
@@ -177,11 +179,11 @@ class Menu
     });
 
     // Create basic Config handler
-    static::$container->bind('files', 'Illuminate\Filesystem\Filesystem');
+    static::$container->bindIf('files', 'Illuminate\Filesystem\Filesystem');
     static::$container->singleton('config', function($container) {
-      $fileLoader = new \Illuminate\Config\FileLoader($container['files'], __DIR__.'/../');
+      $fileLoader = new FileLoader($container['files'], __DIR__.'/../');
 
-      return new \Illuminate\Config\Repository($fileLoader, 'config');
+      return new Repository($fileLoader, 'config');
     });
 
     // Shortcut for getting a dependency
@@ -202,6 +204,7 @@ class Menu
   public static function getOption($option = null)
   {
     if ($option) $option = '.'.$option;
+
     return static::getContainer('config')->get('config'.$option);
   }
 

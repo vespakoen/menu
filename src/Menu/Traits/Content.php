@@ -8,8 +8,7 @@ use HtmlObject\Text;
  */
 class Content extends Text
 {
-
- /**
+  /**
    * Whether the content is a link or not
    *
    * @return boolean
@@ -18,5 +17,4 @@ class Content extends Text
   {
     return false;
   }
-
 }
