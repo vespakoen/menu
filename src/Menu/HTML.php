@@ -2,7 +2,7 @@
 namespace Menu;
 
 use Meido\HTML\HTMLFacade;
-use Underscore\Types\Arrays;
+use Underscore\Methods\ArraysMethods;
 
 /**
  * A facade for Meido's HTML class
@@ -35,8 +35,8 @@ class HTML extends HTMLFacade
   {
     // Magic method for quickly generating basic tags
     if (in_array($method, array('li', 'ol', 'ul', 'dl', 'dt', 'dd'))) {
-      $value = Arrays::get($parameters, 0);
-      $attributes = Arrays::get($parameters, 1, array());
+      $value = ArraysMethods::get($parameters, 0);
+      $attributes = ArraysMethods::get($parameters, 1, array());
 
       return static::element($method, $value, $attributes);
     }

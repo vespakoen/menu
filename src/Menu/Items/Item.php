@@ -44,7 +44,7 @@ class Item extends MenuObject
   {
     // Add the active classes
     $value = $this->value->render();
-    $this->attributes = $this->addActiveClasses($this->attributes);
+    $this->attributes = $this->addActiveClasses();
 
     // Render children if any
     if ($this->hasChildren()) {
@@ -119,17 +119,15 @@ class Item extends MenuObject
    * @param  array $attributes
    * @return array
    */
-  private function addActiveClasses($attributes)
+  private function addActiveClasses()
   {
     if ($this->isActive()) {
-      $attributes = Helpers::addClassTo($attributes, $this->getOption('item.active_class'));
+      $this->addClass($this->getOption('item.active_class'));
     }
 
     if ($this->hasActiveChild()) {
-      $attributes = Helpers::addClassTo($attributes, $this->getOption('item.active_child_class'));
+      $this->addClass($this->getOption('item.active_child_class'));
     }
-
-    return $attributes;
   }
 
   ////////////////////////////////////////////////////////////////////

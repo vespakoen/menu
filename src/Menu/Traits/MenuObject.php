@@ -3,7 +3,7 @@ namespace Menu\Traits;
 
 use HtmlObject\Element;
 use Menu\Menu;
-use Underscore\Types\Arrays;
+use Underscore\Methods\ArraysMethods;
 
 /**
  * Allows dynamic setting and getting of attributes
@@ -50,7 +50,7 @@ abstract class MenuObject extends Element
     // Load the config file if it isn't yet
     if (!$this->options) $this->options = Menu::getOption();
 
-    $this->options = Arrays::set($this->options, $option, $value);
+    $this->options = ArraysMethods::set($this->options, $option, $value);
 
     return $this;
   }
@@ -67,6 +67,7 @@ abstract class MenuObject extends Element
     // Load the config file if it isn't yet
     if (!$this->options) $this->options = Menu::getOption();
     if (!$option) return $this->options;
-    return Arrays::get($this->options, $option);
+
+    return ArraysMethods::get($this->options, $option);
   }
 }

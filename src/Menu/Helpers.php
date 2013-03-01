@@ -1,8 +1,8 @@
 <?php
 namespace Menu;
 
-use Underscore\Types\Arrays;
-use Underscore\Types\String;
+use Underscore\Methods\ArraysMethods;
+use Underscore\Methods\StringMethods;
 
 /**
  * Various helpers used troughout the classes
@@ -19,11 +19,11 @@ class Helpers
   {
     // Explode class if array passed
     if (is_array($class)) $class = explode(' ', $class);
-    $classes = Arrays::get($attributes, 'class');
+    $classes = ArraysMethods::get($attributes, 'class');
 
     // Append class if it's not already here
     if (!$classes) $classes = $class;
-    elseif (!String::contains($classes, $class)) $classes .= ' ' .$class;
+    elseif (!StringMethods::contains($classes, $class)) $classes .= ' ' .$class;
 
     $attributes['class'] = $classes;
 

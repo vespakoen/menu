@@ -3,7 +3,6 @@ namespace Menu\Items\Contents;
 
 use Menu\HTML;
 use Menu\Traits\Content;
-use Underscore\Types\String;
 
 /**
  * A Link in an Item
