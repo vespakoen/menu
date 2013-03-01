@@ -52,7 +52,7 @@ class ItemListTest extends MenuTests
 
     $matcher = $this->matchListWithItem('ul', 'li');
     $matcher['child']['attributes']['class'] = 'foo';
-    $matcher['child']['child']['attributes']['href'] = 'http://:/#lol';
+    $matcher['child']['child']['attributes']['href'] = '#lol';
 
     $this->assertHTML($matcher, $list);
   }

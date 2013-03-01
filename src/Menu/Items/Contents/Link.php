@@ -3,6 +3,8 @@ namespace Menu\Items\Contents;
 
 use Menu\HTML;
 use Menu\Traits\Content;
+use HtmlObject\Traits\Helpers;
+use Underscore\Methods\StringMethods;
 
 /**
  * A Link in an Item
@@ -17,9 +19,7 @@ class Link extends Content
    */
   private $hidden = array(
     '#',
-    'javascript:;',
-    'javascript:void(0);',
-    'javascript:void(0)',
+    'javascript:',
   );
 
   protected $element = 'a';
@@ -45,16 +45,16 @@ class Link extends Content
    */
   public function render()
   {
-    $this->href = $this->getEvaluatedUrl();
+    $href = $this->getEvaluatedUrl();
+    $attributes = $this->attributes;
 
-    // Create link and correct potential special URLs
-    $link = HTML::to($this->href, $this->value, $this->attributes);
-    $link = preg_replace('/(href="[^"]+") (href="[^"]+")/', '$1', $link);
-    if ($this->isSpecialUrl()) {
-      $link = preg_replace('/href="([^"]+)"/', 'href="' .$this->getEvaluatedUrl(). '"', $link);
+    // Don't compote URL if special URL
+    if (!$this->isSpecialUrl()) {
+      $href = HTML::getUrlGenerator()->to($href);
+      unset($attributes['href']);
     }
 
-    return $link;
+    return '<a href="' .$href.'"'.Helpers::parseAttributes($attributes).'>'.$this->getContent().$this->close();
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -78,7 +78,11 @@ class Link extends Content
    */
   public function isSpecialUrl()
   {
-    return in_array($this->href, $this->hidden);
+    foreach ($this->hidden as $hidden) {
+      if (StringMethods::startsWith($this->href, $hidden)) return true;
+    }
+
+    return false;
   }
 
   /**
