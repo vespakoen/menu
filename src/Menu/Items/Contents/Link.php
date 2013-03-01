@@ -201,14 +201,14 @@ class Link extends Content
       return $item->value;
     });
 
-    foreach ($parentContents as $content) {
-      if (!is_object($content)) continue;
+    foreach ($parentItems as $item) {
+      if (!is_object($item)) continue;
 
       if (
-        $content->isLink() and
-        !$content->isSpecialUrl() and
-        !is_null($content->href)) {
-          $urls[] = $content->href;
+        $item->value->isLink() and
+        !$item->value->isSpecialUrl() and
+        !is_null($item->value->href)) {
+          $urls[] = $item->value->href;
       }
     }
 
