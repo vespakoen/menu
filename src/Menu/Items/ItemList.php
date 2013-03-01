@@ -65,17 +65,7 @@ class ItemList extends MenuObject
   public function add($url, $value, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = null)
   {
     $content = new Link($url, $value, $linkAttributes);
-
-    $item = new Item($this, $content, $children);
-    if ($itemElement) $item->setElement($itemElement);
-    $item->setAttributes($itemAttributes);
-
-    // Set Item as parent of its children
-    if (!is_null($children)) {
-      $children->setParent($item);
-    }
-
-    $this->setChild($item);
+    $this->addContent($content, $children, $itemAttributes, $itemElement);
 
     return $this;
   }
@@ -95,11 +85,26 @@ class ItemList extends MenuObject
    *
    * @return ItemList
    */
-  public function raw($raw, $children = null, $itemAttributes = array(), $itemElement = 'li')
+  public function raw($raw, $children = null, $itemAttributes = array(), $itemElement = null)
   {
-    // Create Item
-    $item = new Item($this, new Raw($raw), $children);
-    $item->setAttributes($itemAttributes)->setElement($itemElement);
+    $content = new Raw($raw);
+    $this->addContent($content, $children, $itemAttributes, $itemElement);
+
+    return $this;
+  }
+
+  /**
+   * Add a link to the ItemList
+   *
+   * @param Content $content
+   * @param array   $children
+   * @param array   $itemAttributes
+   * @param string  $itemElement
+   */
+  public function addContent($content, $children, $itemAttributes, $itemElement)
+  {
+    $item = new Item($this, $content, $children, $itemElement);
+    $item->setAttributes($itemAttributes);
 
     // Set Item as parent of its children
     if (!is_null($children)) {
@@ -107,8 +112,6 @@ class ItemList extends MenuObject
     }
 
     $this->setChild($item);
-
-    return $this;
   }
 
   /**
