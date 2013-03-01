@@ -202,6 +202,8 @@ class Link extends Content
     });
 
     foreach ($parentContents as $content) {
+      if (!is_object($content)) continue;
+
       if (
         $content->isLink() and
         !$content->isSpecialUrl() and
