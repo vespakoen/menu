@@ -47,10 +47,10 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
    *
    * @return array
    */
-  protected function matchListWithItem()
+  protected function matchListWithItem($list = null, $item = null)
   {
-    $list = $this->matchList();
-    $list['child'] = $this->matchItem();
+    $list = $this->matchList($list);
+    $list['child'] = $this->matchItem($item);
 
     return $list;
   }
@@ -75,11 +75,11 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
    *
    * @return array
    */
-  protected function matchLink($link = '#')
+  protected function matchLink($link = '#', $content = 'foo')
   {
     return array(
       'tag' => 'a',
-      'content' => 'foo',
+      'content' => $content,
       'attributes' => array(
         'href' => $link,
       ),

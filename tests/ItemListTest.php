@@ -1,6 +1,7 @@
 <?php
 include '_start.php';
 
+use Menu\Menu;
 use Menu\Items\Item;
 use Menu\Items\ItemList;
 
@@ -40,5 +41,15 @@ class ItemListTest extends MenuTests
     $matcher['attributes']['data-foo'] = 'bar';
 
     $this->assertHTML($matcher, $list);
+  }
+
+  public function testCanAttachMenus()
+  {
+    $list = static::$itemList;
+    $list->add('#', 'foo');
+    $list->attach(Menu::items()->add('#', 'bar'));
+
+    $this->assertHTML($this->matchListWithItem(), $list->render());
+    $this->assertHTML($this->matchLink('#', 'bar'), $list->render());
   }
 }

@@ -103,7 +103,8 @@ class MenuTest extends MenuTests
     $list->setOption('item.element', 'dl');
     $list->add('#', 'foo');
 
-    $this->assertEquals('<ul><dl><a href="#">foo</a></dl></ul>', $list->render());
+    $this->assertHTML($this->matchListWithItem('ul', 'dl'), $list->render());
+    $this->assertHTML($this->matchLink(), $list->render());
   }
 
   public function testMenuCanSetGlobalOptions()
@@ -113,6 +114,7 @@ class MenuTest extends MenuTests
     $list = new ItemList;
     $list->add('#', 'foo');
 
-    $this->assertEquals('<ul><dl><a href="#">foo</a></dl></ul>', $list->render());
+    $this->assertHTML($this->matchListWithItem('ul', 'dl'), $list->render());
+    $this->assertHTML($this->matchLink(), $list->render());
   }
 }
