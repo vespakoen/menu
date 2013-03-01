@@ -91,9 +91,9 @@ class Menu
   /**
    * Create a new ItemList
    *
-   * @param string $element    The HTML element for the list (ul or dd)
    * @param string $name       The name of the ItemList
    * @param array  $attributes The HTML attributes for the list element
+   * @param string $element    The HTML element for the list (ul or dd)
    *
    * @return ItemList
    */

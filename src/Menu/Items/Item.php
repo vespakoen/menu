@@ -115,9 +115,6 @@ class Item extends MenuObject
 
   /**
    * Add the various active classes to an array of attributes
-   *
-   * @param  array $attributes
-   * @return array
    */
   private function addActiveClasses()
   {

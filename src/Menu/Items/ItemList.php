@@ -22,9 +22,9 @@ class ItemList extends MenuObject
   /**
    * Create a new Item List instance
    *
-   * @param string  $element     The HTML element for the ItemList
    * @param string  $name        The ItemList's name
    * @param array   $attributes  Attributes for the ItemList's HMTL element
+   * @param string  $element     The HTML element for the ItemList
    *
    * @return void
    */
