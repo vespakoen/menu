@@ -196,12 +196,7 @@ class Link extends Content
   {
     $urls = array();
 
-    $parentItems = $this->getParentItems();
-    $parentContents = ArraysMethods::each($parentItems, function($item) {
-      return $item->value;
-    });
-
-    foreach ($parentItems as $item) {
+    foreach ($this->getParentItems() as $item) {
       if (!is_object($item)) continue;
 
       if (
