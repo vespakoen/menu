@@ -33,6 +33,16 @@ class Item extends MenuObject
   }
 
   /**
+   * Get the Item's content
+   *
+   * @return Content
+   */
+  public function getContent()
+  {
+    return $this->value;
+  }
+
+  /**
    * Render the item
    *
    * @param array
@@ -43,7 +53,7 @@ class Item extends MenuObject
   {
     // Add the active classes
     $value = $this->value->render();
-    $this->attributes = $this->addActiveClasses();
+    $this->addActiveClasses();
 
     // Render children if any
     if ($this->hasChildren()) {

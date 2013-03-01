@@ -74,6 +74,20 @@ class Link extends Content
   }
 
   /**
+   * Change a Link's url
+   *
+   * @param string $url
+   *
+   * @return Link
+   */
+  public function href($url)
+  {
+    $this->url = $url;
+
+    return $this;
+  }
+
+  /**
    * Whether the link is special or not
    *
    * @return boolean

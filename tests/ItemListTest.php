@@ -35,10 +35,24 @@ class ItemListTest extends MenuTests
   public function testCanSetClassOnLists()
   {
     $list = static::$itemList;
-    $list->addClass('foo')->setAttribute('data-foo', 'bar');
+    $list->addClass('foo')->data_foo('bar');
     $matcher = $this->matchList();
     $matcher['attributes']['class'] = 'foo';
     $matcher['attributes']['data-foo'] = 'bar';
+
+    $this->assertHTML($matcher, $list);
+  }
+
+  public function testCanSetClassOnItems()
+  {
+    $list = static::$itemList;
+    $list->add('#', 'foo')
+      ->getChild(0)->addClass('foo')
+        ->getContent()->href('#lol');
+
+    $matcher = $this->matchListWithItem('ul', 'li');
+    $matcher['child']['attributes']['class'] = 'foo';
+    $matcher['child']['child']['attributes']['href'] = 'http://:/#lol';
 
     $this->assertHTML($matcher, $list);
   }
@@ -49,7 +63,7 @@ class ItemListTest extends MenuTests
     $list->add('#', 'foo');
     $list->attach(Menu::items()->add('#', 'bar'));
 
-    $this->assertHTML($this->matchListWithItem(), $list->render());
-    $this->assertHTML($this->matchLink('#', 'bar'), $list->render());
+    $this->assertHTML($this->matchListWithItem(), $list);
+    $this->assertHTML($this->matchLink('#', 'bar'), $list);
   }
 }
