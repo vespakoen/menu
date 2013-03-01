@@ -1,7 +1,6 @@
 <?php
 namespace Menu\Items;
 
-use Menu\Helpers;
 use Menu\HTML;
 use Menu\Menu;
 use Menu\Traits\Content;
