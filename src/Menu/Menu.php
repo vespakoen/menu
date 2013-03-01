@@ -55,7 +55,7 @@ class Menu
     // Create a new Items instance for the names that don't exist yet
     foreach ($names as $name) {
       if ( ! array_key_exists($name, static::$names)) {
-        $itemList = new ItemList($element, $name, $attributes);
+        $itemList = new ItemList($name, $attributes, $element);
         static::setItemList($name, $itemList);
       }
     }
@@ -99,7 +99,7 @@ class Menu
    */
   public static function items($name = null, $attributes = array(), $element = 'ul')
   {
-    return new ItemList($element, $name, $attributes);
+    return new ItemList($name, $attributes, $element);
   }
 
   /**

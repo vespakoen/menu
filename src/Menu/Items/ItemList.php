@@ -28,7 +28,7 @@ class ItemList extends MenuObject
    *
    * @return void
    */
-  public function __construct($element = null, $name = null, $attributes = array())
+  public function __construct($name = null, $attributes = array(), $element = null)
   {
     $this->element    = $element ?: $this->getOption('item_list.element');
     $this->name       = $name;
