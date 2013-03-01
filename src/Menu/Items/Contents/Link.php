@@ -85,16 +85,6 @@ class Link extends Content
     return false;
   }
 
-  /**
-   * Get the Link's url
-   *
-   * @return string
-   */
-  public function getUrl()
-  {
-    return $this->href;
-  }
-
   ////////////////////////////////////////////////////////////////////
   /////////////////////// PREFIXES AND SEGMENTS //////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -214,8 +204,8 @@ class Link extends Content
     $parent_items = $this->get_parent_items();
 
     foreach ($parent_items as $item) {
-      if ($item->value->isLink() && ! is_null($item->value->getUrl()) && !$item->value->isSpecialUrl()) {
-        $urls[] = $item->value->getUrl();
+      if ($item->value->isLink() && ! is_null($item->value->href) && !$item->value->isSpecialUrl()) {
+        $urls[] = $item->value->href;
       }
     }
 
