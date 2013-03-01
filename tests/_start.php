@@ -47,7 +47,7 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
    *
    * @return array
    */
-  protected function matchListWithItem($list = null, $item = null)
+  protected function matchListWithItem($list = 'ul', $item = 'li')
   {
     $list = $this->matchList($list);
     $list['child'] = $this->matchItem($item);

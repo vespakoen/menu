@@ -10,13 +10,6 @@ use Menu\Traits\Content;
 class Link extends Content
 {
   /**
-   * The link URL
-   *
-   * @var string
-   */
-  protected $url;
-
-  /**
    * URL segments that you want to hide from the
    * generated URL when using ->prefixParents()
    *
@@ -29,6 +22,8 @@ class Link extends Content
     'javascript:void(0)',
   );
 
+  protected $element = 'a';
+
   /**
    * Build a new Link
    *
@@ -38,9 +33,9 @@ class Link extends Content
    */
   public function __construct($url, $value = null, $attributes = array())
   {
-    $this->url        = $url;
-    $this->value      = $value;
     $this->attributes = $attributes;
+    $this->value      = $value;
+    $this->href       = $url;
   }
 
   /**
@@ -50,8 +45,11 @@ class Link extends Content
    */
   public function render()
   {
+    $this->href = $this->getEvaluatedUrl();
+
     // Create link and correct potential special URLs
-    $link = HTML::to($this->getEvaluatedUrl(), $this->value, $this->attributes);
+    $link = HTML::to($this->href, $this->value, $this->attributes);
+    $link = preg_replace('/(href="[^"]+") (href="[^"]+")/', '$1', $link);
     if ($this->isSpecialUrl()) {
       $link = preg_replace('/href="([^"]+)"/', 'href="' .$this->getEvaluatedUrl(). '"', $link);
     }
@@ -74,27 +72,13 @@ class Link extends Content
   }
 
   /**
-   * Change a Link's url
-   *
-   * @param string $url
-   *
-   * @return Link
-   */
-  public function href($url)
-  {
-    $this->url = $url;
-
-    return $this;
-  }
-
-  /**
    * Whether the link is special or not
    *
    * @return boolean
    */
   public function isSpecialUrl()
   {
-    return in_array($this->url, $this->hidden);
+    return in_array($this->href, $this->hidden);
   }
 
   /**
@@ -104,7 +88,7 @@ class Link extends Content
    */
   public function getUrl()
   {
-    return $this->url;
+    return $this->href;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -122,7 +106,7 @@ class Link extends Content
 
     // If the URL is just an hash, don't do shit
     if (!$this->getParent() or $this->isSpecialUrl()) {
-      return $this->url;
+      return $this->href;
     }
 
     // Prepend list prefix
@@ -143,7 +127,7 @@ class Link extends Content
       $segments[] = $this->get_handler_segment();
     }
 
-    $segments[] = $this->url;
+    $segments[] = $this->href;
 
     return implode('/', $segments);
   }
