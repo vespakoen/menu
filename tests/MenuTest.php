@@ -43,6 +43,43 @@ class MenuTest extends MenuTests
     $this->assertArrayHasKey('foo', Menu::getItemList());
   }
 
+  public function testCanRenderManuallyBindedItemLists()
+  {
+    $menu = Menu::handler('categories')
+      ->add('algorithms', 'Algorithms', Menu::items()->prefixParents()
+        ->add('cryptography', 'Cryptography')
+        ->add('data-structures', 'Data Structures')
+        ->add('digital-image-processing', 'Digital Image Processing')
+        ->add('memory-management', 'Memory Management'))
+      ->add('graphics-and-multimedia', 'Graphics & Multimedia', Menu::items()->prefixParents()
+        ->add('directx', 'DirectX')
+        ->add('flash', 'Flash')
+        ->add('opengl', 'OpenGL'));
+
+    $matcher =
+    '<ul>'.
+      '<li>'.
+        '<a href="http://:/algorithms">Algorithms</a>'.
+        '<ul>'.
+          '<li><a href="http://:/algorithms/cryptography">Cryptography</a></li>'.
+          '<li><a href="http://:/algorithms/data-structures">Data Structures</a></li>'.
+          '<li><a href="http://:/algorithms/digital-image-processing">Digital Image Processing</a></li>'.
+          '<li><a href="http://:/algorithms/memory-management">Memory Management</a></li>'.
+        '</ul>'.
+      '</li>'.
+      '<li>'.
+        '<a href="http://:/graphics-and-multimedia">Graphics & Multimedia</a>'.
+        '<ul>'.
+          '<li><a href="http://:/graphics-and-multimedia/directx">DirectX</a></li>'.
+          '<li><a href="http://:/graphics-and-multimedia/flash">Flash</a></li>'.
+          '<li><a href="http://:/graphics-and-multimedia/opengl">OpenGL</a></li>'.
+        '</ul>'.
+      '</li>'.
+    '</ul>';
+
+    $this->assertEquals($matcher, $menu->render());
+  }
+
   public function testCanGetItemLists()
   {
     $itemList = Menu::items('foo');

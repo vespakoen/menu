@@ -1,9 +1,9 @@
 <?php
-use Menu\Menu;
-use Menu\Items\Item;
-use Menu\Items\ItemList;
 use Menu\Items\Contents\Link;
 use Menu\Items\Contents\Raw;
+use Menu\Items\Item;
+use Menu\Items\ItemList;
+use Menu\Menu;
 
 abstract class MenuTests extends PHPUnit_Framework_TestCase
 {

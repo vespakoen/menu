@@ -18,7 +18,7 @@ class Link extends Content
 
   /**
    * URL segments that you want to hide from the
-   * generated URL when using ->prefix_parents()
+   * generated URL when using ->prefixParents()
    *
    * @var array
    */
