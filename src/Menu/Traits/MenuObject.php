@@ -1,7 +1,7 @@
 <?php
 namespace Menu\Traits;
 
-use HtmlObject\Element;
+use HtmlObject\Traits\Tag;
 use Menu\Menu;
 use Underscore\Methods\ArraysMethods;
 
@@ -9,7 +9,7 @@ use Underscore\Methods\ArraysMethods;
  * Allows dynamic setting and getting of attributes
  * on the various parts of a menu (items, ItemLists, etc)
  */
-abstract class MenuObject extends Element
+abstract class MenuObject extends Tag
 {
 
   /**

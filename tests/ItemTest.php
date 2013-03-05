@@ -46,7 +46,7 @@ class ItemTest extends MenuTests
   public function testCanCreateElementlessItems()
   {
     $item = new Item(static::$itemList, static::$link);
-    $item->element(null);
+    $item->setElement(null);
 
     $this->assertHTML($this->matchLink(), $item->render());
   }
