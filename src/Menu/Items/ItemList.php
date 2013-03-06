@@ -30,7 +30,7 @@ class ItemList extends MenuObject
    */
   public function __construct($name = null, $attributes = array(), $element = null)
   {
-    $this->defaultElement = $this->getOption('item_list.element');
+    if (!$element) $element = $this->getOption('item_list.element');
 
     $this->name       = $name;
     $this->attributes = $attributes;

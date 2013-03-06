@@ -25,7 +25,7 @@ class Item extends MenuObject
     $this->children = $children;
     $this->options  = $list->getOption();
 
-    $this->defaultElement = $this->getOption('item.element');
+    if (!$element) $element = $this->getOption('item.element');
     $this->setElement($element);
 
     // Create content
