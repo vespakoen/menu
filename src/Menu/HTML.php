@@ -1,7 +1,7 @@
 <?php
 namespace Menu;
 
-use Meido\HTML\HTMLFacade;
+use LaravelBook\Laravel4Powerpack\Facades\HTMLFacade;
 use Underscore\Methods\ArraysMethods;
 
 /**
@@ -20,7 +20,7 @@ class HTML extends HTMLFacade
       if (\App::bound('html')) return 'html';
     }
 
-    return Menu::getContainer('Meido\HTML\HTML');
+    return Menu::getContainer('LaravelBook\Laravel4Powerpack\HTML');
   }
 
   /**
