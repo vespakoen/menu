@@ -40,7 +40,7 @@ Or if you're using Laravel 3 via the artisan command line tool. Open the termina
 Now type the following command :
 
 ```shell
-php artisan package:install menu
+php artisan bundle:install menu
 ```
 
 To let Laravel know the Laravel Menu package should be started, open up `application/packages.php` and add the following lines to the packages array.
