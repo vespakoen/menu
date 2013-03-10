@@ -171,7 +171,6 @@ class Menu
    */
   public static function getContainer($dependency = null)
   {
-    if (class_exists('\App') and $dependency) return \App::make($dependency);
     if (!static::$container) static::$container = new Container;
 
     // Create HTML
@@ -180,6 +179,7 @@ class Menu
     // Create basic Request instance to use
     static::$container->alias('Symfony\Component\HttpFoundation\Request', 'request');
     static::$container->bindIf('Symfony\Component\HttpFoundation\Request', function() {
+      if (class_exists('\App')) return \App::make('request');
       return Request::createFromGlobals();
     });
 
