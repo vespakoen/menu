@@ -147,7 +147,7 @@ class Item extends MenuObject
    */
   public function getRequest()
   {
-    return Menu::getContainer('Symfony\Component\HttpFoundation\Request');
+    return Menu::getContainer('request');
   }
 
 }

@@ -16,11 +16,7 @@ class HTML extends HTMLFacade
    */
   public static function getFacadeAccessor()
   {
-    if (class_exists('App')) {
-      if (\App::bound('html')) return 'html';
-    }
-
-    return Menu::getContainer('LaravelBook\Laravel4Powerpack\HTML');
+    return Menu::getContainer('html');
   }
 
   /**
