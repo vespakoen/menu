@@ -40,13 +40,6 @@ class ItemListTest extends MenuTests
     $matcher['attributes']['class'] = 'foo';
     $matcher['attributes']['data-foo'] = 'bar';
 
-    try {
-      $list->__toString();
-    }
-    catch (Exception $e) {
-      var_dump($e->getMessage());
-    }
-
     $this->assertHTML($matcher, $list);
   }
 
