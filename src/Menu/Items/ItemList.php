@@ -130,7 +130,7 @@ class ItemList extends MenuObject
    */
   public function attach(ItemList $itemList)
   {
-    $this->setChildren($itemList->getChildren());
+    $this->nestChildren($itemList->getChildren());
 
     return $this;
   }
