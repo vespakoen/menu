@@ -2,6 +2,7 @@
 namespace Menu\Items\Contents;
 
 use HtmlObject\Traits\Helpers;
+use HtmlObject\Link as HtmlLink;
 use Menu\Menu;
 use Menu\Traits\Content;
 use Underscore\Methods\ArraysMethods;
@@ -10,7 +11,7 @@ use Underscore\Methods\StringMethods;
 /**
  * A Link in an Item
  */
-class Link extends Content
+class Link extends HtmlLink
 {
   /**
    * URL segments that you want to hide from the
@@ -24,11 +25,18 @@ class Link extends Content
   );
 
   /**
-   * The default element
+   * The link's URL
    *
    * @var string
    */
-  protected $element = 'a';
+  protected $href;
+
+  /**
+   * An array of properties to be injected as attributes
+   *
+   * @var array
+   */
+  protected $injectedProperties = array('href');
 
   /**
    * Build a new Link
@@ -45,22 +53,46 @@ class Link extends Content
   }
 
   /**
+   * Change the Link's URL
+   *
+   * @param string $href An URL
+   *
+   * @return Link
+   */
+  public function href($href)
+  {
+    $this->href = $href;
+
+    return $this;
+  }
+
+  /**
+   * Break off a chain
+   *
+   * @return Item
+   */
+  public function stop()
+  {
+    return $this->getParent(1);
+  }
+
+  /**
    * Render the Link
    *
    * @return string
    */
   public function render()
   {
-    $href = $this->getEvaluatedUrl();
-    $attributes = $this->attributes;
+    $this->href = $this->getEvaluatedUrl();
 
     // Don't compote URL if special URL
     if (!$this->isSpecialUrl()) {
-      $href = Menu::getContainer()->bound('url') ? Menu::getContainer('url')->to($href) : $href;
-      unset($attributes['href']);
+      $this->href = Menu::getContainer()->bound('url')
+        ? Menu::getContainer('url')->to($this->href)
+        : $this->href;
     }
 
-    return '<a href="' .$href.'"'.Helpers::parseAttributes($attributes).'>'.$this->getContent().$this->close();
+    return parent::render();
   }
 
   ////////////////////////////////////////////////////////////////////

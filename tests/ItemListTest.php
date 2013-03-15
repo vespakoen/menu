@@ -47,13 +47,31 @@ class ItemListTest extends MenuTests
   {
     $list = static::$itemList;
     $list->add('#', 'foo')->onItem()->addClass('foo')
-        ->getContent()->href('#lol')->stop();
+        ->getContent()->href('#lol');
 
     $matcher = $this->matchListWithItem('ul', 'li');
     $matcher['child']['attributes']['class'] = 'foo';
     $matcher['child']['child']['attributes']['href'] = '#lol';
 
     $this->assertHTML($matcher, $list);
+  }
+
+  public function testChainingMethods()
+  {
+    $menu = static::$itemList
+      ->add('#', 'foo')->onItem()->data_foo('bar')->addClass('active')
+        ->getContent()->href('lol')->stop()
+      ->add('#', 'bar');
+
+    $this->assertEquals(
+      '<ul>'.
+        '<li data-foo="bar" class="active">'.
+          '<a href="lol">foo</a>'.
+        '</li>'.
+        '<li>'.
+          '<a href="#">bar</a>'.
+        '</li>'.
+      '</ul>', $menu->render());
   }
 
   public function testCanAttachMenus()

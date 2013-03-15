@@ -2,6 +2,7 @@
 namespace Menu\Items;
 
 use HtmlObject\Element;
+use HtmlObject\Traits\Tag;
 use Menu\Menu;
 use Menu\Traits\Content;
 use Menu\Traits\MenuObject;
@@ -15,11 +16,11 @@ class Item extends MenuObject
    * Create a new item instance
    *
    * @param ItemList $list     The parent
-   * @param Content  $value    The content
+   * @param Tag      $value    The content
    * @param array    $children Facultative children ItemLists
    * @param array    $element  The Item element
    */
-  public function __construct(ItemList $list, Content $value, $children = array(), $element = null)
+  public function __construct(ItemList $list, Tag $value, $children = array(), $element = null)
   {
     $this->parent   = $list;
     $this->children = $children;

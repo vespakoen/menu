@@ -25,6 +25,6 @@ class Content extends Text
    */
   public function stop()
   {
-    return $this->getParent();
+    return $this->getParent(1);
   }
 }
