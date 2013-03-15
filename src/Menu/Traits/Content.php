@@ -17,4 +17,14 @@ class Content extends Text
   {
     return false;
   }
+
+  /**
+   * Break off a chain
+   *
+   * @return Item
+   */
+  public function stop()
+  {
+    return $this->getParent();
+  }
 }

@@ -33,6 +33,16 @@ class Item extends MenuObject
   }
 
   /**
+   * Break off a chain
+   *
+   * @return ItemList
+   */
+  public function stop()
+  {
+    return $this->getParent();
+  }
+
+  /**
    * Get the Item's content
    *
    * @return Content

@@ -37,6 +37,16 @@ class ItemList extends MenuObject
     $this->setElement($element);
   }
 
+  /**
+   * Get the last Item
+   *
+   * @return Item
+   */
+  public function onItem()
+  {
+    return $this->children[sizeof($this->children) - 1];
+  }
+
   ////////////////////////////////////////////////////////////////////
   ///////////////////////// PUBLIC INTERFACE /////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -67,7 +77,7 @@ class ItemList extends MenuObject
   public function add($url, $value, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = null)
   {
     $content = new Link($url, $value, $linkAttributes);
-    $this->addContent($content, $children, $itemAttributes, $itemElement);
+    $item = $this->addContent($content, $children, $itemAttributes, $itemElement);
 
     return $this;
   }
@@ -90,7 +100,7 @@ class ItemList extends MenuObject
   public function raw($raw, $children = null, $itemAttributes = array(), $itemElement = null)
   {
     $content = new Raw($raw);
-    $this->addContent($content, $children, $itemAttributes, $itemElement);
+    $item = $this->addContent($content, $children, $itemAttributes, $itemElement);
 
     return $this;
   }
@@ -114,6 +124,8 @@ class ItemList extends MenuObject
     }
 
     $this->setChild($item);
+
+    return $item;
   }
 
   /**

@@ -46,9 +46,8 @@ class ItemListTest extends MenuTests
   public function testCanSetClassOnItems()
   {
     $list = static::$itemList;
-    $list->add('#', 'foo')
-      ->getChild(0)->addClass('foo')
-        ->getContent()->href('#lol');
+    $list->add('#', 'foo')->onItem()->addClass('foo')
+        ->getContent()->href('#lol')->stop();
 
     $matcher = $this->matchListWithItem('ul', 'li');
     $matcher['child']['attributes']['class'] = 'foo';
