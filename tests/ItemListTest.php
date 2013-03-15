@@ -27,7 +27,7 @@ class ItemListTest extends MenuTests
     $list->add('bar', 'foo');
 
     $matcher = $this->matchListWithItem();
-    $matcher['child']['child'] = $this->matchLink('http://:/foo/bar');
+    $matcher['child']['child'] = $this->matchLink('foo/bar');
 
     $this->assertHTML($matcher, $list->render());
   }

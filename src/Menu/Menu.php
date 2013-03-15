@@ -171,25 +171,23 @@ class Menu
    */
   public static function getContainer($dependency = null)
   {
-    if (!static::$container) static::$container = new Container;
+    if (!static::$container) {
+      $container = new Container;
 
-    // Create HTML
-    static::$container->bindIf('html', 'LaravelBook\Laravel4Powerpack\HTML');
+      // Create HTML
+      $container->bindIf('html', 'LaravelBook\Laravel4Powerpack\HTML');
 
-    // Create basic Request instance to use
-    static::$container->alias('Symfony\Component\HttpFoundation\Request', 'request');
-    static::$container->bindIf('Symfony\Component\HttpFoundation\Request', function() {
-      if (class_exists('\App')) return \App::make('request');
-      return Request::createFromGlobals();
-    });
+      // Create basic Request instance to use
+      $container->alias('Symfony\Component\HttpFoundation\Request', 'request');
+      $container->bindIf('Symfony\Component\HttpFoundation\Request', function() {
+        return Request::createFromGlobals();
+      });
 
-    // Create basic Config handler
-    static::$container->bindIf('files', 'Illuminate\Filesystem\Filesystem');
-    static::$container->singleton('config', function($container) {
-      $fileLoader = new FileLoader($container['files'], __DIR__.'/../');
+      // Create basic Config handler
+      $container->bindIf('files', 'Illuminate\Filesystem\Filesystem');
 
-      return new Repository($fileLoader, 'config');
-    });
+      static::setContainer($container);
+    }
 
     // Shortcut for getting a dependency
     if ($dependency) {
@@ -197,6 +195,22 @@ class Menu
     }
 
     return static::$container;
+  }
+
+  /**
+   * Set the Container to use
+   *
+   * @param Container $container
+   */
+  public static function setContainer($container)
+  {
+    $container->singleton('config', function($container) {
+      $fileLoader = new FileLoader($container['files'], __DIR__.'/../');
+
+      return new Repository($fileLoader, 'config');
+    });
+
+    static::$container = $container;
   }
 
   /**

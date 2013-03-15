@@ -14,7 +14,6 @@
         "anahkiasen/underscore-php": "dev-master",
         "anahkiasen/html-object": "dev-master",
         "illuminate/http": "dev-master",
-        "laravelbook/laravel4-powerpack": "dev-master",
         "illuminate/config": "dev-master"
     },
     "autoload": {

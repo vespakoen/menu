@@ -1,9 +1,9 @@
 <?php
 namespace Menu\Items\Contents;
 
-use Menu\HTML;
-use Menu\Traits\Content;
 use HtmlObject\Traits\Helpers;
+use Menu\Menu;
+use Menu\Traits\Content;
 use Underscore\Methods\ArraysMethods;
 use Underscore\Methods\StringMethods;
 
@@ -56,7 +56,7 @@ class Link extends Content
 
     // Don't compote URL if special URL
     if (!$this->isSpecialUrl()) {
-      $href = HTML::getUrlGenerator()->to($href);
+      $href = Menu::getContainer()->bound('url') ? Menu::getContainer('url')->to($href) : $href;
       unset($attributes['href']);
     }
 

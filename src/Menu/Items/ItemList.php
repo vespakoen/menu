@@ -1,7 +1,7 @@
 <?php
 namespace Menu\Items;
 
-use Menu\HTML;
+use HtmlObject\Element;
 use Menu\Items\Contents\Link;
 use Menu\Items\Contents\Raw;
 use Menu\Menu;
@@ -215,7 +215,7 @@ class ItemList extends MenuObject
     }
 
     $element = $this->element;
-    if ($element) $content = HTML::$element($contents, $this->attributes);
+    if ($element) $content = Element::create($element, $contents, $this->attributes)->render();
 
     return $content;
   }

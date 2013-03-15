@@ -1,7 +1,7 @@
 <?php
 namespace Menu\Items;
 
-use Menu\HTML;
+use HtmlObject\Element;
 use Menu\Menu;
 use Menu\Traits\Content;
 use Menu\Traits\MenuObject;
@@ -62,9 +62,9 @@ class Item extends MenuObject
 
     // Facultatively render an element around the item
     $element = $this->element;
-    if ($element) $value = HTML::$element($value, $this->attributes);
+    if ($element) $value = Element::create($element, $value, $this->attributes)->render();
 
-    return HTML::decode($value);
+    return html_entity_decode($value, ENT_QUOTES, 'UTF-8');
   }
 
   ////////////////////////////////////////////////////////////////////
