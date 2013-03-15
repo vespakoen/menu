@@ -117,4 +117,24 @@ class MenuTest extends MenuTests
     $this->assertHTML($this->matchListWithItem('ul', 'dl'), $list->render());
     $this->assertHTML($this->matchLink(), $list->render());
   }
+
+  public function testChainingMethods()
+  {
+    $this->markTestIncomplete('Not yet implemented');
+
+    $menu = Menu::handler('foo')
+      ->add('#', 'foo')->onItem()->data_foo('bar')->addClass('active')
+        ->getContent()->href('lol')->stop()
+      ->add('#', 'bar');
+
+    $this->assertEquals(
+      '<ul>'.
+        '<li data-foo="bar" class="active">'.
+          '<a href="lol">foo</a>'.
+        '</li>'.
+        '<li>'.
+          '<a href="#">bar</a>'.
+        '</li>'.
+      '</ul>', $menu->render());
+  }
 }
