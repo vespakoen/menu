@@ -20,7 +20,10 @@ class MenuServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    Menu::setContainer($this->app);
+    $container = Menu::getContainer();
+    $container['url'] = $this->app['url'];
+
+    Menu::setContainer($container);
   }
 
   /**

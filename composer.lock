@@ -1,5 +1,5 @@
 {
-    "hash": "220ef6c78ff1ded61649aa81439808d2",
+    "hash": "4e7bf1fe049f8db7dabe51c7db2dcbc0",
     "packages": [
         {
             "name": "anahkiasen/html-object",
@@ -7,12 +7,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Anahkiasen/html-object.git",
-                "reference": "cfab35ef154af67a9fd7a295c680a8a036524c8d"
+                "reference": "962217e03cbe1b44b7a571e47cc8ba5c6f435e30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Anahkiasen/html-object/zipball/cfab35ef154af67a9fd7a295c680a8a036524c8d",
-                "reference": "cfab35ef154af67a9fd7a295c680a8a036524c8d",
+                "url": "https://api.github.com/repos/Anahkiasen/html-object/zipball/962217e03cbe1b44b7a571e47cc8ba5c6f435e30",
+                "reference": "962217e03cbe1b44b7a571e47cc8ba5c6f435e30",
                 "shasum": ""
             },
             "require": {
@@ -35,7 +35,7 @@
                 }
             ],
             "description": "A set of classes to create and manipulate HTML objects abstractions",
-            "time": "2013-03-15 22:33:19"
+            "time": "2013-03-17 23:54:21"
         },
         {
             "name": "anahkiasen/underscore-php",
@@ -82,12 +82,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/cache.git",
-                "reference": "a61b2aec898d01c49562f4fdcbfcf89f4c351d78"
+                "reference": "78a01b43c31a410f7bf4c36f0875770e85cee869"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/cache/zipball/a61b2aec898d01c49562f4fdcbfcf89f4c351d78",
-                "reference": "a61b2aec898d01c49562f4fdcbfcf89f4c351d78",
+                "url": "https://api.github.com/repos/illuminate/cache/zipball/78a01b43c31a410f7bf4c36f0875770e85cee869",
+                "reference": "78a01b43c31a410f7bf4c36f0875770e85cee869",
                 "shasum": ""
             },
             "require": {
@@ -116,7 +116,7 @@
                     "email": "taylorotwell@gmail.com"
                 }
             ],
-            "time": "2013-03-13 21:37:19"
+            "time": "2013-03-15 22:14:46"
         },
         {
             "name": "illuminate/config",
@@ -248,12 +248,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "bc08b36fe9f538ee0675a0101c0797d6c662c81d"
+                "reference": "1e2215f9199954b2abfebcdbd00aac1d24f0a28a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/bc08b36fe9f538ee0675a0101c0797d6c662c81d",
-                "reference": "bc08b36fe9f538ee0675a0101c0797d6c662c81d",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/1e2215f9199954b2abfebcdbd00aac1d24f0a28a",
+                "reference": "1e2215f9199954b2abfebcdbd00aac1d24f0a28a",
                 "shasum": ""
             },
             "require": {
@@ -294,7 +294,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2013-03-14 21:11:13"
+            "time": "2013-03-16 02:22:52"
         },
         {
             "name": "illuminate/encryption",

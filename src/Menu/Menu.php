@@ -185,6 +185,11 @@ class Menu
 
       // Create basic Config handler
       $container->bindIf('files', 'Illuminate\Filesystem\Filesystem');
+      $container->singleton('config', function($container) {
+        $fileLoader = new FileLoader($container['files'], __DIR__.'/../');
+
+        return new Repository($fileLoader, 'config');
+      });
 
       static::setContainer($container);
     }
@@ -204,12 +209,6 @@ class Menu
    */
   public static function setContainer($container)
   {
-    $container->singleton('config', function($container) {
-      $fileLoader = new FileLoader($container['files'], __DIR__.'/../');
-
-      return new Repository($fileLoader, 'config');
-    });
-
     static::$container = $container;
   }
 
