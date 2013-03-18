@@ -30,13 +30,9 @@ The HTML element and attributes for the item can also be changed, more on this t
 
 # Installing
 
-The Menu package is via composer :
+## Laravel 3
 
-```json
-"vespakoen/menu": "dev-master"
-```
-
-Or if you're using Laravel 3 via the artisan command line tool. Open the terminal and navigate to your Laravel project's root.
+Install Menu via the artisan command line tool. Open the terminal and navigate to your Laravel project's root.
 Now type the following command :
 
 ```shell
@@ -46,10 +42,21 @@ php artisan bundle:install menu
 To let Laravel know the Laravel Menu package should be started, open up `application/packages.php` and add the following lines to the packages array.
 
 ```php
-'menu' => array(
-    'auto' => true
-),
+'menu' => array('auto' => true),
 ```
+
+## Laravel 4
+
+Add this to your `composer.json` file's `"require"` :
+
+```json
+"vespakoen/menu": "dev-master"
+```
+
+And add the following to your `app/config/app.php` file :
+
+- In the Service Providers array : `'Menu\MenuServiceProvider',`
+- In the aliases array : `'Menu' => 'Menu\Menu',`
 
 # Diving in
 
