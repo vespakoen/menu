@@ -90,7 +90,7 @@ class Item extends MenuObject
   public function isActive()
   {
     return
-      $this->getUrl() == trim($this->getRequest()->getPathInfo(), '/') or
+      trim($this->getUrl(), '/') == trim($this->getRequest()->getPathInfo(), '/') or
       $this->getUrl() == $this->getRequest()->fullUrl() or
       $this->getUrl() == $this->getRequest()->url();
   }
