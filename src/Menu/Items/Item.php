@@ -12,6 +12,11 @@ use Menu\Traits\MenuObject;
  */
 class Item extends MenuObject
 {
+  /**
+   * Array of patterns to match the active state
+   *
+   * @var array
+   */
   protected $patterns = array();
   /**
    * Create a new item instance
@@ -34,6 +39,13 @@ class Item extends MenuObject
     $this->value = $value->setParent($this);
   }
 
+  /**
+   * Add an pattern to $patterns array
+   *
+   * @param string|array  $pattern The pattern
+   * @param string        $name  Its name
+   *
+   */
   public function setActivePatterns($pattern, $name = null)
   {
     if (!$name) $name = sizeof($this->patterns);
