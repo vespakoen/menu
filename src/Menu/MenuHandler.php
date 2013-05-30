@@ -1,14 +1,15 @@
 <?php
 namespace Menu;
 
-use Menu\Traits\MenuObject;
 use Exception;
+use Menu\Traits\MenuObject;
 
 /**
  * Handles various instances of ItemList at once
  */
 class MenuHandler extends MenuObject
 {
+
   /**
    * The names of the ItemLists this handler acts on
    *
@@ -124,4 +125,5 @@ class MenuHandler extends MenuObject
 
     return new MenuHandler($names);
   }
+
 }

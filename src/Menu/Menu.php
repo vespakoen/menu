@@ -13,6 +13,7 @@ use Menu\Items\ItemList;
  */
 class Menu
 {
+
   /**
    * The current IoC container
    * @var Container
