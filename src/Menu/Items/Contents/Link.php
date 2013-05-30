@@ -5,7 +5,6 @@ use HtmlObject\Traits\Helpers;
 use HtmlObject\Link as HtmlLink;
 use Menu\Menu;
 use Menu\Traits\Content;
-use Underscore\Methods\ArraysMethods;
 use Underscore\Methods\StringMethods;
 
 /**

@@ -67,7 +67,6 @@ abstract class MenuObject extends Tag
     // Load the config file if it isn't yet
     if (!$this->options) $this->options = Menu::getOption();
     if (!$option) return $this->options;
-
     return ArraysMethods::get($this->options, $option);
   }
 }

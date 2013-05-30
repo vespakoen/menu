@@ -130,7 +130,6 @@ class Menu
   public static function getItemList($name = null)
   {
     if (!$name) return static::$names;
-
     return static::$names[$name];
   }
 
@@ -223,7 +222,6 @@ class Menu
   public static function getOption($option = null)
   {
     if ($option) $option = '.'.$option;
-
     return static::getContainer('config')->get('config'.$option);
   }
 

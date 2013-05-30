@@ -94,11 +94,12 @@ class ItemList extends MenuObject
    *
    * @return MenuItems
    */
-  public function activePattern( $pattern )
+  public function activePattern($pattern)
   {
     $pattern = (array) $pattern;
     $item = end($this->children);
-    $item->setActivePatterns( $pattern );
+    $item->setActivePatterns($pattern);
+
     return $this;
   }
 
@@ -248,7 +249,6 @@ class ItemList extends MenuObject
 
     $element = $this->element;
     if ($element) $content = Element::create($element, $contents, $this->attributes)->render();
-
     return $content;
   }
 

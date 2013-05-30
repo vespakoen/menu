@@ -18,6 +18,7 @@ class Item extends MenuObject
    * @var array
    */
   protected $patterns = array();
+
   /**
    * Create a new item instance
    *
@@ -93,7 +94,6 @@ class Item extends MenuObject
     // Facultatively render an element around the item
     $element = $this->element;
     if ($element) $value = Element::create($element, $value, $this->attributes)->render();
-
     return html_entity_decode($value, ENT_QUOTES, 'UTF-8');
   }
 
@@ -120,20 +120,21 @@ class Item extends MenuObject
    *
    * @return boolean
    */
-  protected function hasActivePatterns() {
-
-    foreach ($this->patterns as $pattern) 
-    {
+  protected function hasActivePatterns()
+  {
+    foreach ($this->patterns as $pattern) {
       $path = $this->getRequest()->getPathInfo();
 
-      if( is_array( $pattern) ) {
-        foreach ($pattern as $p) 
-          $res = preg_match('/'.$p.'/i', $path);
+      if (is_array($pattern)) {
+        foreach ($pattern as $p)
+          $isActive = preg_match('/'.$p.'/i', $path);
       } else {
-        $res = preg_match('/'.$pattern.'/i', $path);    
+        $isActive = preg_match('/'.$pattern.'/i', $path);
       }
-      if( $res ) return true; 
+
+      if($isActive) return true;
     }
+
     return false;
   }
 
