@@ -83,6 +83,26 @@ class ItemList extends MenuObject
   }
 
   /**
+   * Add an active pattern to the ItemList instance.
+   *
+   * <code>
+   *    // Add a item to the default menu and set an active class for /user/5/edit
+   *    Menu::add('user', 'Users')->activePattern('\/user\/\d\/edit');
+   * </code>
+   *
+   * @param string   $pattern
+   *
+   * @return MenuItems
+   */
+  public function activePattern( $pattern )
+  {
+    $pattern = (array) $pattern;
+    $item = end($this->children);
+    $item->setActivePatterns( $pattern );
+    return $this;
+  }
+
+  /**
    * Add a raw html item to the MenuItems instance.
    *
    * <code>

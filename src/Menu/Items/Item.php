@@ -13,6 +13,12 @@ use Menu\Traits\MenuObject;
 class Item extends MenuObject
 {
   /**
+   * Array of patterns to match the active state
+   *
+   * @var array
+   */
+  protected $patterns = array();
+  /**
    * Create a new item instance
    *
    * @param ItemList $list     The parent
@@ -31,6 +37,19 @@ class Item extends MenuObject
 
     // Create content
     $this->value = $value->setParent($this);
+  }
+
+  /**
+   * Add an pattern to $patterns array
+   *
+   * @param string|array  $pattern The pattern
+   * @param string        $name  Its name
+   *
+   */
+  public function setActivePatterns($pattern, $name = null)
+  {
+    if (!$name) $name = sizeof($this->patterns);
+    $this->patterns[$name] = $pattern;
   }
 
   /**
@@ -92,7 +111,30 @@ class Item extends MenuObject
     return
       trim($this->getUrl(), '/') == trim($this->getRequest()->getPathInfo(), '/') or
       $this->getUrl() == $this->getRequest()->fullUrl() or
-      $this->getUrl() == $this->getRequest()->url();
+      $this->getUrl() == $this->getRequest()->url() or
+      $this->hasActivePatterns();
+  }
+
+  /**
+   * Check if this item has an active pattern
+   *
+   * @return boolean
+   */
+  protected function hasActivePatterns() {
+
+    foreach ($this->patterns as $pattern) 
+    {
+      $path = $this->getRequest()->getPathInfo();
+
+      if( is_array( $pattern) ) {
+        foreach ($pattern as $p) 
+          $res = preg_match('/'.$p.'/i', $path);
+      } else {
+        $res = preg_match('/'.$pattern.'/i', $path);    
+      }
+      if( $res ) return true; 
+    }
+    return false;
   }
 
   /**
