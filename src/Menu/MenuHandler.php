@@ -11,58 +11,177 @@ class MenuHandler extends MenuObject
 {
 
   /**
-   * The names of the ItemLists this handler acts on
+   * The ItemList or Item instances this handler acts on
    *
    * @var array
    */
-  protected $handles = array();
+  protected $menuObjects = array();
+
+  public static $override = array(
+    'add',
+    'addRaw',
+    'addCustom',
+    'addItem',
+    'setName',
+    'setItems'
+  );
+
+  public static $responses = array(
+    'getHandlerFromResults' => array(
+      'getAllItemLists',
+      'getItemListsAtDepth',
+      'getItemListsAtDepthRange',
+      'filter'
+    ),
+    'getItemListFromResults' => array(
+      'getAllItems',
+      'getItemsAtDepth',
+      'getItemsAtDepthRange'
+    ),
+    'getMatchFromResults' => array(
+      'findItemListByName',
+      'findByName',
+      'find'
+    ),
+    'getCombinedResult' => array(
+      'lists'
+    )
+  );
 
   /**
-   * Set the handles on which this menu should act
+   * Set the menuobjects on which this menu should act
    *
-   * @param array $names The names of the ItemLists
+   * @param array $menuObjects The menuobjects
    *
    * @return void
    */
-  public function __construct($names)
+  public function __construct($menuObjects = array())
   {
-    $this->handles = $names;
-  }
-
-  ////////////////////////////////////////////////////////////////////
-  //////////////////////////// CODE METHODS //////////////////////////
-  ////////////////////////////////////////////////////////////////////
-
-  /**
-   * Render all the ItemLists this handler acts on and return the HTML
-   *
-   * @return string
-   */
-  public function render()
-  {
-    $contents = '';
-
-    // Loop through the ItemLists this handler handles
-    // And render each one in the content
-    foreach ($this->handles as $name) {
-      $contents .= Menu::getItemList($name)->setAttributes($this->attributes)->render();
-    }
-
-    return $contents;
+    $this->menuObjects = $menuObjects;
   }
 
   ////////////////////////////////////////////////////////////////////
   ////////////////////////// PUBLIC INTERFACE ////////////////////////
   ////////////////////////////////////////////////////////////////////
 
-  /**
-   * Get the handles this Menu hooks into
-   *
-   * @return array
-   */
-  public function getHandles()
+  public function setMenuObjects($menuObjects)
   {
-    return $this->handles;
+    $this->menuObjects = $menuObjects;
+
+    return $this;
+  }
+
+  public function getMenuObjects()
+  {
+    return $this->menuObjects;
+  }
+
+  public function addMenuObject($menuObject)
+  {
+    $this->menuObjects[] = $menuObject;
+
+    return $this;
+  }
+
+  public function getItemsWithDepth()
+  {
+    $this->__call('getItemsWithDepth');
+
+    $results = array();
+    foreach ($this->lastResults as $result)
+    {
+      foreach($result as $depth => $items)
+      {
+        foreach($items as $item)
+        {
+          $results[$depth][] = $item;
+        }
+      }
+    }
+
+    return $results;
+  }
+
+  public function getItemListsWithDepth()
+  {
+    $this->__call('getItemListsWithDepth');
+
+    $results = array();
+    foreach ($this->lastResults as $result)
+    {
+      foreach($result as $depth => $items)
+      {
+        foreach($items as $item)
+        {
+          $results[$depth][] = $item;
+        }
+      }
+    }
+
+    return $results;
+  }
+
+  public function render()
+  {
+    $this->__call('render');
+
+    return implode('', $this->lastResults);
+  }
+
+  protected function getMenuObjectsFromHandlers()
+  {
+    $results = array();
+    foreach($this->lastResults as $result)
+    {
+      foreach($result->getMenuObjects() as $item)
+      {
+        $results[] = $item;
+      }
+    }
+
+    return $results;
+  }
+
+  protected function getItemsFromItemLists()
+  {
+    $results = array();
+    foreach($this->lastResults as $result)
+    {
+      foreach($result->getItems() as $item)
+      {
+        $results[] = $item;
+      }
+    }
+
+    return $results;
+  }
+
+  protected function getMatchFromResults()
+  {
+    foreach($this->lastResults as $result)
+    {
+      if($result !== false)
+      {
+        return $result;
+      }
+    }
+
+    return false;
+  }
+
+  public function getCombinedResult()
+  {
+    return call_user_func_array('array_merge', $this->lastResults);
+  }
+
+  protected function getHandlerFromResults()
+  {
+    return new Handler($this->getMenuObjectsFromHandlers());
+  }
+
+  protected function getItemListFromResults()
+  {
+    return new ItemList($this->getItemsFromItemLists());
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -78,15 +197,25 @@ class MenuHandler extends MenuObject
    *
    * @return MenuHandler
    */
-  public function __call($method, $parameters)
+  public function __call($method, $parameters = array())
   {
-    // Loop through the ItemLists this handler handles
-    foreach ($this->handles as $name) {
+    $results = array();
+    foreach($this->menuObjects as &$menuObject) {
+      $result = call_user_func_array(array($menuObject, $method), $parameters);
 
-      // Forward the call to the ItemList
-      $itemList = Menu::getItemList($name);
-      $itemList = call_user_func_array(array($itemList, $method), $parameters);
-      Menu::setItemList($name, $itemList);
+      if (in_array($method, static::$override)) {
+        $menuObject = $result;
+      }
+
+      $results[] = $result;
+    }
+
+    $this->lastResults = $results;
+
+    foreach (static::$responses as $responseMethod => $methods) {
+      if(in_array($method, $methods)) {
+        return $this->$responseMethod();
+      }
     }
 
     return $this;
