@@ -28,10 +28,11 @@ class ItemList extends MenuObject
    *
    * @return void
    */
-  public function __construct($name = null, $attributes = array(), $element = null)
+  public function __construct($items = array(), $name = null, $attributes = array(), $element = null)
   {
     if (!$element) $element = $this->getOption('item_list.element');
 
+    $this->setChildren($items);
     $this->name       = $name;
     $this->attributes = $attributes;
     $this->setElement($element);
@@ -83,27 +84,6 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Add an active pattern to the ItemList instance.
-   *
-   * <code>
-   *    // Add a item to the default menu and set an active class for /user/5/edit
-   *    Menu::add('user', 'Users')->activePattern('\/user\/\d\/edit');
-   * </code>
-   *
-   * @param string   $pattern
-   *
-   * @return MenuItems
-   */
-  public function activePattern($pattern)
-  {
-    $pattern = (array) $pattern;
-    $item = end($this->children);
-    $item->setActivePatterns($pattern);
-
-    return $this;
-  }
-
-  /**
    * Add a raw html item to the MenuItems instance.
    *
    * <code>
@@ -147,6 +127,27 @@ class ItemList extends MenuObject
     $this->setChild($item);
 
     return $item;
+  }
+
+  /**
+   * Add an active pattern to the ItemList instance.
+   *
+   * <code>
+   *    // Add a item to the default menu and set an active class for /user/5/edit
+   *    Menu::add('user', 'Users')->activePattern('\/user\/\d\/edit');
+   * </code>
+   *
+   * @param string   $pattern
+   *
+   * @return MenuItems
+   */
+  public function activePattern($pattern)
+  {
+    $pattern = (array) $pattern;
+    $item = end($this->children);
+    $item->setActivePatterns($pattern);
+
+    return $this;
   }
 
   /**
@@ -228,28 +229,217 @@ class ItemList extends MenuObject
     return $this;
   }
 
-  /**
-   * Get the evaluated string content of the ItemList.
-   *
-   * @param  integer $depth The depth at which the ItemList should be rendered
-   *
-   * @return string
-   */
-  public function render($depth = 0)
+  public function getItemsWithDepth()
   {
-    // Check for maximal depth
-    $maxDepth = $this->getOption('max_depth');
-    if ($maxDepth != 0 and $depth > $maxDepth) return false;
+    return $this->getItemsRecursivelyWithDepth($this->getChildren());
+  }
 
-    // Render contained items
-    $contents = null;
-    foreach ($this->children as $item) {
-      $contents .= $item->render($depth + 1);
+  protected function getItemsRecursivelyWithDepth($items, $depth = 1)
+  {
+    $results = array();
+    foreach($items as $item)
+    {
+      $results[$depth][] = $item;
+  
+      $subItems = $item->getItemList()
+        ->getChildren();
+      foreach($this->getItemsRecursivelyWithDepth($subItems, $depth + 1) as $childrenDepth => $children)
+      {
+        foreach($children as $child)
+        {
+          $results[$childrenDepth][] = $child;
+        }
+      }
     }
 
-    $element = $this->element;
-    if ($element) $content = Element::create($element, $contents, $this->attributes)->render();
-    return $content;
+    return $results;
+  }
+
+  public function getItemListsWithDepth()
+  {
+    return $this->getItemListsRecursivelyWithDepth($this);
+  }
+
+  protected function getItemListsRecursivelyWithDepth($itemList, $depth = 1)
+  {
+    $results = array();
+
+    $results[$depth][] = $itemList;
+    foreach($itemList->getChildren() as $item)
+    {
+      foreach($this->getItemListsRecursivelyWithDepth($item->getItemList(), $depth + 1) as $childrenDepth => $children)
+      {
+        foreach($children as $child)
+        {
+          $results[$childrenDepth][] = $child;
+        }
+      }
+    }
+
+    return $results;
+  }
+
+  public function getAllItems()
+  {
+    $results = array();
+
+    foreach($this->getItemsWithDepth() as $depth => $items)
+    {
+      foreach($items as $item)
+      {
+        $results[] = $item;
+      }
+    }
+
+    return new ItemList($results);
+  }
+
+  public function getItemsByContentType($renderableType)
+  {
+    $results = array();
+    $items = $this->getAllItems();
+
+    foreach($items as $item)
+    {
+      $renderable = $item->getContent();
+      if(get_class($renderable) == $renderableType)
+      {
+        $results[] = $item;
+      }
+    }
+
+    return new ItemList($results);
+  }
+
+  public function getAllItemLists()
+  {
+    $results = array();
+
+    foreach($this->getItemListsWithDepth() as $depth => $items)
+    {
+      foreach($items as $item)
+      {
+        $results[] = $item;
+      }
+    }
+
+    return new Handler($results);
+  }
+
+  public function getAllItemListsIncludingThisOne()
+  {
+    return $this->getAllItemLists()
+      ->addMenuObject($this);
+  }
+
+  public function getItemListsAtDepth($depth)
+  {
+    $itemListsWithDepth = $this->getItemListsWithDepth();
+
+    return new Handler($itemListsWithDepth[$depth]);
+  }
+
+  public function getItemListsAtDepthRange($from, $to)
+  {
+    $itemListsWithDepth = $this->getItemListsWithDepth();
+    
+    $results = array();
+    foreach($itemListsWithDepth as $depth => $itemLists)
+    {
+      if($depth >= $from && $depth <= $to)
+      {
+        foreach($itemLists as $itemList)
+        {
+          $results[] = $itemList;
+        }
+      }
+    }
+
+    return new Handler($results);
+  }
+
+  public function getItemsAtDepth($depth)
+  {
+    $itemsWithDepth = $this->getItemsWithDepth();
+
+    return new ItemList($itemsWithDepth[$depth]);
+  }
+
+  public function getItemsAtDepthRange($from, $to)
+  {
+    $itemsWithDepth = $this->getItemsWithDepth();
+    
+    $results = array();
+    foreach($itemsWithDepth as $depth => $items)
+    {
+      if($depth >= $from && $depth <= $to)
+      {
+        foreach($items as $item)
+        {
+          $results[] = $item;
+        }
+      }
+    }
+
+    return new ItemList($results);
+  }
+
+  public function findItemListByName($name)
+  {
+    $itemLists = $this->getAllItemListsIncludingThisOne()
+      ->getMenuObjects();
+
+    foreach($itemLists as $itemList)
+    {
+      if($itemList->getName() == $name)
+      {
+        return $itemList;
+      }
+    }
+
+    return false;
+  }
+
+  public function findByName($name)
+  {
+    return $this->findItemListByName($name);
+  }
+
+  public function find($name)
+  {
+    return $this->findItemListByName($name);
+  }
+
+  public function findItemByAttribute($key, $value)
+  {
+    $itemList = $this->getAllItemListsIncludingThisOne()
+      ->getMenuObjects();
+
+    foreach($itemLists as $itemList)
+    {
+      if($itemList->getAttibute($key) == $value)
+      {
+        return $itemList;
+      }
+    }
+
+    return false;
+  }
+
+  public function findItemByUrl($url)
+  {
+    $items = $this->getItemsByContentType('Link');
+
+    foreach($items as $item)
+    {
+      $renderable = $item->getContent();
+      if($renderable->getUrl() == $url)
+      {
+        return $item;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -280,5 +470,29 @@ class ItemList extends MenuObject
     }
 
     return $results;
+  }
+
+  /**
+   * Get the evaluated string content of the ItemList.
+   *
+   * @param  integer $depth The depth at which the ItemList should be rendered
+   *
+   * @return string
+   */
+  public function render($depth = 0)
+  {
+    // Check for maximal depth
+    $maxDepth = $this->getOption('max_depth');
+    if ($maxDepth != 0 and $depth > $maxDepth) return false;
+
+    // Render contained items
+    $contents = null;
+    foreach ($this->children as $item) {
+      $contents .= $item->render($depth + 1);
+    }
+
+    $element = $this->element;
+    if ($element) $contents = Element::create($element, $contents, $this->attributes)->render();
+    return $contents;
   }
 }
