@@ -443,36 +443,6 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Find itemslists by name (itself, or on of it's children)
-   *
-   * @param array $names the names to find
-   *
-   * @return ItemList
-   */
-  public function find($names)
-  {
-    $names = (array) $names;
-
-    $results = array();
-
-    foreach ($names as $name) {
-      if ($this->name == $name) {
-        $results[] = $this;
-      }
-
-      foreach ($this->children as $item) {
-        if ($item->hasChildren() && $found = $item->children->find($name)) {
-          foreach ($found as $list_item) {
-            $results[] = $list_item;
-          }
-        }
-      }
-    }
-
-    return $results;
-  }
-
-  /**
    * Get the evaluated string content of the ItemList.
    *
    * @param  integer $depth The depth at which the ItemList should be rendered
