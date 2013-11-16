@@ -25,6 +25,13 @@ class ItemTest extends MenuTests
     $this->assertHTML($matcher, $item->render());
   }
 
+  public function testRawItemNotActive()
+  {
+    $item = new Item(static::$itemList, static::$raw);
+
+    $this->assertFalse($item->isActive());
+  }
+
   public function testCanCreateItemWithSublist()
   {
     $sublist = static::$itemList;
