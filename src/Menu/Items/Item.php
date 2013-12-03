@@ -22,16 +22,16 @@ class Item extends MenuObject
   /**
    * Create a new item instance
    *
-   * @param ItemList $list     The parent
+   * @param ItemList $parent   The parent
    * @param Tag      $value    The content
    * @param array    $children Facultative children ItemLists
    * @param array    $element  The Item element
    */
-  public function __construct(ItemList $list, Tag $value, $children = array(), $element = null)
+  public function __construct(ItemList $parent, Tag $value, $children = null, $element = null)
   {
-    $this->parent   = $list;
-    $this->children = $children;
-    $this->options  = $list->getOption();
+    $this->parent   = $parent;
+    $this->children = is_null($children) ? new ItemList() : $children;
+    $this->options  = $parent->getOption();
 
     if (!$element) $element = $this->getOption('item.element');
     $this->setElement($element);
@@ -113,6 +113,11 @@ class Item extends MenuObject
       $this->getUrl() == $this->getRequest()->fullUrl() or
       $this->getUrl() == $this->getRequest()->url() or
       $this->hasActivePatterns();
+  }
+
+  public function hasChildren()
+  {
+    return count($this->children->getChildren()) > 0;
   }
 
   /**
