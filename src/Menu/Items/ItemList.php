@@ -5,6 +5,7 @@ use HtmlObject\Element;
 use Menu\Items\Contents\Link;
 use Menu\Items\Contents\Raw;
 use Menu\Menu;
+use Menu\MenuHandler;
 use Menu\Traits\MenuObject;
 
 /**
@@ -32,7 +33,7 @@ class ItemList extends MenuObject
   {
     if (!$element) $element = $this->getOption('item_list.element');
 
-    $this->setChildren($items);
+    $this->children   = $items;
     $this->name       = $name;
     $this->attributes = $attributes;
     $this->setElement($element);
@@ -73,7 +74,7 @@ class ItemList extends MenuObject
    * @param array    $itemAttributes
    * @param string   $itemElement
    *
-   * @return MenuItems
+   * @return ItemList
    */
   public function add($url, $value, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = null)
   {
@@ -84,7 +85,7 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Add a raw html item to the MenuItems instance.
+   * Add a raw html item to the ItemList instance.
    *
    * <code>
    *    // Add a raw item to the default main menu
@@ -107,7 +108,7 @@ class ItemList extends MenuObject
   }
 
   /**
-   * Add a link to the ItemList
+   * Add content to the ItemList
    *
    * @param Content $content
    * @param array   $children
@@ -139,7 +140,7 @@ class ItemList extends MenuObject
    *
    * @param string   $pattern
    *
-   * @return MenuItems
+   * @return ItemList
    */
   public function activePattern($pattern)
   {
@@ -154,7 +155,7 @@ class ItemList extends MenuObject
    * Add menu items to another ItemList.
    *
    * <code>
-   *    // Attach menu items to the default menuhandler
+   *    // Attach menu items to the default MenuHandler
    *    Menu::attach(Menu::items()->add('home', 'Homepage'));
    * </code>
    *
@@ -218,13 +219,13 @@ class ItemList extends MenuObject
   /**
    * Prefix this ItemList with the name of the ItemList at the very top of the tree
    *
-   * @param boolean $prefixHandler
+   * @param boolean $prefixMenuHandler
    *
    * @return ItemList
    */
-  public function prefixHandler($prefixHandler = true)
+  public function prefixMenuHandler($prefixMenuHandler = true)
   {
-    $this->setOption('item_list.prefix_handler', $prefixHandler);
+    $this->setOption('item_list.prefix_MenuHandler', $prefixMenuHandler);
 
     return $this;
   }
@@ -240,8 +241,8 @@ class ItemList extends MenuObject
     foreach($items as $item)
     {
       $results[$depth][] = $item;
-  
-      $subItems = $item->getItemList()
+
+      $subItems = $item->getChildren()
         ->getChildren();
       foreach($this->getItemsRecursivelyWithDepth($subItems, $depth + 1) as $childrenDepth => $children)
       {
@@ -265,9 +266,11 @@ class ItemList extends MenuObject
     $results = array();
 
     $results[$depth][] = $itemList;
-    foreach($itemList->getChildren() as $item)
+
+    $items = $itemList->getChildren();
+    foreach($items as $item)
     {
-      foreach($this->getItemListsRecursivelyWithDepth($item->getItemList(), $depth + 1) as $childrenDepth => $children)
+      foreach($this->getItemListsRecursivelyWithDepth($item->getChildren(), $depth + 1) as $childrenDepth => $children)
       {
         foreach($children as $child)
         {
@@ -297,9 +300,8 @@ class ItemList extends MenuObject
   public function getItemsByContentType($renderableType)
   {
     $results = array();
-    $items = $this->getAllItems();
-
-    foreach($items as $item)
+    $itemList = $this->getAllItems();
+    foreach($itemList->getChildren() as $item)
     {
       $renderable = $item->getContent();
       if(get_class($renderable) == $renderableType)
@@ -323,7 +325,7 @@ class ItemList extends MenuObject
       }
     }
 
-    return new Handler($results);
+    return new MenuHandler($results);
   }
 
   public function getAllItemListsIncludingThisOne()
@@ -336,13 +338,13 @@ class ItemList extends MenuObject
   {
     $itemListsWithDepth = $this->getItemListsWithDepth();
 
-    return new Handler($itemListsWithDepth[$depth]);
+    return new MenuHandler($itemListsWithDepth[$depth]);
   }
 
   public function getItemListsAtDepthRange($from, $to)
   {
     $itemListsWithDepth = $this->getItemListsWithDepth();
-    
+
     $results = array();
     foreach($itemListsWithDepth as $depth => $itemLists)
     {
@@ -355,7 +357,7 @@ class ItemList extends MenuObject
       }
     }
 
-    return new Handler($results);
+    return new MenuHandler($results);
   }
 
   public function getItemsAtDepth($depth)
@@ -368,7 +370,7 @@ class ItemList extends MenuObject
   public function getItemsAtDepthRange($from, $to)
   {
     $itemsWithDepth = $this->getItemsWithDepth();
-    
+
     $results = array();
     foreach($itemsWithDepth as $depth => $items)
     {
@@ -428,9 +430,8 @@ class ItemList extends MenuObject
 
   public function findItemByUrl($url)
   {
-    $items = $this->getItemsByContentType('Link');
-
-    foreach($items as $item)
+    $itemList = $this->getItemsByContentType('Menu\Items\Contents\Link');
+    foreach($itemList->getChildren() as $item)
     {
       $renderable = $item->getContent();
       if($renderable->getUrl() == $url)
@@ -440,6 +441,57 @@ class ItemList extends MenuObject
     }
 
     return false;
+  }
+
+  /**
+   * Easily create items while looping over DB results
+   * that have a reference to the parent (usually via parentId)
+   *
+   *     Menu::hydrate(function($parentId)
+   *       {
+   *         return Page::where('parent_id', $parentId)
+   *           ->get();
+   *       },
+   *       function($children, $page)
+   *       {
+   *         $children->add($page->slug, $page->name);
+   *       });
+   *
+   * @param Closure $resolver   the callback to resolve results for a given parentId
+   * @param Closure $decorator  the callback that modifies the ItemList for the given node
+   * @param integer $idField    the id column that matches with the parentId
+   * @param integer $parentId   the parentId to start hydrating from
+   *
+   * @return ItemList the
+   */
+  public function hydrate($resolver, $decorator, $idField = 'id', $parentId = 0)
+  {
+    if($items = $resolver($parentId))
+    {
+      foreach($items as $item)
+      {
+        // Let the decorator add the item(s) (and maybe set some attributes)
+        $decorator($this, $item);
+
+        // Grab the newest item
+        $newestItem = end($this->children);
+
+        // If there is an item, add hydrate it
+        if($newestItem)
+        {
+          // grab the newest itemlist
+          $newestItemList = $newestItem->getChildren();
+
+          // get the id of the item
+          $parentId = is_object($item) ? $item->{$idField} : $item[$idField];
+
+          // Hydrate the children
+          $newestItemList->hydrate($resolver, $decorator, $idField, $parentId);
+        }
+      }
+    }
+
+    return $this;
   }
 
   /**
