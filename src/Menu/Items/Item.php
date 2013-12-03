@@ -108,6 +108,10 @@ class Item extends MenuObject
    */
   public function isActive()
   {
+    if( ! $this->value->isLink()) {
+      return false;
+    }
+
     return
       trim($this->getUrl(), '/') == trim($this->getRequest()->getPathInfo(), '/') or
       $this->getUrl() == $this->getRequest()->fullUrl() or
