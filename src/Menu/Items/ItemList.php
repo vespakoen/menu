@@ -447,6 +447,7 @@ class ItemList extends MenuObject
    * Easily create items while looping over DB results
    * that have a reference to the parent (usually via parentId)
    *
+   * <code>
    *     Menu::hydrate(function($parentId)
    *       {
    *         return Page::where('parent_id', $parentId)
@@ -456,6 +457,7 @@ class ItemList extends MenuObject
    *       {
    *         $children->add($page->slug, $page->name);
    *       });
+   * </code>
    *
    * @param Closure $resolver   the callback to resolve results for a given parentId
    * @param Closure $decorator  the callback that modifies the ItemList for the given node
