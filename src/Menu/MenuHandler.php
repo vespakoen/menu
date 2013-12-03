@@ -256,4 +256,14 @@ class MenuHandler
     return new MenuHandler($names);
   }
 
+  /**
+   * Render the MenuHandler
+   *
+   * @return string
+   */
+  public static function __toString()
+  {
+    return $this->render();
+  }
+
 }
