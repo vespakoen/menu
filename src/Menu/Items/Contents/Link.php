@@ -66,6 +66,16 @@ class Link extends HtmlLink
   }
 
   /**
+   * Get the link's href
+   *
+   * @return string the href
+   */
+  public function getUrl()
+  {
+    return $this->href;
+  }
+
+  /**
    * Break off a chain
    *
    * @return Item
