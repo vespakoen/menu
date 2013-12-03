@@ -25,7 +25,7 @@ class Menu
    *
    * @var array
    */
-  protected static $names = array();
+  protected static $itemLists = array();
 
   /**
    * Get a MenuHandler.
@@ -55,16 +55,22 @@ class Menu
   {
     $names = (array) $names;
 
-    // Create a new Items instance for the names that don't exist yet
+    $itemLists = array();
+    // Create a new ItemList instance for the names that don't exist yet
     foreach ($names as $name) {
-      if (!array_key_exists($name, static::$names)) {
-        $itemList = new ItemList($name, $attributes, $element);
+      if (!array_key_exists($name, static::$itemLists)) {
+        $itemList = new ItemList(array(), $name, $attributes, $element);
         static::setItemList($name, $itemList);
       }
+      else {
+        $itemList = static::getItemList($name);
+      }
+
+      $itemLists[] = $itemList;
     }
 
-    // Return a Handler for the given names
-    return new MenuHandler($names);
+    // Return a Handler for the item lists
+    return new MenuHandler($itemLists);
   }
 
   /**
@@ -74,9 +80,7 @@ class Menu
    */
   public static function allHandlers()
   {
-    $handles = array_keys(static::$names);
-
-    return new MenuHandler($handles);
+    return new MenuHandler(array_values(static::$itemLists));
   }
 
   /**
@@ -84,7 +88,7 @@ class Menu
    */
   public static function reset()
   {
-    static::$names = array();
+    static::$itemLists = array();
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -115,7 +119,7 @@ class Menu
    */
   public static function setItemList($name, $itemList)
   {
-    static::$names[$name] = $itemList;
+    static::$itemLists[$name] = $itemList;
 
     return $itemList;
   }
@@ -129,8 +133,8 @@ class Menu
    */
   public static function getItemList($name = null)
   {
-    if (!$name) return static::$names;
-    return static::$names[$name];
+    if (is_null($name)) return static::$itemLists;
+    return static::$itemLists[$name];
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -153,7 +157,7 @@ class Menu
    *
    * @return mixed
    */
-  public static function __callStatic($method, $parameters)
+  public static function __callStatic($method, $parameters = array())
   {
     return call_user_func_array(array(static::handler(), $method), $parameters);
   }
