@@ -261,7 +261,7 @@ class MenuHandler
    *
    * @return string
    */
-  public static function __toString()
+  public function __toString()
   {
     return $this->render();
   }
