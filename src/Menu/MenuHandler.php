@@ -2,12 +2,11 @@
 namespace Menu;
 
 use Exception;
-use Menu\Traits\MenuObject;
 
 /**
  * Handles various instances of ItemList at once
  */
-class MenuHandler extends MenuObject
+class MenuHandler
 {
 
   /**
@@ -23,7 +22,8 @@ class MenuHandler extends MenuObject
     'addCustom',
     'addItem',
     'setName',
-    'setItems'
+    'setItems',
+    'addClass',
   );
 
   public static $responses = array(
@@ -36,11 +36,12 @@ class MenuHandler extends MenuObject
     'getItemListFromResults' => array(
       'getAllItems',
       'getItemsAtDepth',
-      'getItemsAtDepthRange'
+      'getItemsAtDepthRange',
     ),
     'getMatchFromResults' => array(
       'findItemListByName',
       'findByName',
+      'findItemByUrl',
       'find'
     ),
     'getCombinedResult' => array(
@@ -176,7 +177,7 @@ class MenuHandler extends MenuObject
 
   protected function getHandlerFromResults()
   {
-    return new Handler($this->getMenuObjectsFromHandlers());
+    return new MenuHandler($this->getMenuObjectsFromHandlers());
   }
 
   protected function getItemListFromResults()
@@ -200,7 +201,7 @@ class MenuHandler extends MenuObject
   public function __call($method, $parameters = array())
   {
     $results = array();
-    foreach($this->menuObjects as &$menuObject) {
+    foreach ($this->menuObjects as &$menuObject) {
       $result = call_user_func_array(array($menuObject, $method), $parameters);
 
       if (in_array($method, static::$override)) {
