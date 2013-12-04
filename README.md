@@ -1,8 +1,8 @@
 # Menu
 
-[![Build Status](https://secure.travis-ci.org/Vespakoen/laravel-menu.png?branch=master)](http://travis-ci.org/vespakoen/laravel-menu)
+[![Build Status](https://secure.travis-ci.org/vespakoen/menu.png?branch=master)](http://travis-ci.org/vespakoen/menu)
 
-See http://vespakoen.github.com/laravel-menu/ for more information.
+See http://vespakoen.github.io/menu/ for more information.
 
 Are you the type of person that writes menus by hand in view files or do you find yourself looking for the best place to store links to pages on your website? then Menu is for you!
 
