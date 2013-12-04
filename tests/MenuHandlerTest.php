@@ -1,13 +1,13 @@
 <?php
-use Menu\MenuHandler;
+use Menu\Menu;
 
 class MenuHandlerTest extends MenuTests
 {
-  public function testCanCreateMenuHandlerWithMultipleHandles()
+  public function testCanHandle()
   {
     $handles = array('foo', 'bar');
-    $menu = new MenuHandler($handles);
+    $menu = Menu::handler($handles);
 
-    $this->assertEquals($handles, $menu->getHandles());
+    $this->assertEquals(array_values(Menu::getItemList()), $menu->getMenuObjects());
   }
 }

@@ -15,9 +15,9 @@ class MenuTest extends MenuTests
   {
     Menu::handler('foo');
     Menu::handler('bar');
-    $menu = Menu::allHandlers();
+    $allHandlers = Menu::allHandlers();
 
-    $this->assertEquals(array('foo', 'bar'), $menu->getHandles());
+    $this->assertEquals(array('foo', 'bar'), array_keys($allHandlers->getMenuObjects()));
   }
 
   public function testCanResetAllHandles()
