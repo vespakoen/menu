@@ -80,7 +80,7 @@ class Menu
    */
   public static function allHandlers()
   {
-    return new MenuHandler(array_values(static::$itemLists));
+    return new MenuHandler(static::$itemLists);
   }
 
   /**
@@ -106,7 +106,7 @@ class Menu
    */
   public static function items($name = null, $attributes = array(), $element = 'ul')
   {
-    return new ItemList($name, $attributes, $element);
+    return new ItemList(array(), $name, $attributes, $element);
   }
 
   /**
