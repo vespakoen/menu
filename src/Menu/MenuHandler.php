@@ -223,40 +223,6 @@ class MenuHandler
   }
 
   /**
-   * Find itemslists by name in any of the ItemLists this menuhandler acts on
-   *
-   * @param array $names the names to find
-   *
-   * @return MenuHandler
-   */
-  public function find($names)
-  {
-    $names = (array) $names;
-
-    $results = array();
-
-    // Loop through the listitems this handler handles
-    foreach ($this->handles as $name) {
-
-      // Find the menuitems
-      foreach (Menu::getItemList($name)->find($names) as $itemList) {
-        $results[] = $itemList;
-      }
-    }
-
-    $not_found_list_items = array_diff($names, array_pluck($results, 'name'));
-    if ( ! empty($not_found_list_items)) {
-      throw new Exception('Some list items you are trying to find do not exist ('.implode(', ', $not_found_list_items).')');
-    }
-
-    foreach ($results as $itemList) {
-      Menu::setItemList($itemList->name, $itemList);
-    }
-
-    return new MenuHandler($names);
-  }
-
-  /**
    * Render the MenuHandler
    *
    * @return string
