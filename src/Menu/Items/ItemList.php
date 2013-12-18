@@ -7,6 +7,7 @@ use Menu\Items\Contents\Raw;
 use Menu\Menu;
 use Menu\MenuHandler;
 use Menu\Traits\MenuObject;
+use Illuminate\Support\Collection;
 
 /**
  * A container for Items
@@ -475,34 +476,39 @@ class ItemList extends MenuObject
    *
    * @return ItemList the
    */
-  public function hydrate($resolver, $decorator, $idField = 'id', $parentId = 0)
+  public function hydrate($resolver, $decorator, $idField = 'id', $parentIdField = 'parent_id', $parentId = 0)
   {
-    if($items = $resolver($parentId))
+    $items = is_callable($resolver) ? $resolver() : $resolver;
+
+    if($items instanceof Collection)
     {
-      foreach($items as $item)
+      $items = $items->all();
+    }
+
+    $itemsForThisLevel = array_filter($items, function($item) use ($parentId, $parentIdField)
+    {
+      return $parentId == (is_object($item) ? $item->{$parentIdField} : $item[$parentIdField]);
+    });
+
+    foreach($itemsForThisLevel as $item)
+    {
+      // Let the decorator add the item(s) (and maybe set some attributes)
+      $decorator($this, $item);
+
+      // Grab the newest item
+      $newestItem = end($this->children);
+
+      // If there is an item, add hydrate it
+      if($newestItem)
       {
-        // Let the decorator add the item(s) (and maybe set some attributes)
-        if( ! $decorator($this, $item))
-        {
-          // If the decorator returns false, we won't dig any deeper and continue
-          continue;
-        }
+        // Grab the newest itemlist
+        $newestItemList = $newestItem->getChildren();
 
-        // Grab the newest item
-        $newestItem = end($this->children);
+        // Get the id of the item
+        $parentId = is_object($item) ? $item->{$idField} : $item[$idField];
 
-        // If there is an item, add hydrate it
-        if($newestItem)
-        {
-          // Grab the newest itemlist
-          $newestItemList = $newestItem->getChildren();
-
-          // Get the id of the item
-          $parentId = is_object($item) ? $item->{$idField} : $item[$idField];
-
-          // Hydrate the children
-          $newestItemList->hydrate($resolver, $decorator, $idField, $parentId);
-        }
+        // Hydrate the children
+        $newestItemList->hydrate($items, $decorator, $idField, $parentIdField, $parentId);
       }
     }
 
