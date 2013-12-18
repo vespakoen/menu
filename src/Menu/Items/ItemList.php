@@ -184,6 +184,11 @@ class ItemList extends MenuObject
     return $this;
   }
 
+  public function getName()
+  {
+    return $this->name;
+  }
+
   ////////////////////////////////////////////////////////////////////
   ///////////////////////////// PREFIXES /////////////////////////////
   ////////////////////////////////////////////////////////////////////
@@ -390,7 +395,6 @@ class ItemList extends MenuObject
   {
     $itemLists = $this->getAllItemListsIncludingThisOne()
       ->getMenuObjects();
-
     foreach($itemLists as $itemList)
     {
       if($itemList->getName() == $name)
@@ -473,11 +477,7 @@ class ItemList extends MenuObject
       foreach($items as $item)
       {
         // Let the decorator add the item(s) (and maybe set some attributes)
-        if( ! $decorator($this, $item))
-        {
-          // If the decorator returns false, we won't dig any deeper and continue
-          continue;
-        }
+        $decorator($this, $item);
 
         // Grab the newest item
         $newestItem = end($this->children);
@@ -485,10 +485,10 @@ class ItemList extends MenuObject
         // If there is an item, add hydrate it
         if($newestItem)
         {
-          // Grab the newest itemlist
+          // grab the newest itemlist
           $newestItemList = $newestItem->getChildren();
 
-          // Get the id of the item
+          // get the id of the item
           $parentId = is_object($item) ? $item->{$idField} : $item[$idField];
 
           // Hydrate the children
