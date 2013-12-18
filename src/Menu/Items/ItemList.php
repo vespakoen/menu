@@ -184,6 +184,11 @@ class ItemList extends MenuObject
     return $this;
   }
 
+  /**
+   * Get the name of the ItemList
+   *
+   * @return string Name of the ItemList
+   */
   public function getName()
   {
     return $this->name;
@@ -477,7 +482,11 @@ class ItemList extends MenuObject
       foreach($items as $item)
       {
         // Let the decorator add the item(s) (and maybe set some attributes)
-        $decorator($this, $item);
+        if( ! $decorator($this, $item))
+        {
+          // If the decorator returns false, we won't dig any deeper and continue
+          continue;
+        }
 
         // Grab the newest item
         $newestItem = end($this->children);
@@ -485,10 +494,10 @@ class ItemList extends MenuObject
         // If there is an item, add hydrate it
         if($newestItem)
         {
-          // grab the newest itemlist
+          // Grab the newest itemlist
           $newestItemList = $newestItem->getChildren();
 
-          // get the id of the item
+          // Get the id of the item
           $parentId = is_object($item) ? $item->{$idField} : $item[$idField];
 
           // Hydrate the children
