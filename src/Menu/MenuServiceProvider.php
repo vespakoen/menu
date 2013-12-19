@@ -20,9 +20,11 @@ class MenuServiceProvider extends ServiceProvider
    */
   public function register()
   {
+    
+    $this->package('vespakoen/menu', null, __DIR__ . '/../');
     $container = Menu::getContainer();
     $container['url'] = $this->app['url'];
-
+    $container['config'] = $this->app['config'];
     Menu::setContainer($container);
   }
 
