@@ -1,6 +1,8 @@
 <?php
 namespace Menu;
 
+use Menu\Items\ItemList;
+use Illuminate\Support\Str;
 use Exception;
 
 /**
@@ -18,25 +20,20 @@ class MenuHandler
 
   public static $override = array(
     'add',
-    'addRaw',
-    'addCustom',
-    'addItem',
-    'setName',
-    'setItems',
-    'addClass',
+    'set',
+    'wrap'
   );
 
   public static $responses = array(
     'getHandlerFromResults' => array(
+      'getAllItems',
+      'getItemsAtDepth',
+      'getItemsAtDepthRange',
+      'getItemsByContentType',
       'getAllItemLists',
       'getItemListsAtDepth',
       'getItemListsAtDepthRange',
       'filter'
-    ),
-    'getItemListFromResults' => array(
-      'getAllItems',
-      'getItemsAtDepth',
-      'getItemsAtDepthRange',
     ),
     'getMatchFromResults' => array(
       'findItemListByName',
@@ -44,8 +41,15 @@ class MenuHandler
       'findItemByUrl',
       'find'
     ),
-    'getCombinedResult' => array(
+    'getCombinedResults' => array(
       'lists'
+    ),
+    'getCombindedResultsByKey' => array(
+      'getItemsWithDepth',
+      'getItemListsWithDepth'
+    ),
+    'getImplodedResults' => array(
+      'render'
     )
   );
 
@@ -84,82 +88,25 @@ class MenuHandler
     return $this;
   }
 
-  public function getItemsWithDepth()
+  public function map($callback)
   {
-    $this->__call('getItemsWithDepth');
-
-    $results = array();
-    foreach ($this->lastResults as $result)
-    {
-      foreach($result as $depth => $items)
-      {
-        foreach($items as $item)
-        {
-          $results[$depth][] = $item;
-        }
-      }
-    }
-
-    return $results;
+    array_map($callback, $this->getMenuObjects());
   }
 
-  public function getItemListsWithDepth()
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////// RESPONDERS ////////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  protected function getHandlerFromResults($menuHandlers)
   {
-    $this->__call('getItemListsWithDepth');
+    $menuObjects = $this->getMenuObjectsFromHandlers($menuHandlers);
 
-    $results = array();
-    foreach ($this->lastResults as $result)
-    {
-      foreach($result as $depth => $items)
-      {
-        foreach($items as $item)
-        {
-          $results[$depth][] = $item;
-        }
-      }
-    }
-
-    return $results;
+    return new MenuHandler($menuObjects);
   }
 
-  public function render()
+  protected function getMatchFromResults($results)
   {
-    $this->__call('render');
-
-    return implode('', $this->lastResults);
-  }
-
-  protected function getMenuObjectsFromHandlers()
-  {
-    $results = array();
-    foreach($this->lastResults as $result)
-    {
-      foreach($result->getMenuObjects() as $item)
-      {
-        $results[] = $item;
-      }
-    }
-
-    return $results;
-  }
-
-  protected function getItemsFromItemLists()
-  {
-    $results = array();
-    foreach($this->lastResults as $result)
-    {
-      foreach($result->getItems() as $item)
-      {
-        $results[] = $item;
-      }
-    }
-
-    return $results;
-  }
-
-  protected function getMatchFromResults()
-  {
-    foreach($this->lastResults as $result)
+    foreach($results as $result)
     {
       if($result !== false)
       {
@@ -170,19 +117,49 @@ class MenuHandler
     return false;
   }
 
-  public function getCombinedResult()
+  protected function getCombinedResults($results)
   {
-    return call_user_func_array('array_merge', $this->lastResults);
+    return call_user_func_array('array_merge', $results);
   }
 
-  protected function getHandlerFromResults()
+  protected function getCombindedResultsByKey($results)
   {
-    return new MenuHandler($this->getMenuObjectsFromHandlers());
+    $combinedResults = array();
+    foreach ($results as $result)
+    {
+      foreach($result as $key => $items)
+      {
+        foreach($items as $item)
+        {
+          $combinedResults[$key][] = $item;
+        }
+      }
+    }
+
+    return $combinedResults;
   }
 
-  protected function getItemListFromResults()
+  protected function getImplodedResults($results)
   {
-    return new ItemList($this->getItemsFromItemLists());
+    return implode('', $results);
+  }
+
+  ////////////////////////////////////////////////////////////////////
+  ///////////////////////// RESULT EXTRACTORS ////////////////////////
+  ////////////////////////////////////////////////////////////////////
+
+  protected function getMenuObjectsFromHandlers($menuHandlers)
+  {
+    $results = array();
+    foreach($menuHandlers as $menuHandler)
+    {
+      foreach($menuHandler->getMenuObjects() as $item)
+      {
+        $results[] = $item;
+      }
+    }
+
+    return $results;
   }
 
   ////////////////////////////////////////////////////////////////////
@@ -204,18 +181,16 @@ class MenuHandler
     foreach ($this->menuObjects as &$menuObject) {
       $result = call_user_func_array(array($menuObject, $method), $parameters);
 
-      if (in_array($method, static::$override)) {
+      if (Str::startsWith($method, static::$override)) {
         $menuObject = $result;
       }
 
       $results[] = $result;
     }
 
-    $this->lastResults = $results;
-
     foreach (static::$responses as $responseMethod => $methods) {
       if(in_array($method, $methods)) {
-        return $this->$responseMethod();
+        return $this->$responseMethod($results);
       }
     }
 
