@@ -187,14 +187,6 @@ class Menu
         return Request::createFromGlobals();
       });
 
-      // Create basic Config handler
-      $container->bindIf('files', 'Illuminate\Filesystem\Filesystem');
-      $container->singleton('config', function($container) {
-        $fileLoader = new FileLoader($container['files'], __DIR__.'/../');
-
-        return new Repository($fileLoader, 'config');
-      });
-
       static::setContainer($container);
     }
 
@@ -225,8 +217,10 @@ class Menu
    */
   public static function getOption($option = null)
   {
-    if ($option) $option = '.'.$option;
-    return static::getContainer('config')->get('config'.$option);
+      if ($option == null) {
+          $option = 'config';
+      }
+      return static::getContainer('config')->get('menu::'.$option);
   }
 
   /**
