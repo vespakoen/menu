@@ -231,7 +231,10 @@ class Menu
    */
   public static function setOption($option, $value)
   {
-    static::getContainer('config')->set('config.'.$option, $value);
+      if ($option == null) {
+          $option = 'config';
+      }
+      static::getContainer('config')->set('menu::'.$option, $value);
   }
 
 }
