@@ -305,14 +305,15 @@ class ItemList extends MenuObject
       }
     }
 
-    return new ItemList($results);
+    return new MenuHandler($results);
   }
 
   public function getItemsByContentType($renderableType)
   {
     $results = array();
+
     $itemList = $this->getAllItems();
-    foreach($itemList->getChildren() as $item)
+    foreach($itemList->getMenuObjects() as $item)
     {
       $renderable = $item->getContent();
       if(get_class($renderable) == $renderableType)
@@ -321,7 +322,7 @@ class ItemList extends MenuObject
       }
     }
 
-    return new ItemList($results);
+    return new MenuHandler($results);
   }
 
   public function getAllItemLists()
@@ -375,7 +376,7 @@ class ItemList extends MenuObject
   {
     $itemsWithDepth = $this->getItemsWithDepth();
 
-    return new ItemList($itemsWithDepth[$depth]);
+    return new MenuHandler($itemsWithDepth[$depth]);
   }
 
   public function getItemsAtDepthRange($from, $to)
@@ -394,7 +395,7 @@ class ItemList extends MenuObject
       }
     }
 
-    return new ItemList($results);
+    return new MenuHandler($results);
   }
 
   public function findItemListByName($name)

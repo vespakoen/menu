@@ -2,8 +2,6 @@
 
 [![Build Status](https://secure.travis-ci.org/vespakoen/menu.png?branch=master)](http://travis-ci.org/vespakoen/menu)
 
-See http://vespakoen.github.io/menu/ for more information.
-
 Are you the type of person that writes menus by hand in view files or do you find yourself looking for the best place to store links to pages on your website? then Menu is for you!
 
 # Key concepts
@@ -58,7 +56,100 @@ And add the following to your `app/config/app.php` file :
 - In the Service Providers array : `'Menu\MenuServiceProvider',`
 - In the aliases array : `'Menu' => 'Menu\Menu',`
 
-# Diving in
+# Basic usage
+
+First, let's load some pages into the menu.
+We will do this by utilising the `hydrate` method.
+
+```php
+Menu::handler('main')->hydrate(function()
+  {
+    return Page::with('translation')
+      ->where('group', '=', 'main')
+      ->get();
+  },
+  function($children, $item)
+  {
+    $children->add($item->translation->slug, $item->translation->name, Menu::items($item->as));
+  });
+
+/* the hydrate method takes these arguments
+  $resolver       Closure     A callback to resolve results
+  $decorator      Closure     A callback that gets called for every result fetched from the resolver with the corresponding ItemList and result as the arguments
+  $idField        integer (default = 'id')           the property on the result that contains the id
+  $parentIdField  integer (default = 'parent_id')    the property on the result that contains the parent id
+  $parentId       integer (default = 0)              the parentId to start hydrating from
+*/
+```
+
+Now that we have loaded our pages into the menu, and even identified every menu item with a name (via `Menu::items($item->as)`) a lot of options are available to us.
+
+Find a node by it's name and add a subitem.
+```php
+Menu::find('users')
+  ->add('users/create', 'Create new user');
+```
+
+Add some properties to the root node
+```php
+Menu::handler('main')
+  ->addClass('nav navbar-nav');
+```
+
+Get all `ItemList`s at a certain depth and add a class
+```php
+Menu::handler('main')
+  ->getItemListsAtDepth(1)
+  ->addClass('level-1');
+```
+
+Get all `ItemList`s at a depth range and change the element
+```php
+Menu::handler('main')
+  ->getItemListsAtDepthRange(1,3)
+  ->setElement('div');
+```
+
+Get all `Item`s at a certain depth and add a class
+```php
+Menu::handler('main')
+  ->getItemsAtDepth(1)
+  ->addClass('level-1');
+```
+
+Get `Item`s by it's content type and use the map function to walk over the results and perform actions based on gathered information
+```php
+Menu::handler('main')
+  ->getItemsByContentType('Menu\Items\Contents\Link')
+  ->map(function($item)
+  {
+    if($item->isActive() && $item->hasChildren())
+    {
+      $item->addClass('is-active-link-with-children');
+    }
+
+    if($item->getContent()->getUrl() == 'home')
+    {
+      $item->addClass('is-home');
+    }
+  });
+```
+
+Get all `ItemList`s and add a class to them if they have children
+```php
+Menu::handler('main')
+  ->getAllItemLists()
+  ->map(function($itemList)
+  {
+    if($itemList->hasChildren())
+    {
+      $itemList->addClass('has-children');
+    }
+  });
+```
+
+
+# Diving deeper
 
 The Laravel Menu packages consists of a couple of classes, but you can interact with all of them via the _Menu_ class.
 Let's take a look at the **handler** method. it takes a string or an array as the only argument, the string(s) given are the names for the item lists we want to retrieve.
@@ -131,23 +222,9 @@ echo Menu::handler('main');
 echo Menu::handler('main')->render();
 ```
 
-The render method (only) takes an array with render options, presented below.
-
-- **max_depth**
-  Hide items below a certain depth
-- **active_class**
-  Change the (automatically added) class for the active item
-- **active_child_class**
-  Change the (automatically added) class for the item that has an active child item
-
 Now that we have the basics under control, we are going to explore some other cool features this package provides.
-
-## Extra features
-
-You might have noticed earlier that the items method takes a "name" as the first argument.
-And you also might have wondered what it is for.
 
 # Some last words
 
 Thanks for following along and using this package.
-More last words soon ;)
+Special thanks to @Anahkiasen for refactoring this package and boosting new life into it!
