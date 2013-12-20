@@ -21,6 +21,5 @@
         "psr-0": {
             "Menu": "src"
         }
-    },
-    "minimum-stability": "dev"
+    }
 }
