@@ -27,7 +27,7 @@ class ItemListTest extends MenuTests
     $list->add('bar', 'foo');
 
     $matcher = $this->matchListWithItem();
-    $matcher['child']['child'] = $this->matchLink('foo/bar');
+    $matcher['child']['child'] = $this->matchLink(URL::to('foo/bar'));
 
     $this->assertHTML($matcher, $list->render());
   }
@@ -66,7 +66,7 @@ class ItemListTest extends MenuTests
     $this->assertEquals(
       '<ul>'.
         '<li data-foo="bar" class="active">'.
-          '<a href="lol">foo</a>'.
+          '<a href="'.URL::to('lol').'">foo</a>'.
         '</li>'.
         '<li>'.
           '<a href="#">bar</a>'.

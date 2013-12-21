@@ -59,20 +59,20 @@ class MenuTest extends MenuTests
     $matcher =
     '<ul>'.
       '<li>'.
-        '<a href="algorithms">Algorithms</a>'.
+        '<a href="'.URL::to('algorithms').'">Algorithms</a>'.
         '<ul>'.
-          '<li><a href="algorithms/cryptography">Cryptography</a></li>'.
-          '<li><a href="algorithms/data-structures">Data Structures</a></li>'.
-          '<li><a href="algorithms/digital-image-processing">Digital Image Processing</a></li>'.
-          '<li><a href="algorithms/memory-management">Memory Management</a></li>'.
+          '<li><a href="'.URL::to('algorithms/cryptography').'">Cryptography</a></li>'.
+          '<li><a href="'.URL::to('algorithms/data-structures').'">Data Structures</a></li>'.
+          '<li><a href="'.URL::to('algorithms/digital-image-processing').'">Digital Image Processing</a></li>'.
+          '<li><a href="'.URL::to('algorithms/memory-management').'">Memory Management</a></li>'.
         '</ul>'.
       '</li>'.
       '<li>'.
-        '<a href="graphics-and-multimedia">Graphics & Multimedia</a>'.
+        '<a href="'.URL::to('graphics-and-multimedia').'">Graphics & Multimedia</a>'.
         '<ul>'.
-          '<li><a href="graphics-and-multimedia/directx">DirectX</a></li>'.
-          '<li><a href="graphics-and-multimedia/flash">Flash</a></li>'.
-          '<li><a href="graphics-and-multimedia/opengl">OpenGL</a></li>'.
+          '<li><a href="'.URL::to('graphics-and-multimedia/directx').'">DirectX</a></li>'.
+          '<li><a href="'.URL::to('graphics-and-multimedia/flash').'">Flash</a></li>'.
+          '<li><a href="'.URL::to('graphics-and-multimedia/opengl').'">OpenGL</a></li>'.
         '</ul>'.
       '</li>'.
     '</ul>';

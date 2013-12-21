@@ -5,7 +5,7 @@ use Menu\Items\Item;
 use Menu\Items\ItemList;
 use Menu\Menu;
 
-abstract class MenuTests extends PHPUnit_Framework_TestCase
+abstract class MenuTests extends \Orchestra\Testbench\TestCase
 {
   protected static $link;
   protected static $raw;
@@ -14,14 +14,31 @@ abstract class MenuTests extends PHPUnit_Framework_TestCase
 
   public function setUp()
   {
+    parent::setUp();
     // Reset all menus
     Menu::reset();
+    $this->refreshApplication();
 
     // Precreate somme Dummy data
     static::$link     = new Link('#', 'foo');
     static::$raw      = new Raw('foo');
     static::$itemList = new ItemList;
     static::$item     = new Item(static::$itemList, static::$link);
+  }
+  
+
+  protected function getPackageProviders()
+  {
+    return array(
+      'Menu\MenuServiceProvider',
+    );
+  }
+  
+  protected function getPackageAliases()
+  {
+    return array(
+      'Menu' => 'Menu\Menu',
+    );
   }
 
   ////////////////////////////////////////////////////////////////////
