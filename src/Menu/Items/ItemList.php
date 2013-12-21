@@ -1,6 +1,7 @@
 <?php
 namespace Menu\Items;
 
+use Exception;
 use HtmlObject\Element;
 use Menu\Items\Contents\Link;
 use Menu\Items\Contents\Raw;
@@ -525,6 +526,11 @@ class ItemList extends MenuObject
    */
   public function render($depth = 0)
   {
+    if( ! is_int($depth))
+    {
+      throw new Exception("The render method doesn't take any arguments anymore, you can now configure your menu via the config file.");
+    }
+
     // Check for maximal depth
     $maxDepth = $this->getOption('max_depth');
     if ($maxDepth != 0 and $depth > $maxDepth) return false;
