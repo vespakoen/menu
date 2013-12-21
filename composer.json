@@ -15,7 +15,8 @@
         "anahkiasen/html-object": "dev-master",
         "illuminate/http": "~4",
         "illuminate/config": "~4",
-        "illuminate/container": "~4"
+        "illuminate/container": "~4",
+        "orchestra/testbench": "2.1.*"
     },
     "autoload": {
         "psr-0": {
