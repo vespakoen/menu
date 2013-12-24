@@ -18,7 +18,7 @@ class Menu
    * The current IoC container
    * @var Container
    */
-  private static $container;
+  protected static $container;
 
   /**
    * All the registered names and the associated ItemLists
