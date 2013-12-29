@@ -33,12 +33,10 @@ class ItemList extends MenuObject
    */
   public function __construct($items = array(), $name = null, $attributes = array(), $element = null)
   {
-    if (!$element) $element = $this->getOption('item_list.element');
-
     $this->children   = $items;
     $this->name       = $name;
     $this->attributes = $attributes;
-    $this->setElement($element);
+    $this->element  = $element;
   }
 
   /**
@@ -237,9 +235,14 @@ class ItemList extends MenuObject
    */
   public function prefixMenuHandler($prefixMenuHandler = true)
   {
-    $this->setOption('item_list.prefix_MenuHandler', $prefixMenuHandler);
+    $this->setOption('item_list.prefix_handler', $prefixMenuHandler);
 
     return $this;
+  }
+
+  public function setElement($element = null)
+  {
+    $this->setOption('item_list.element', $element);
   }
 
   public function getItemsWithDepth()
@@ -247,7 +250,7 @@ class ItemList extends MenuObject
     return $this->getItemsRecursivelyWithDepth($this->getChildren());
   }
 
-  protected function getItemsRecursivelyWithDepth($items, $depth = 1)
+  protected function getItemsRecursivelyWithDepth($items, $depth = 0)
   {
     $results = array();
     foreach($items as $item)
@@ -273,7 +276,7 @@ class ItemList extends MenuObject
     return $this->getItemListsRecursivelyWithDepth($this);
   }
 
-  protected function getItemListsRecursivelyWithDepth($itemList, $depth = 1)
+  protected function getItemListsRecursivelyWithDepth($itemList, $depth = 0)
   {
     $results = array();
 
@@ -533,7 +536,7 @@ class ItemList extends MenuObject
 
     // Check for maximal depth
     $maxDepth = $this->getOption('max_depth');
-    if ($maxDepth != 0 and $depth > $maxDepth) return false;
+    if ($maxDepth !== -1 and $depth > $maxDepth) return false;
 
     // Render contained items
     $contents = null;
@@ -542,6 +545,10 @@ class ItemList extends MenuObject
     }
 
     $element = $this->element;
+    if (is_null($element)) {
+      $element = $this->getOption('item_list.element');
+    }
+
     if ($element) $contents = Element::create($element, $contents, $this->attributes)->render();
     return $contents;
   }

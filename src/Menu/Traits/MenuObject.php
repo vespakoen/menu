@@ -17,7 +17,7 @@ abstract class MenuObject extends Tag
    *
    * @var array
    */
-  protected $options;
+  public $options = array();
 
   ////////////////////////////////////////////////////////////////////
   /////////////////////////// CONFIGURATION //////////////////////////
@@ -47,9 +47,6 @@ abstract class MenuObject extends Tag
    */
   public function setOption($option, $value)
   {
-    // Load the config file if it isn't yet
-    if (!$this->options) $this->options = Menu::getOption();
-
     $this->options = ArraysMethods::set($this->options, $option, $value);
 
     return $this;
@@ -64,9 +61,9 @@ abstract class MenuObject extends Tag
    */
   public function getOption($option = null)
   {
-    // Load the config file if it isn't yet
-    if (!$this->options) $this->options = Menu::getOption();
-    if (!$option) return $this->options;
-    return ArraysMethods::get($this->options, $option);
+    $globalOptions = Menu::getOption();
+    $combinedOptions = array_replace_recursive($globalOptions, $this->options);
+    if (!$option) return $combinedOptions;
+    return ArraysMethods::get($combinedOptions, $option);
   }
 }

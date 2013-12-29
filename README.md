@@ -99,21 +99,21 @@ Menu::handler('main')
 Get all `ItemList`s at a certain depth and add a class
 ```php
 Menu::handler('main')
-  ->getItemListsAtDepth(1)
+  ->getItemListsAtDepth(0)
   ->addClass('level-1');
 ```
 
 Get all `ItemList`s at a depth range and change the element
 ```php
 Menu::handler('main')
-  ->getItemListsAtDepthRange(1,3)
+  ->getItemListsAtDepthRange(0,2)
   ->setElement('div');
 ```
 
 Get all `Item`s at a certain depth and add a class
 ```php
 Menu::handler('main')
-  ->getItemsAtDepth(1)
+  ->getItemsAtDepth(0)
   ->addClass('level-1');
 ```
 

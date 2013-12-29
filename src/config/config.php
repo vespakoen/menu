@@ -3,8 +3,8 @@
   // Global options ------------------------------------------------ /
 
   // The maximum depth a list can be generated
-  // 0 means no limit
-  'max_depth' => 0,
+  // -1 means no limit
+  'max_depth' => -1,
 
   // Items --------------------------------------------------------- /
 
