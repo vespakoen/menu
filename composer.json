@@ -16,6 +16,8 @@
         "illuminate/http": "~4",
         "illuminate/config": "~4",
         "illuminate/container": "~4",
+    },
+    "require-dev": {
         "orchestra/testbench": "2.1.*"
     },
     "autoload": {
