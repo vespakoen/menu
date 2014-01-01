@@ -3,9 +3,13 @@ namespace Menu\Items;
 
 use HtmlObject\Element;
 use HtmlObject\Traits\Tag;
+
 use Menu\Menu;
 use Menu\Traits\Content;
 use Menu\Traits\MenuObject;
+use Menu\MenuHandler;
+
+use Underscore\Methods\ArraysMethods;
 
 /**
  * An Item in a list
@@ -71,6 +75,34 @@ class Item extends MenuObject
   }
 
   /**
+   * Set the Item's element
+   *
+   * @param string $element
+   */
+  public function setElement($element = null)
+  {
+    $this->setOption('item.element', $element);
+
+    return $this;
+  }
+
+  /**
+   * Get the Item's element
+   *
+   * @return string
+   */
+  public function getElement()
+  {
+    $element = $this->getOption('item.element');
+    if(is_null($element))
+    {
+      $element = $this->element;
+    }
+
+    return $element;
+  }
+
+  /**
    * Render the item
    *
    * @param array
@@ -89,11 +121,7 @@ class Item extends MenuObject
     }
 
     // Facultatively render an element around the item
-    $element = $this->element;
-    if(is_null($element)) {
-      $element = $this->getParent()->getOption('item.element');
-    }
-
+    $element = $this->getElement();
     if ($element) $value = Element::create($element, $value, $this->attributes)->render();
     return html_entity_decode($value, ENT_QUOTES, 'UTF-8');
   }
@@ -101,11 +129,6 @@ class Item extends MenuObject
   ////////////////////////////////////////////////////////////////////
   ///////////////////////// PUBLIC INTERFACE /////////////////////////
   ////////////////////////////////////////////////////////////////////
-
-  public function setElement($element = null)
-  {
-    $this->setOption('item.element', $element);
-  }
 
   /**
    * Check if this item is active
@@ -197,11 +220,11 @@ class Item extends MenuObject
   private function addActiveClasses()
   {
     if ($this->isActive()) {
-      $this->addClass($this->getParent()->getOption('item.active_class'));
+      $this->addClass($this->getOption('item.active_class'));
     }
 
     if ($this->hasActiveChild()) {
-      $this->addClass($this->getParent()->getOption('item.active_child_class'));
+      $this->addClass($this->getOption('item.active_child_class'));
     }
   }
 

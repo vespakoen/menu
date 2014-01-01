@@ -2,13 +2,19 @@
 namespace Menu\Items;
 
 use Exception;
+
 use HtmlObject\Element;
-use Menu\Items\Contents\Link;
-use Menu\Items\Contents\Raw;
+
 use Menu\Menu;
 use Menu\MenuHandler;
+use Menu\Items\Contents\Link;
+use Menu\Items\Contents\Raw;
 use Menu\Traits\MenuObject;
+
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+
+use Underscore\Methods\ArraysMethods;
 
 /**
  * A container for Items
@@ -52,6 +58,29 @@ class ItemList extends MenuObject
   ////////////////////////////////////////////////////////////////////
   ///////////////////////// PUBLIC INTERFACE /////////////////////////
   ////////////////////////////////////////////////////////////////////
+
+  /**
+   * Set a particular option in the array
+   *
+   * @param string $option The option
+   * @param mixed  $value  Its new value
+   *
+   * @return MenuObject
+   */
+  public function setOption($option, $value)
+  {
+    // forward item config values to the items
+    if(Str::startsWith($option, 'item.')) {
+      foreach($this->children as $child) {
+        $child->setOption($option, $value);
+      }
+    }
+    else {
+      $this->options = ArraysMethods::set($this->options, $option, $value);
+    }
+
+    return $this;
+  }
 
   /**
    * Add a link item to the ItemList instance.
@@ -240,16 +269,49 @@ class ItemList extends MenuObject
     return $this;
   }
 
+  /**
+   * Set the Item's element
+   *
+   * @param string $element
+   */
   public function setElement($element = null)
   {
     $this->setOption('item_list.element', $element);
+
+    return $this;
   }
 
+  /**
+   * Get the Item's element
+   *
+   * @return string
+   */
+  public function getElement()
+  {
+    $element = $this->getOption('item_list.element');
+    if(is_null($element))
+    {
+      $element = $this->element;
+    }
+
+    return $element;
+  }
+
+  /**
+   * Get all items with the depth as key
+   *
+   * @return array
+   */
   public function getItemsWithDepth()
   {
     return $this->getItemsRecursivelyWithDepth($this->getChildren());
   }
 
+  /**
+   * Get all items for an array of items recursively for a specific depth
+   *
+   * @return array
+   */
   protected function getItemsRecursivelyWithDepth($items, $depth = 0)
   {
     $results = array();
@@ -271,11 +333,21 @@ class ItemList extends MenuObject
     return $results;
   }
 
+  /**
+   * Get all itemlists with the depth as key
+   *
+   * @return array
+   */
   public function getItemListsWithDepth()
   {
     return $this->getItemListsRecursivelyWithDepth($this);
   }
 
+  /**
+   * Get all itemlists for an itemlsit recursively for a specific depth
+   *
+   * @return array
+   */
   protected function getItemListsRecursivelyWithDepth($itemList, $depth = 0)
   {
     $results = array();
@@ -297,6 +369,11 @@ class ItemList extends MenuObject
     return $results;
   }
 
+  /**
+   * Get all items
+   *
+   * @return \Vespakoen\Menu\MenuHandler
+   */
   public function getAllItems()
   {
     $results = array();
@@ -312,15 +389,22 @@ class ItemList extends MenuObject
     return new MenuHandler($results);
   }
 
-  public function getItemsByContentType($renderableType)
+  /**
+   * Get items by their content type
+   *
+   * @param  string $contentType The full object name
+   *
+   * @return \VEspakoen\Menu\MenuHandler
+   */
+  public function getItemsByContentType($contentType)
   {
     $results = array();
 
     $itemList = $this->getAllItems();
     foreach($itemList->getMenuObjects() as $item)
     {
-      $renderable = $item->getContent();
-      if(get_class($renderable) == $renderableType)
+      $content = $item->getContent();
+      if(get_class($content) == $contentType)
       {
         $results[] = $item;
       }
@@ -329,6 +413,11 @@ class ItemList extends MenuObject
     return new MenuHandler($results);
   }
 
+  /**
+   * Get all itemlists
+   *
+   * @return \Vespakoen\Menu\MenuHandler
+   */
   public function getAllItemLists()
   {
     $results = array();
@@ -344,12 +433,22 @@ class ItemList extends MenuObject
     return new MenuHandler($results);
   }
 
+  /**
+   * Get all itemslists including this one
+   *
+   * @return \Vespakoen\Menu\MenuHandler
+   */
   public function getAllItemListsIncludingThisOne()
   {
     return $this->getAllItemLists()
       ->addMenuObject($this);
   }
 
+  /**
+   * Get itemlists at a certain depth
+   *
+   * @return \Vespakoen\Menu\MenuHandler
+   */
   public function getItemListsAtDepth($depth)
   {
     $itemListsWithDepth = $this->getItemListsWithDepth();
@@ -357,6 +456,11 @@ class ItemList extends MenuObject
     return new MenuHandler($itemListsWithDepth[$depth]);
   }
 
+  /**
+   * Get itemlists in a range of depths
+   *
+   * @return \Vespakoen\Menu\MenuHandler
+   */
   public function getItemListsAtDepthRange($from, $to)
   {
     $itemListsWithDepth = $this->getItemListsWithDepth();
@@ -376,6 +480,11 @@ class ItemList extends MenuObject
     return new MenuHandler($results);
   }
 
+  /**
+   * Get all items at a certain depth
+   *
+   * @return \Vespakoen\Menu\MenuHandler
+   */
   public function getItemsAtDepth($depth)
   {
     $itemsWithDepth = $this->getItemsWithDepth();
@@ -383,6 +492,11 @@ class ItemList extends MenuObject
     return new MenuHandler($itemsWithDepth[$depth]);
   }
 
+  /**
+   * Get items in a range of depths
+   *
+   * @return \Vespakoen\Menu\MenuHandler
+   */
   public function getItemsAtDepthRange($from, $to)
   {
     $itemsWithDepth = $this->getItemsWithDepth();
@@ -402,6 +516,11 @@ class ItemList extends MenuObject
     return new MenuHandler($results);
   }
 
+  /**
+   * Find an itemlist by it's name
+   *
+   * @return \Vespakoen\Menu\Items\ItemLists|false
+   */
   public function findItemListByName($name)
   {
     $itemLists = $this->getAllItemListsIncludingThisOne()
@@ -417,16 +536,35 @@ class ItemList extends MenuObject
     return false;
   }
 
+  /**
+   * Find an itemlist by it's name
+   *
+   * alias for findItemListByName
+   *
+   * @return \Vespakoen\Menu\Items\ItemLists|false
+   */
   public function findByName($name)
   {
     return $this->findItemListByName($name);
   }
 
+  /**
+   * Find an itemlist by it's name
+   *
+   * alias for findItemListByName
+   *
+   * @return \Vespakoen\Menu\Items\ItemLists|false
+   */
   public function find($name)
   {
     return $this->findItemListByName($name);
   }
 
+  /**
+   * Find an item by an attribute
+   *
+   * @return \Vespakoen\Menu\Items\Item|false
+   */
   public function findItemByAttribute($key, $value)
   {
     $itemList = $this->getAllItemListsIncludingThisOne()
@@ -443,13 +581,18 @@ class ItemList extends MenuObject
     return false;
   }
 
+  /**
+   * Find an item by it's link's URL
+   *
+   * @return \Vespakoen\Menu\Items\Item|false
+   */
   public function findItemByUrl($url)
   {
     $itemList = $this->getItemsByContentType('Menu\Items\Contents\Link');
     foreach($itemList->getChildren() as $item)
     {
-      $renderable = $item->getContent();
-      if($renderable->getUrl() == $url)
+      $content = $item->getContent();
+      if($content->getUrl() == $url)
       {
         return $item;
       }
@@ -544,11 +687,7 @@ class ItemList extends MenuObject
       $contents .= $item->render($depth + 1);
     }
 
-    $element = $this->element;
-    if (is_null($element)) {
-      $element = $this->getOption('item_list.element');
-    }
-
+    $element = $this->getElement();
     if ($element) $contents = Element::create($element, $contents, $this->attributes)->render();
     return $contents;
   }
