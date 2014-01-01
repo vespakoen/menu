@@ -156,13 +156,15 @@ Breadcrumb hell is a thing of the past.
 
 Bootstrap ready breadcrums are as easy as this
 ```php
-Menu::breadcrumbs()
+Menu::handler('main')
+    ->breadcrumbs()
     ->setElement('ol')
     ->addClass('breadcrumb');
 ```
 
 The breadcrumbs method searches all handlers and returns a plain old ItemList, that you can manipulate.
-By default, the first ItemList it finds get's returned, but in case there are more paths that lead to an active page, you can actually pick the one you want to use by providing a callback method as the first argument.
+If you call the breadcrumbs method directly on the Menu class, it will search all your handlers for breadcrumbs, and by default will return the first match.
+However, there might be cases where you want to choose the breadcrumbs out of the ones it found, for this you can provide a callback method as the first argument.
 
 And example is shown below:
 ```php
