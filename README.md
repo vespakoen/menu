@@ -162,7 +162,7 @@ Menu::breadcrumbs()
 ```
 
 The breadcrumbs method searches all handlers and returns a plain old ItemList, that you can manipulate.
-By default, the first ItemList it finds get's returned, but in case there are more paths that lead to an active page, you can actually pick the one you want to use by providing a calledback method as the first argument.
+By default, the first ItemList it finds get's returned, but in case there are more paths that lead to an active page, you can actually pick the one you want to use by providing a callback method as the first argument.
 
 And example is shown below:
 ```php
