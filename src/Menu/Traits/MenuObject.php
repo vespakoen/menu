@@ -32,7 +32,11 @@ abstract class MenuObject extends Tag
    */
   public function replaceOptions($options)
   {
-    $this->options = $options;
+    $this->options = array();
+
+    foreach($options as $key => $value) {
+      $this->setOption($key, $value);
+    }
 
     return $this;
   }

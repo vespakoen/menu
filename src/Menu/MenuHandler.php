@@ -33,6 +33,9 @@ class MenuHandler
       'getAllItemLists',
       'getItemListsAtDepth',
       'getItemListsAtDepthRange',
+      'onItem',
+      'getContent',
+      'stop',
       'filter'
     ),
     'getMatchFromResults' => array(
@@ -99,6 +102,12 @@ class MenuHandler
 
   protected function getHandlerFromResults($menuHandlers)
   {
+    if(is_array($menuHandlers) && count($menuHandlers) > 0 && ! $menuHandlers[0] instanceof MenuHandler) {
+      foreach ($menuHandlers as &$menuHandler) {
+        $menuHandler = new MenuHandler(array($menuHandler));
+      }
+    }
+
     $menuObjects = $this->getMenuObjectsFromHandlers($menuHandlers);
 
     return new MenuHandler($menuObjects);
