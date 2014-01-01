@@ -144,7 +144,7 @@ class ItemList extends MenuObject
    * @param array   $itemAttributes
    * @param string  $itemElement
    */
-  public function addContent($content, $children, $itemAttributes, $itemElement)
+  public function addContent($content, $children = null, $itemAttributes = array(), $itemElement = null)
   {
     $item = new Item($this, $content, $children, $itemElement);
     $item->setAttributes($itemAttributes);
@@ -514,6 +514,60 @@ class ItemList extends MenuObject
     }
 
     return new MenuHandler($results);
+  }
+
+  public function reverse()
+  {
+    $this->children = array_reverse($this->children);
+
+    return $this;
+  }
+
+  public function breadcrumbs()
+  {
+    // Collect all items
+    $items = $this->getAllItems()
+      ->getMenuObjects();
+
+    // Find the active one
+    foreach($items as $item) {
+      if($item->isActive()) {
+        $activeItem = $item;
+        break;
+      }
+    }
+
+    // Make the breadcrumbs
+    $itemList = new ItemList(array(), 'breadcrumbs');
+
+    // Fill her up if we found the active link
+    if(isset($activeItem)) {
+      // Add the found item
+      $itemList->addContent($activeItem->getContent());
+      // Loop throught the parents until we hit the root
+      while($nextItem = $activeItem->getParent()) {
+        if(is_null($nextItem->getParent())) break;
+
+        // Add a seperator and the link
+        $itemList->raw('/');
+        $itemList->addContent($nextItem->getParent()->getContent());
+
+        // Set the activeItem for the next iteration
+        $activeItem = $nextItem->getParent();
+      }
+    }
+
+    // Correct order
+    $itemList->reverse();
+
+    return $itemList;
+  }
+
+  public function map($callback)
+  {
+    array_map($callback, $this->children);
+
+    return $this;
   }
 
   /**

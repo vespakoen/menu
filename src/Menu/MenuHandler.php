@@ -96,6 +96,30 @@ class MenuHandler
     array_map($callback, $this->getMenuObjects());
   }
 
+  public function breadcrumbs($choosePath = null)
+  {
+    if(is_null($choosePath)) {
+      $choosePath = function($itemLists) {
+        return $itemLists[0];
+      };
+    }
+
+    $menuObjects = array();
+    foreach (Menu::allHandlers()->getMenuObjects() as $itemList) {
+      $breadcrumbs = $itemList->breadcrumbs();
+      if($breadcrumbs->hasChildren()) {
+        $menuObjects[] = $breadcrumbs;
+      }
+    }
+
+    if(count($menuObjects) > 1)
+    {
+      return $choosePath($menuObjects);
+    }
+
+    return $menuObjects[0];
+  }
+
   ////////////////////////////////////////////////////////////////////
   //////////////////////////// RESPONDERS ////////////////////////////
   ////////////////////////////////////////////////////////////////////
