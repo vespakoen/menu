@@ -9,6 +9,6 @@
   <files>
     <directory>src</directory>
     <directory>vendor/anahkiasen/html-object/src</directory>
-    <directory>vendor/anahkiasen/undescore-php/src</directory>
+    <directory>vendor/anahkiasen/underscore-php/src</directory>
   </files>
 </phpdoc>
