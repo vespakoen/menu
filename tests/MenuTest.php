@@ -91,7 +91,7 @@ class MenuTest extends MenuTests
   public function testCanGetValueFromConfig()
   {
     $config = Menu::getOption('max_depth');
-    $this->assertEquals(0, $config);
+    $this->assertEquals(-1, $config);
 
     $config = Menu::getOption();
     $this->assertInternalType('array', $config);
@@ -100,8 +100,8 @@ class MenuTest extends MenuTests
   public function testClassesPassTheirConfigurationToChildren()
   {
     $list = static::$itemList;
-    $list->setOption('item.element', 'dl');
     $list->add('#', 'foo');
+    $list->setOption('item.element', 'dl');
 
     $this->assertHTML($this->matchListWithItem('ul', 'dl'), $list->render());
     $this->assertHTML($this->matchLink(), $list->render());
@@ -120,8 +120,6 @@ class MenuTest extends MenuTests
 
   public function testChainingMethods()
   {
-    $this->markTestIncomplete('Not yet implemented');
-
     $menu = Menu::handler('foo')
       ->add('#', 'foo')->onItem()->data_foo('bar')->addClass('active')
         ->getContent()->href('lol')->stop()
@@ -130,7 +128,7 @@ class MenuTest extends MenuTests
     $this->assertEquals(
       '<ul>'.
         '<li data-foo="bar" class="active">'.
-          '<a href="lol">foo</a>'.
+          '<a href="http://localhost/lol">foo</a>'.
         '</li>'.
         '<li>'.
           '<a href="#">bar</a>'.
