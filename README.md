@@ -156,9 +156,6 @@ Let's take a look at the **handler** method. it takes a string or an array as th
 If an itemlist we asked for didn't exist yet, it will create it for us.
 After the menu class has found and created the item lists we want, it will hand back a menuhandler that handles the item lists we asked for.
 
-[![Class diagram](http://rawgithub.com/vespakoen/menu/master/menu-class-diagram.svg)](http://rawgithub.com/vespakoen/menu/master/menu-class-diagram.svg)
-
-
 ```php
 // Get a MenuHandler instance that handles an ItemList named "main"
 Menu::handler('main');
@@ -226,6 +223,10 @@ echo Menu::handler('main')->render();
 ```
 
 Now that we have the basics under control, we are going to explore some other cool features this package provides.
+
+# Class diagram
+
+[![Class diagram](http://rawgithub.com/vespakoen/menu/master/menu-class-diagram.svg)](http://rawgithub.com/vespakoen/menu/master/menu-class-diagram.svg)
 
 # Some last words
 
