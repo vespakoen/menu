@@ -2,6 +2,8 @@
 
 [![Build Status](https://secure.travis-ci.org/vespakoen/menu.png?branch=master)](http://travis-ci.org/vespakoen/menu)
 
+[Api Docs](http://vespakoen.github.io/menu/api/ "API Docs")
+
 Are you the type of person that writes menus by hand in view files or do you find yourself looking for the best place to store links to pages on your website? then Menu is for you!
 
 # Key concepts
