@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 use Menu\Items\ItemList;
 
 /**
- * Basic interface between the package and the user
- * Redirects and dispatch calls to the different menus in memory
+ * Basic interface to different components within the package
  */
 class Menu
 {

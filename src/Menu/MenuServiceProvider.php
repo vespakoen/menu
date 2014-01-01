@@ -3,6 +3,9 @@ namespace Menu;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * The "start" file for laravel
+ */
 class MenuServiceProvider extends ServiceProvider
 {
 
