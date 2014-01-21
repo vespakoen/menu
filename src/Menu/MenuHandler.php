@@ -117,7 +117,7 @@ class MenuHandler
       return $choosePath($menuObjects);
     }
 
-    return $menuObjects[0];
+    return isset($menuObjects[0]) ? $menuObjects[0] : new MenuHandler;
   }
 
   ////////////////////////////////////////////////////////////////////
