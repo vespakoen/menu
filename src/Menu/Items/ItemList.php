@@ -75,8 +75,12 @@ class ItemList extends MenuObject
         $child->setOption($option, $value);
       }
     }
-    else {
+    elseif(Str::startsWith($option, 'item_list.')) {
       $this->options = ArraysMethods::set($this->options, $option, $value);
+    }
+    else
+    {
+      Menu::setOption($option, $value);
     }
 
     return $this;
