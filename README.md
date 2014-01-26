@@ -63,6 +63,7 @@ And add the following to your `app/config/app.php` file :
 First, let's load some pages into the menu.
 We will do this by utilising the `hydrate` method.
 
+
 ```php
 Menu::handler('main')->hydrate(function()
   {
