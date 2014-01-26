@@ -7,14 +7,14 @@ use Menu\Items\ItemList;
 
 class ItemListTest extends MenuTests
 {
-  public function testCanCreateItemList()
+  public function testEmptyItemListRendersNothing()
   {
-    $this->assertHTML($this->matchList(), static::$itemList->render());
+    $this->assertTrue('' == static::$itemList->render());
   }
 
   public function testCanCreateListsOfADifferentElement()
   {
-    $list = static::$itemList;
+    $list = static::$itemList->add('some', 'item');
     $list->setElement('ol');
 
     $this->assertHTML($this->matchList('ol'), $list->render());
@@ -36,6 +36,7 @@ class ItemListTest extends MenuTests
   {
     $list = static::$itemList;
     $list->addClass('foo')->data_foo('bar');
+    $list->add('some', 'item');
     $matcher = $this->matchList();
     $matcher['attributes']['class'] = 'foo';
     $matcher['attributes']['data-foo'] = 'bar';
