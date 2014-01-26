@@ -293,7 +293,7 @@ class ItemList extends MenuObject
   public function getElement()
   {
     $element = $this->getOption('item_list.element');
-    if(is_null($element))
+    if( ! is_null($this->element))
     {
       $element = $this->element;
     }
@@ -527,25 +527,41 @@ class ItemList extends MenuObject
     return $this;
   }
 
-  public function breadcrumbs()
+  public function findActiveItem()
   {
-    // Collect all items
     $items = $this->getAllItems()
       ->getMenuObjects();
 
     // Find the active one
     foreach($items as $item) {
       if($item->isActive()) {
-        $activeItem = $item;
-        break;
+        return $item;
       }
     }
+
+    return null;
+  }
+
+  public function getSubmenu()
+  {
+    if($activeItem = $this->findActiveItem())
+    {
+      return $activeItem->getChildren();
+    }
+
+    return new ItemList;
+  }
+
+  public function breadcrumbs()
+  {
+    // Collect all items
+    $activeItem = $this->findActiveItem();
 
     // Make the breadcrumbs
     $itemList = new ItemList(array(), 'breadcrumbs');
 
     // Fill her up if we found the active link
-    if(isset($activeItem)) {
+    if( ! is_null($activeItem)) {
       // Add the found item
       $itemList->addContent($activeItem->getContent());
       // Loop throught the parents until we hit the root
@@ -693,7 +709,7 @@ class ItemList extends MenuObject
 
     $itemsForThisLevel = array_filter($items, function($item) use ($parentId, $parentIdField)
     {
-      return $parentId == (is_object($item) ? $item->{$parentIdField} : $item[$parentIdField]);
+      return $parentId == (is_object($item) ? (property_exists($item, $parentIdField) ? $item->$parentIdField : 0) : (isset($item[$parentIdField]) ? $item[$parentIdField] : 0));
     });
 
     foreach($itemsForThisLevel as $item)
@@ -711,7 +727,7 @@ class ItemList extends MenuObject
         $newestItemList = $newestItem->getChildren();
 
         // Get the id of the item
-        $parentId = is_object($item) ? $item->{$idField} : $item[$idField];
+        $parentId = is_object($item) ? $item->$idField : $item[$idField];
 
         // Hydrate the children
         $newestItemList->hydrate($items, $decorator, $idField, $parentIdField, $parentId);
@@ -741,6 +757,11 @@ class ItemList extends MenuObject
 
     // Render contained items
     $contents = null;
+    if(count($this->children) == 0)
+    {
+      return "";
+    }
+
     foreach ($this->children as $item) {
       $contents .= $item->render($depth + 1);
     }

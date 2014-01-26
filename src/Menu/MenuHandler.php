@@ -31,6 +31,7 @@ class MenuHandler
       'getItemsAtDepthRange',
       'getItemsByContentType',
       'getAllItemLists',
+      'getSubmenu',
       'getItemListsAtDepth',
       'getItemListsAtDepthRange',
       'onItem',
@@ -40,6 +41,7 @@ class MenuHandler
     ),
     'getMatchFromResults' => array(
       'findItemListByName',
+      'findActiveItem',
       'findByName',
       'findItemByUrl',
       'find'
