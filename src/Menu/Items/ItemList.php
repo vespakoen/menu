@@ -709,7 +709,7 @@ class ItemList extends MenuObject
 
     $itemsForThisLevel = array_filter($items, function($item) use ($parentId, $parentIdField)
     {
-      return $parentId == (is_object($item) ? (property_exists($item, $parentIdField) ? $item->$parentIdField : 0) : (isset($item[$parentIdField]) ? $item[$parentIdField] : 0));
+      return $parentId == (is_object($item) ? (isset($item->$parentIdField) ? $item->$parentIdField : 0) : (isset($item[$parentIdField]) ? $item[$parentIdField] : 0));
     });
 
     foreach($itemsForThisLevel as $item)
