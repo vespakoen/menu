@@ -557,6 +557,8 @@ class ItemList extends MenuObject
     // Collect all items
     $activeItem = $this->findActiveItem();
 
+    $separator  = $this->getOption('item_list.breadcrumb_separator');
+
     // Make the breadcrumbs
     $itemList = new ItemList(array(), 'breadcrumbs');
 
@@ -568,8 +570,12 @@ class ItemList extends MenuObject
       while($nextItem = $activeItem->getParent()) {
         if(is_null($nextItem->getParent())) break;
 
-        // Add a seperator and the link
-        $itemList->raw('/');
+        // Add a separator and the link
+        if ( ! empty($separator)
+        {
+          $itemList->raw($separator);
+        }
+
         $itemList->addContent($nextItem->getParent()->getContent());
 
         // Set the activeItem for the next iteration
