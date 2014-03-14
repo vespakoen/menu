@@ -571,7 +571,7 @@ class ItemList extends MenuObject
         if(is_null($nextItem->getParent())) break;
 
         // Add a separator and the link
-        if ( ! empty($separator)
+        if ( ! empty($separator) )
         {
           $itemList->raw($separator);
         }
