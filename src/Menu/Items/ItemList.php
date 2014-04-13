@@ -293,7 +293,7 @@ class ItemList extends MenuObject
   public function getElement()
   {
     $element = $this->getOption('item_list.element');
-    if(is_null($this->element))
+    if(is_null($element))
     {
       $element = $this->element;
     }
