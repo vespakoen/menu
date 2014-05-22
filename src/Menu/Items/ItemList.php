@@ -647,7 +647,7 @@ class ItemList extends MenuObject
    */
   public function findItemByAttribute($key, $value)
   {
-    $itemList = $this->getAllItemListsIncludingThisOne()
+    $itemLists = $this->getAllItemListsIncludingThisOne()
       ->getMenuObjects();
 
     foreach($itemLists as $itemList)
