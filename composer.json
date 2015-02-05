@@ -1,7 +1,7 @@
 {
 	"name": "vespakoen/menu",
 	"description": "Managing menu's the easy way.",
-	"keywords": ["menu", "laravel"],
+	"keywords": ["menu", "laravel", "laravel 5"],
 	"license": "MIT",
 	"authors": [
 		{
@@ -25,5 +25,5 @@
 			"Menu": "src"
 		}
 	},
-	"minimum-stability": "dev"
+	"minimum-stability": "stable"
 }
