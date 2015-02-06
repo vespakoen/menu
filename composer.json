@@ -1,7 +1,7 @@
 {
 	"name": "vespakoen/menu",
 	"description": "Managing menu's the easy way.",
-	"keywords": ["menu", "laravel"],
+	"keywords": ["menu", "laravel", "laravel 5"],
 	"license": "MIT",
 	"authors": [
 		{
@@ -13,17 +13,18 @@
 		"php": ">=5.3.0",
 		"anahkiasen/underscore-php": "~1",
 		"anahkiasen/html-object": "~1.2.0",
-		"illuminate/http": "~4",
-		"illuminate/config": "~4",
-		"illuminate/container": "~4"
+		"illuminate/http": "~4|5.*",
+		"illuminate/config": "~4|5.*",
+		"illuminate/container": "~4|5.*"
 	},
 	"require-dev": {
-		"orchestra/testbench": "2.1.*"
+		"phpunit/phpunit": "4.0",
+		"orchestra/testbench": "2.0.*"
 	},
 	"autoload": {
 		"psr-0": {
 			"Menu": "src"
 		}
 	},
-	"minimum-stability": "dev"
+	"minimum-stability": "stable"
 }
