@@ -12,9 +12,9 @@ abstract class MenuTests extends \Orchestra\Testbench\TestCase
   protected static $itemList;
   protected static $item;
 
-  public function getEnvironmentSetUp()
+  public function getEnvironmentSetUp($app)
   {
-    parent::getEnvironmentSetUp();
+    parent::getEnvironmentSetUp($app);
     // Reset all menus
     Menu::reset();
     $this->refreshApplication();
