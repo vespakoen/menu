@@ -23,8 +23,8 @@ class MenuServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    $configPath = __DIR__ . '/../config/ide-helper.php';
-    $this->mergeConfigFrom($configPath, 'ide-helper');
+    $configPath = __DIR__ . '/../config/menu.php';
+    $this->mergeConfigFrom($configPath, 'menu');
 
     $container = Menu::getContainer();
     $container['url'] = $this->app['url'];
