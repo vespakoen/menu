@@ -12,9 +12,9 @@ abstract class MenuTests extends \Orchestra\Testbench\TestCase
   protected static $itemList;
   protected static $item;
 
-  public function getEnvironmentSetUp($app)
+  public function setUp()
   {
-    parent::getEnvironmentSetUp($app);
+    parent::setUp();
     // Reset all menus
     Menu::reset();
     $this->refreshApplication();
@@ -27,14 +27,14 @@ abstract class MenuTests extends \Orchestra\Testbench\TestCase
   }
 
 
-  protected function getPackageProviders()
+  protected function getPackageProviders($app)
   {
     return array(
       'Menu\MenuServiceProvider',
     );
   }
 
-  protected function getPackageAliases()
+  protected function getPackageAliases($app)
   {
     return array(
       'Menu' => 'Menu\Menu',
