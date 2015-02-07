@@ -217,9 +217,11 @@ class Menu
   public static function getOption($option = null)
   {
       if ($option == null) {
-          $option = 'config';
+
+        return static::getContainer('config')->get('menu');
       }
-      return static::getContainer('config')->get('menu::'.$option);
+
+      return static::getContainer('config')->get('menu.'.$option);
   }
 
   /**
