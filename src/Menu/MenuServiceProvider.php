@@ -39,4 +39,14 @@ class MenuServiceProvider extends ServiceProvider
     return array('menu');
   }
 
+  /**
+   * Declare publishable assets
+   *
+   * @return void
+   */
+  public function boot()
+  {
+        $configPath = __DIR__ . '/../config/config.php';
+        $this->publishes([$configPath => config_path('menu.php')], 'config');
+  }
 }
