@@ -23,7 +23,7 @@ class MenuServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    $configPath = __DIR__ . '/../config/menu.php';
+    $configPath = __DIR__ . '/../config/config.php';
     $this->mergeConfigFrom($configPath, 'menu');
 
     $container = Menu::getContainer();
