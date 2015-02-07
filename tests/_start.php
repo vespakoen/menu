@@ -27,14 +27,14 @@ abstract class MenuTests extends \Orchestra\Testbench\TestCase
   }
 
 
-  protected function getPackageProviders($app)
+  protected function getPackageProviders($app = null)
   {
     return array(
       'Menu\MenuServiceProvider',
     );
   }
 
-  protected function getPackageAliases($app)
+  protected function getPackageAliases($app = null)
   {
     return array(
       'Menu' => 'Menu\Menu',
