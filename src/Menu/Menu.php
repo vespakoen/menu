@@ -235,7 +235,7 @@ class Menu
       if ($option == null) {
           $option = 'config';
       }
-      static::getContainer('config')->set('menu::'.$option, $value);
+      static::getContainer('config')->set('menu.'.$option, $value);
   }
 
 }
