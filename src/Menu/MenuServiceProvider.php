@@ -23,7 +23,8 @@ class MenuServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    $this->package('vespakoen/menu', null, __DIR__ . '/../');
+    $configPath = __DIR__ . '/../config/config.php';
+    $this->mergeConfigFrom($configPath, 'menu');
 
     $container = Menu::getContainer();
     $container['url'] = $this->app['url'];
@@ -41,4 +42,14 @@ class MenuServiceProvider extends ServiceProvider
     return array('menu');
   }
 
+  /**
+   * Declare publishable assets
+   *
+   * @return void
+   */
+  public function boot()
+  {
+        $configPath = __DIR__ . '/../config/config.php';
+        $this->publishes([$configPath => config_path('menu.php')], 'config');
+  }
 }

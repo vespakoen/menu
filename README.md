@@ -58,6 +58,14 @@ And add the following to your `app/config/app.php` file :
 - In the Service Providers array : `'Menu\MenuServiceProvider',`
 - In the aliases array : `'Menu' => 'Menu\Menu',`
 
+## Laravel 5
+
+Same as for Laravel 4 except that you should also run the following after install:
+
+```
+php artisan vendor:publish
+```
+
 # Basic usage
 
 First, let's load some pages into the menu.

@@ -25,16 +25,16 @@ abstract class MenuTests extends \Orchestra\Testbench\TestCase
     static::$itemList = new ItemList;
     static::$item     = new Item(static::$itemList, static::$link);
   }
-  
 
-  protected function getPackageProviders()
+
+  protected function getPackageProviders($app = null)
   {
     return array(
       'Menu\MenuServiceProvider',
     );
   }
-  
-  protected function getPackageAliases()
+
+  protected function getPackageAliases($app = null)
   {
     return array(
       'Menu' => 'Menu\Menu',
