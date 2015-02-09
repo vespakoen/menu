@@ -50,7 +50,7 @@ To let Laravel know the Laravel Menu package should be started, open up `applica
 Add this to your `composer.json` file's `"require"` :
 
 ```json
-"vespakoen/menu": "dev-master"
+"vespakoen/menu": "2.*"
 ```
 
 And add the following to your `app/config/app.php` file :
@@ -60,7 +60,18 @@ And add the following to your `app/config/app.php` file :
 
 ## Laravel 5
 
-Same as for Laravel 4 except that you should also run the following after install:
+Add this to your `composer.json` file's `"require"` :
+
+```json
+"vespakoen/menu": "3.*"
+```
+
+And add the following to your `config/app.php` file :
+
+- In the Service Providers array : `'Menu\MenuServiceProvider',`
+- In the aliases array : `'Menu' => 'Menu\Menu',`
+
+Lastly, run the following from your project's root dir:
 
 ```
 php artisan vendor:publish
