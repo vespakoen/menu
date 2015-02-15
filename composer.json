@@ -12,7 +12,7 @@
 	"require": {
 		"php": ">=5.4.0",
 		"anahkiasen/underscore-php": "~1",
-		"anahkiasen/html-object": "~1.2.0",
+		"anahkiasen/html-object": "~1.4",
 		"illuminate/http": "5.*",
 		"illuminate/config": "5.*",
 		"illuminate/container": "5.*"
