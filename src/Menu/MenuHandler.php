@@ -31,6 +31,7 @@ class MenuHandler
       'getItemsAtDepthRange',
       'getItemsByContentType',
       'getAllItemLists',
+      'getSubmenu',
       'getItemListsAtDepth',
       'getItemListsAtDepthRange',
       'onItem',
@@ -40,6 +41,7 @@ class MenuHandler
     ),
     'getMatchFromResults' => array(
       'findItemListByName',
+      'findActiveItem',
       'findByName',
       'findItemByUrl',
       'find'
@@ -117,7 +119,7 @@ class MenuHandler
       return $choosePath($menuObjects);
     }
 
-    return $menuObjects[0];
+    return isset($menuObjects[0]) ? $menuObjects[0] : new MenuHandler;
   }
 
   ////////////////////////////////////////////////////////////////////

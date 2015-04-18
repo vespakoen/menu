@@ -26,6 +26,10 @@
     // The default ItemList element
     'element' => 'ul',
 
+    // The default breadcrumb separator, set to '' to not output any separators for
+    // use with bootstrap.
+    'breadcrumb_separator' => '/',
+
     // A prefix to prepend the links URLs with
     'prefix'         => null,
 
