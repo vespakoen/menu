@@ -6,6 +6,62 @@
 
 Are you the type of person that writes menus by hand in view files or do you find yourself looking for the best place to store links to pages on your website? then Menu is for you!
 
+# Quick overview example
+
+```php
+$menu = Menu::handler('mailbox'); 
+
+// items
+$menu
+    ->add('contacts', 'Contacts')
+    ->add('inbox', 'Inbox')
+    ->raw(null, null, ['class' => 'divider'])
+    ->add('folders', 'Folders', Menu::items() 
+        ->prefixParents() 
+        ->add('urgent', 'Urgent') // with prefix: /folders/urgent
+        ->add('sent', 'Sent')
+        ->add('deleted', 'Deleted')
+    );
+
+// styling
+$menu
+    ->addClass('nav navbar-nav')
+    ->getItemsByContentType(Menu\Items\Contents\Link::class)
+    ->map(function($item) {
+        if ( $item->isActive() )  {
+            $item->addClass('active');
+        }
+    });
+```
+
+`{!! $menu !!}` will output:
+
+```html
+<ul class="nav navbar-nav">
+  <li class="active"> <!-- current element in laravel, detected by library -->
+    <a href="http://myapp.com/contacts">Contacts</a>
+  </li>
+  <li>
+    <a href="http://myapp.com/inbox">Inbox</a>
+  </li>
+  <li class="divider"></li>
+  <li>
+    <a href="http://myapp.com/folders">Folders</a>
+    <ul>
+      <li>
+        <a href="http://myapp.com/folders/urgent">Urgent</a>
+      </li>
+      <li>
+        <a href="http://myapp.com/folders/sent">Sent</a>
+      </li>
+      <li>
+        <a href="http://myapp.com/folders/deleted">Deleted</a>
+      </li>
+    </ul>
+  </li>
+</ul>
+```
+
 # Key concepts
 
 ## Item lists
