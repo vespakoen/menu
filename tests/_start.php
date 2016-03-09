@@ -4,7 +4,7 @@ use Menu\Items\Contents\Raw;
 use Menu\Items\Item;
 use Menu\Items\ItemList;
 use Menu\Menu;
-use PHPUnit\Util\PHPUnit_Util_XML;
+use PHPUnit\Util\XML;
 use PHPUnit\DOMNode;
 
 abstract class MenuTests extends \Orchestra\Testbench\TestCase
@@ -140,8 +140,8 @@ abstract class MenuTests extends \Orchestra\Testbench\TestCase
 
   public static function assertTag($matcher, $actual, $message = '', $isHtml = true)
   {
-    $dom = PHPUnit_Util_XML::load($actual, $isHtml);
-    $tags = PHPUnit_Util_XML::findNodes($dom, $matcher, $isHtml);
+    $dom = XML::load($actual, $isHtml);
+    $tags = XML::findNodes($dom, $matcher, $isHtml);
     $matched = count($tags) > 0 && $tags[0] instanceof DOMNode;
     self::assertTrue($matched, $message);
   }
