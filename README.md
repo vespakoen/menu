@@ -1,6 +1,10 @@
 # Menu
 
 [![Build Status](https://secure.travis-ci.org/vespakoen/menu.png?branch=master)](http://travis-ci.org/vespakoen/menu)
+[![Total Downloads](https://poser.pugx.org/vespakoen/menu/d/total.svg)](https://packagist.org/packages/vespakoen/menu)
+[![Latest Stable Version](https://poser.pugx.org/vespakoen/menu/v/stable.svg)](https://packagist.org/packages/vespakoen/menu)
+[![Latest Unstable Version](https://poser.pugx.org/vespakoen/menu/v/unstable.svg)](https://packagist.org/packages/vespakoen/menu)
+[![License](https://poser.pugx.org/vespakoen/menu/license.svg)](https://packagist.org/packages/vespakoen/menu)
 
 [Api Docs](http://vespakoen.github.io/menu/api/ "API Docs")
 
