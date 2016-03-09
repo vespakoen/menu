@@ -6,7 +6,7 @@
 [![Latest Unstable Version](https://poser.pugx.org/vespakoen/menu/v/unstable.svg)](https://packagist.org/packages/vespakoen/menu)
 [![License](https://poser.pugx.org/vespakoen/menu/license.svg)](https://packagist.org/packages/vespakoen/menu)
 
-[Api Docs](http://vespakoen.github.io/menu/api/ "API Docs")
+[API Docs](http://vespakoen.github.io/menu/)
 
 Are you the type of person that writes menus by hand in view files or do you find yourself looking for the best place to store links to pages on your website? then Menu is for you!
 
