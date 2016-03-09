@@ -93,13 +93,12 @@ class Item extends MenuObject
    */
   public function getElement()
   {
-    $element = $this->getOption('item.element');
-    if(is_null($element))
+    if(is_null($this->element))
     {
-      $element = $this->element;
+      return $this->getOption('item.element');
     }
 
-    return $element;
+    return $this->element;
   }
 
   /**
