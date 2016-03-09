@@ -137,12 +137,4 @@ abstract class MenuTests extends \Orchestra\Testbench\TestCase
         .$html."\n\t"
         .json_encode($matcher));
   }
-
-  public static function assertTag($matcher, $actual, $message = '', $isHtml = true)
-  {
-    $dom = XML::load($actual, $isHtml);
-    $tags = XML::findNodes($dom, $matcher, $isHtml);
-    $matched = count($tags) > 0 && $tags[0] instanceof DOMNode;
-    self::assertTrue($matched, $message);
-  }
 }
