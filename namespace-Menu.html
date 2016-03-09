@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>Overview</title>
+	<title>Namespace Menu</title>
 
 	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
 
@@ -12,12 +12,13 @@
 <body>
 <div id="left">
 	<div id="menu">
-<span>Overview</span>
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
 
 		<div id="groups">
 				<h3>Namespaces</h3>
 			<ul>
-				<li>
+				<li class="active">
 					<a href="namespace-Menu.html">
 						Menu<span></span>
 					</a>
@@ -50,15 +51,9 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
-				<li><a href="class-Menu.Items.Contents.Link.html">Menu\Items\Contents\Link</a></li>
-				<li><a href="class-Menu.Items.Contents.Raw.html">Menu\Items\Contents\Raw</a></li>
-				<li><a href="class-Menu.Items.Item.html">Menu\Items\Item</a></li>
-				<li><a href="class-Menu.Items.ItemList.html">Menu\Items\ItemList</a></li>
-				<li><a href="class-Menu.Menu.html">Menu\Menu</a></li>
-				<li><a href="class-Menu.MenuHandler.html">Menu\MenuHandler</a></li>
-				<li><a href="class-Menu.MenuServiceProvider.html">Menu\MenuServiceProvider</a></li>
-				<li><a href="class-Menu.Traits.Content.html">Menu\Traits\Content</a></li>
-				<li><a href="class-Menu.Traits.MenuObject.html">Menu\Traits\MenuObject</a></li>
+				<li><a href="class-Menu.Menu.html">Menu</a></li>
+				<li><a href="class-Menu.MenuHandler.html">MenuHandler</a></li>
+				<li><a href="class-Menu.MenuServiceProvider.html">MenuServiceProvider</a></li>
 			</ul>
 
 
@@ -76,14 +71,15 @@
 	<form id="search">
 		<input type="hidden" name="cx" value="">
 		<input type="hidden" name="ie" value="UTF-8">
-		<input type="text" name="q" class="text" placeholder="Search" autofocus>
+		<input type="text" name="q" class="text" placeholder="Search">
 	</form>
 
 	<div id="navigation">
 		<ul>
-			<li class="active">
-<span>Overview</span>			</li>
 			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li class="active">
 <span>Namespace</span>			</li>
 			<li>
 <span>Class</span>			</li>
@@ -94,25 +90,38 @@
 		</ul>
 	</div>
 
-<div id="content">
-	<h1>Overview</h1>
-
+<div id="content" class="namespace">
+	<h1>Namespace Menu</h1>
 
 	<table class="summary" id="namespaces">
-		<caption>Namespaces summary</caption>
-			<tr>
-				<td class="name"><a href="namespace-Menu.html">Menu</a></td>
-			</tr>
-			<tr>
-				<td class="name"><a href="namespace-Menu.Items.html">Menu\Items</a></td>
-			</tr>
-			<tr>
-				<td class="name"><a href="namespace-Menu.Items.Contents.html">Menu\Items\Contents</a></td>
-			</tr>
-			<tr>
-				<td class="name"><a href="namespace-Menu.Traits.html">Menu\Traits</a></td>
-			</tr>
+	<caption>Namespaces summary</caption>
+	<tr>
+		<td class="name"><a href="namespace-Menu.Items.html">Menu\Items</a></td>
+	</tr>
+	<tr>
+		<td class="name"><a href="namespace-Menu.Traits.html">Menu\Traits</a></td>
+	</tr>
 	</table>
+
+
+<table class="summary" id="classes">
+<caption>Classes summary</caption>
+<tr>
+	<td class="name"><a href="class-Menu.Menu.html">Menu</a></td>
+	<td>Basic interface to different components within the package</td>
+</tr>
+<tr>
+	<td class="name"><a href="class-Menu.MenuHandler.html">MenuHandler</a></td>
+	<td>Handles various instances of ItemList at once</td>
+</tr>
+<tr>
+	<td class="name"><a href="class-Menu.MenuServiceProvider.html">MenuServiceProvider</a></td>
+	<td>The "start" file for laravel</td>
+</tr>
+</table>
+
+
+
 
 
 </div>

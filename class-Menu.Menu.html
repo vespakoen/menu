@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Class Menu\Menu</title>
+
+	<link rel="stylesheet" href="resources/style.css?e99947befd7bf673c6b43ff75e9e0f170c88a60e">
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+				<h3>Namespaces</h3>
+			<ul>
+				<li class="active">
+					<a href="namespace-Menu.html">
+						Menu<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-Menu.Items.html">
+						Items<span></span>
+					</a>
+
+						<ul>
+				<li>
+					<a href="namespace-Menu.Items.Contents.html">
+						Contents					</a>
+
+						</li>
+							</ul></li>
+				<li>
+					<a href="namespace-Menu.Traits.html">
+						Traits					</a>
+
+						</li>
+							</ul></li>
+			</ul>
+		</div>
+
+		<hr>
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li class="active"><a href="class-Menu.Menu.html">Menu</a></li>
+				<li><a href="class-Menu.MenuHandler.html">MenuHandler</a></li>
+				<li><a href="class-Menu.MenuServiceProvider.html">MenuServiceProvider</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text" placeholder="Search">
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Menu.html" title="Summary of Menu"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Menu</h1>
+
+
+	<div class="description">
+	<p>Basic interface to different components within the package</p>
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Menu.html">Menu</a><br>
+		
+
+			<b>Located at</b> <a href="source-class-Menu.Menu.html#10-241" title="Go to source code">Menu/Menu.php</a>
+		<br>
+	</div>
+
+
+
+	<table class="summary methods" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="handler" id="_handler">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-Menu.MenuHandler.html">Menu\MenuHandler</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_handler">#</a>
+		<code><a href="source-class-Menu.Menu.html#29-73" title="Go to source code">handler</a>( <span>string|array <var>$names</var> = <span class="php-quote">''</span></span>, <span>array <var>$attributes</var> = <span class="php-keyword1">array</span>()</span>, <span>string <var>$element</var> = <span class="php-quote">'ul'</span></span> )</code>
+
+		<div class="description short">
+			<p>Get a MenuHandler.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get a MenuHandler.</p>
+
+<p>This method will retrieve ItemLists by name,
+If an ItemList doesn't already exist, it will
+be registered and added to the handler.</p>
+
+<pre><span class="php-comment">// Get the menu handler that handles the default name</span>
+   <span class="php-var">$handler</span> = Menu::handler();
+
+   <span class="php-comment">// Get a named menu handler for a single name</span>
+   <span class="php-var">$handler</span> = Menu::handler(<span class="php-quote">'backend'</span>);
+
+   <span class="php-comment">// Get a menu handler that handles multiple names</span>
+   <span class="php-var">$handler</span> = Menu::handler(<span class="php-keyword1">array</span>(<span class="php-quote">'admin'</span>, <span class="php-quote">'sales'</span>));</pre>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$names</var></dt>
+					<dd>The name this handler should respond to</dd>
+					<dt><var>$attributes</var></dt>
+					<dd>Its attributes</dd>
+					<dt><var>$element</var></dt>
+					<dd>Its element</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Menu.MenuHandler.html">Menu\MenuHandler</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="allHandlers" id="_allHandlers">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-Menu.MenuHandler.html">Menu\MenuHandler</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_allHandlers">#</a>
+		<code><a href="source-class-Menu.Menu.html#75-83" title="Go to source code">allHandlers</a>( )</code>
+
+		<div class="description short">
+			<p>Get a MenuHandler for all registered ItemLists</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get a MenuHandler for all registered ItemLists</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Menu.MenuHandler.html">Menu\MenuHandler</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="reset" id="_reset">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_reset">#</a>
+		<code><a href="source-class-Menu.Menu.html#85-91" title="Go to source code">reset</a>( )</code>
+
+		<div class="description short">
+			<p>Erase all menus in memory</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Erase all menus in memory</p>
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="items" id="_items">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-Menu.Items.ItemList.html">Menu\Items\ItemList</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_items">#</a>
+		<code><a href="source-class-Menu.Menu.html#97-109" title="Go to source code">items</a>( <span>string <var>$name</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$attributes</var> = <span class="php-keyword1">array</span>()</span>, <span>string <var>$element</var> = <span class="php-quote">'ul'</span></span> )</code>
+
+		<div class="description short">
+			<p>Create a new ItemList</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Create a new ItemList</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>The name of the ItemList</dd>
+					<dt><var>$attributes</var></dt>
+					<dd>The HTML attributes for the list element</dd>
+					<dt><var>$element</var></dt>
+					<dd>The HTML element for the list (ul or dd)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Menu.Items.ItemList.html">Menu\Items\ItemList</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setItemList" id="_setItemList">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-Menu.Items.ItemList.html">Menu\Items\ItemList</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setItemList">#</a>
+		<code><a href="source-class-Menu.Menu.html#111-124" title="Go to source code">setItemList</a>( <span>string <var>$name</var></span>, <span><code><a href="class-Menu.Items.ItemList.html">Menu\Items\ItemList</a></code> <var>$itemList</var></span> )</code>
+
+		<div class="description short">
+			<p>Store an ItemList in memory</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Store an ItemList in memory</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>The handle to store it to</dd>
+					<dt><var>$itemList</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Menu.Items.ItemList.html">Menu\Items\ItemList</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getItemList" id="_getItemList">
+
+		<td class="attributes"><code>
+			 public static
+
+			<code><a href="class-Menu.Items.ItemList.html">Menu\Items\ItemList</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getItemList">#</a>
+		<code><a href="source-class-Menu.Menu.html#126-137" title="Go to source code">getItemList</a>( <span>string <var>$name</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Get an ItemList from the memory</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get an ItemList from the memory</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd>The ItemList handle</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-Menu.Items.ItemList.html">Menu\Items\ItemList</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__callStatic" id="___callStatic">
+
+		<td class="attributes"><code>
+			 public static
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___callStatic">#</a>
+		<code><a href="source-class-Menu.Menu.html#143-162" title="Go to source code">__callStatic</a>( <span>string <var>$method</var></span>, <span>array <var>$parameters</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			<p>Magic Method for calling methods on the default handler.</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Magic Method for calling methods on the default handler.</p>
+
+<pre><span class="php-comment">// Call the &quot;render&quot; method on the default handler</span>
+   <span class="php-keyword1">echo</span> Menu::render();
+
+   <span class="php-comment">// Call the &quot;add&quot; method on the default handler</span>
+   Menu::add(<span class="php-quote">'home'</span>, <span class="php-quote">'Home'</span>);</pre>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$method</var></dt>
+					<dd></dd>
+					<dt><var>$parameters</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getContainer" id="_getContainer">
+
+		<td class="attributes"><code>
+			 public static
+
+			Illuminate\Container\Container
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getContainer">#</a>
+		<code><a href="source-class-Menu.Menu.html#168-198" title="Go to source code">getContainer</a>( <span>string <var>$dependency</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Get the current dependencies</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get the current dependencies</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dependency</var></dt>
+					<dd>A dependency to make on the fly</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					Illuminate\Container\Container
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setContainer" id="_setContainer">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setContainer">#</a>
+		<code><a href="source-class-Menu.Menu.html#200-208" title="Go to source code">setContainer</a>( <span>Illuminate\Container\Container <var>$container</var></span> )</code>
+
+		<div class="description short">
+			<p>Set the Container to use</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set the Container to use</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$container</var></dt>
+					<dd></dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getOption" id="_getOption">
+
+		<td class="attributes"><code>
+			 public static
+
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getOption">#</a>
+		<code><a href="source-class-Menu.Menu.html#210-225" title="Go to source code">getOption</a>( <span>string <var>$option</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			<p>Get an option from the options array</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get an option from the options array</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$option</var></dt>
+					<dd>The option key</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					mixed<br>Its value
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setOption" id="_setOption">
+
+		<td class="attributes"><code>
+			 public static
+
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setOption">#</a>
+		<code><a href="source-class-Menu.Menu.html#227-239" title="Go to source code">setOption</a>( <span>key <var>$option</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			<p>Set a global option</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set a global option</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$option</var></dt>
+					<dd>The option</dd>
+					<dt><var>$value</var></dt>
+					<dd>Its value</dd>
+				</dl></div>
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary properties" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="container" id="$container">
+		<td class="attributes"><code>
+			protected static 
+			Illuminate\Container\Container
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Menu.Menu.html#16-20" title="Go to source code"><var>$container</var></a>
+
+			<div class="description short">
+				<p>The current IoC container</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>The current IoC container</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$container" class="anchor">#</a>
+				<code></code>
+			</div>
+		</td>
+	</tr>
+	<tr data-order="itemLists" id="$itemLists">
+		<td class="attributes"><code>
+			protected static 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Menu.Menu.html#22-27" title="Go to source code"><var>$itemLists</var></a>
+
+			<div class="description short">
+				<p>All the registered names and the associated ItemLists</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>All the registered names and the associated ItemLists</p>
+
+			</div>
+		</td>
+		<td class="value">
+			<div>
+				<a href="#$itemLists" class="anchor">#</a>
+				<code><span class="php-keyword1">array</span>()</code>
+			</div>
+		</td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 API documentation generated by <a href="http://apigen.org">ApiGen</a>
+	</div>
+</div>
+</div>
+<script src="resources/combined.js"></script>
+<script src="elementlist.js"></script>
+</body>
+</html>
