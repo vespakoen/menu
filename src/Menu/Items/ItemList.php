@@ -100,19 +100,21 @@ class ItemList extends MenuObject
    *    Menu::add('home', 'Homepage', null, array('class' => 'fancy'));
    * </code>
    *
-   * @param string   $url
-   * @param string   $value
-   * @param ItemList $children
-   * @param array    $linkAttributes
-   * @param array    $itemAttributes
-   * @param string   $itemElement
+   * @param string   $url             Url of the link
+   * @param string   $value           (H)T(ML) inside of the link
+   * @param ItemList $children        Children
+   * @param array    $linkAttributes  Attributes for the link
+   * @param array    $itemAttributes  Attributes for the item
+   * @param string   $itemElement     The element for the item
+   * @param string   $beforeContent   String to add before the link
+   * @param string   $afterContent    String to add after the link
    *
    * @return ItemList
    */
-  public function add($url, $value, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = null)
+  public function add($url, $value, $children = null, $linkAttributes = array(), $itemAttributes = array(), $itemElement = null, $beforeContent = null, $afterContent = null)
   {
     $content = new Link($url, $value, $linkAttributes);
-    $item = $this->addContent($content, $children, $itemAttributes, $itemElement);
+    $item = $this->addContent($content, $children, $itemAttributes, $itemElement, $beforeContent, $afterContent);
 
     return $this;
   }
@@ -125,17 +127,19 @@ class ItemList extends MenuObject
    *    Menu::raw('<img src="img/seperator.gif">');
    * </code>
    *
-   * @param string $raw            The raw content
-   * @param array $children        Possible children
-   * @param array  $itemAttributes The item attributes
-   * @param string $itemElement    The item element
+   * @param string   $raw            The raw content
+   * @param ItemList $children       Children
+   * @param array    $itemAttributes The item attributes
+   * @param string   $itemElement    The item element
+   * @param string   $beforeContent  String to add before the raw content
+   * @param string   $afterContent   String to add after the raw content
    *
    * @return ItemList
    */
-  public function raw($raw, $children = null, $itemAttributes = array(), $itemElement = null)
+  public function raw($raw, $children = null, $itemAttributes = array(), $itemElement = null, $beforeContent = null, $afterContent = null)
   {
     $content = new Raw($raw);
-    $item = $this->addContent($content, $children, $itemAttributes, $itemElement);
+    $item = $this->addContent($content, $children, $itemAttributes, $itemElement, $beforeContent, $afterContent);
 
     return $this;
   }
@@ -143,14 +147,16 @@ class ItemList extends MenuObject
   /**
    * Add content to the ItemList
    *
-   * @param Content $content
-   * @param array   $children
-   * @param array   $itemAttributes
-   * @param string  $itemElement
+   * @param Content   $content        Content object
+   * @param ItemList  $children       Children
+   * @param array     $itemAttributes Attributes for the item (li)
+   * @param string    $itemElement    Element for the item (li is default)
+   * @param string    $beforeContent  String to add before the content
+   * @param string    $afterContent   String to add after the content
    */
-  public function addContent($content, $children = null, $itemAttributes = array(), $itemElement = null)
+  public function addContent($content, $children = null, $itemAttributes = array(), $itemElement = null, $beforeContent = null, $afterContent = null)
   {
-    $item = new Item($this, $content, $children, $itemElement);
+    $item = new Item($this, $content, $children, $itemElement, $beforeContent, $afterContent);
     $item->setAttributes($itemAttributes);
 
     // Set Item as parent of its children
@@ -280,8 +286,7 @@ class ItemList extends MenuObject
    */
   public function setElement($element = null)
   {
-    $this->setOption('item_list.element', $element);
-
+    $this->element = $element;
     return $this;
   }
 
@@ -292,13 +297,11 @@ class ItemList extends MenuObject
    */
   public function getElement()
   {
-    $element = $this->getOption('item_list.element');
-    if(is_null($element))
-    {
-      $element = $this->element;
+    if (is_null($this->element)) {
+      return $this->getOption('item_list.element');
     }
 
-    return $element;
+    return $this->element;
   }
 
   /**

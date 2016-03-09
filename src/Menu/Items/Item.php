@@ -30,12 +30,16 @@ class Item extends MenuObject
    * @param Tag      $value    The content
    * @param array    $children Facultative children ItemLists
    * @param array    $element  The Item element
+   * @param string   $beforeContent  String to add before the content
+   * @param string   $afterContent   String to add after the content
    */
-  public function __construct(ItemList $parent, Tag $value, $children = null, $element = null)
+  public function __construct(ItemList $parent, Tag $value, $children = null, $element = null, $beforeContent = null, $afterContent = null)
   {
     $this->parent   = $parent;
     $this->children = is_null($children) ? new ItemList() : $children;
     $this->element = $element;
+    $this->beforeContent = $beforeContent;
+    $this->afterContent = $afterContent;
 
     // Create content
     $this->value = $value->setParent($this);
@@ -75,6 +79,28 @@ class Item extends MenuObject
   }
 
   /**
+   * Set the value to be inserted before the item's content
+   *
+   * @param string $value The value to insert
+   */
+  public function setBeforeContent($value)
+  {
+    $this->beforeContent = $value;
+    return $this;
+  }
+
+  /**
+   * Set the value to be inserted after the item's content
+   *
+   * @param string $value The value to insert
+   */
+  public function setAfterContent($value)
+  {
+    $this->beforeContent = $value;
+    return $this;
+  }
+
+  /**
    * Set the Item's element
    *
    * @param string $element
@@ -111,7 +137,10 @@ class Item extends MenuObject
   public function render($depth = 0)
   {
     // Add the active classes
-    $value = $this->value->render();
+    $value = is_null($this->beforeContent) ? '' : $this->beforeContent;
+    $value .= $this->value->render();
+    $value .= is_null($this->afterContent) ? '' : $this->afterContent;
+
     $this->addActiveClasses();
 
     // Render children if any
