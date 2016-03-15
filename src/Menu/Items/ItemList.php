@@ -459,8 +459,10 @@ class ItemList extends MenuObject
   public function getItemListsAtDepth($depth)
   {
     $itemListsWithDepth = $this->getItemListsWithDepth();
-
-    return new MenuHandler($itemListsWithDepth[$depth]);
+    if (array_key_exists($depth, $itemListsWithDepth)) {
+      return new MenuHandler($itemListsWithDepth[$depth]);  
+    }
+    return new MenuHandler(array());
   }
 
   /**
