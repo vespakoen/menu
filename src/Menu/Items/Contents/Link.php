@@ -5,7 +5,7 @@ use HtmlObject\Traits\Helpers;
 use HtmlObject\Link as HtmlLink;
 use Menu\Menu;
 use Menu\Traits\Content;
-use Underscore\Methods\StringMethods;
+use Underscore\Methods\StringsMethods;
 
 /**
  * A Link in an Item
@@ -126,7 +126,7 @@ class Link extends HtmlLink
   public function isSpecialUrl()
   {
     foreach ($this->hidden as $hidden) {
-      if (StringMethods::startsWith($this->href, $hidden)) return true;
+      if (StringsMethods::startsWith($this->href, $hidden)) return true;
     }
 
     return false;
