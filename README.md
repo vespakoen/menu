@@ -8,7 +8,7 @@
 
 [API Docs](http://vespakoen.github.io/menu/)
 
-Are you the type of person that writes menus by hand in view files or do you find yourself looking for the best place to store links to pages on your website? then Menu is for you!
+Are you the type of person that writes menus by hand in view files or do you find yourself looking for the best place to store links to pages on your website? Then Menu is for you!
 
 # Quick overview example
 
@@ -70,7 +70,7 @@ $menu
 
 ## Item lists
 An item list is what a menu is all about and it should be pretty self explanatory because it simply stores a list of items.
-there are some configurations available for an item list.
+There are some configurations available for an item list.
 You can, for example set the HMTL element that will be used to render the list, prefix every item in the list with all the parent's url segments, and a lot more. We will explore these options later.
 
 ## Menu handlers
@@ -259,7 +259,7 @@ Menu::breadcrumbs(function($itemLists)
 # Diving deeper
 
 The Laravel Menu packages consists of a couple of classes, but you can interact with all of them via the _Menu_ class.
-Let's take a look at the **handler** method. it takes a string or an array as the only argument, the string(s) given are the names for the item lists we want to retrieve.
+Let's take a look at the **handler** method. It takes a string or an array as the only argument, the string(s) given are the names for the item lists we want to retrieve.
 If an itemlist we asked for didn't exist yet, it will create it for us.
 After the menu class has found and created the item lists we want, it will hand back a menuhandler that handles the item lists we asked for.
 
