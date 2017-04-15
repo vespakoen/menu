@@ -170,7 +170,7 @@ class Item extends MenuObject
     }
 
     return
-      trim($this->getUrl(), '/') == trim($this->getRequest()->getPathInfo(), '/') or
+      (!is_null($this->getUrl()) and trim($this->getUrl(), '/') == trim($this->getRequest()->getPathInfo(), '/')) or
       $this->getUrl() == $this->getRequest()->fullUrl() or
       $this->getUrl() == $this->getRequest()->url() or
       $this->hasActivePatterns();
